@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
+import { CartIcon } from '@/components/cart/cart-icon'
 import { Menu, X, ShoppingCart, User, Sun, Moon, LogOut, Settings, LayoutDashboard } from 'lucide-react'
 import Image from 'next/image'
 
@@ -50,8 +51,12 @@ export function Header() {
               Shop
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
             </Link>
-            <Link href="/admin" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
-              Admin
+            <Link href="/about" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+              About
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+            </Link>
+            <Link href="/contact" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+              Contact
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
             </Link>
           </nav>
@@ -59,14 +64,8 @@ export function Header() {
           {/* Right Actions */}
           <div className="flex items-center gap-2">
            
-            <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-purple-500/50 transition-all" asChild>
-              <Link href="/cart">
-                <ShoppingCart className="h-5 w-5 text-white/70" />
-                <span className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-xs font-bold text-white flex items-center justify-center shadow-lg shadow-purple-500/30">
-                  0
-                </span>
-              </Link>
-            </Button>
+          {/* Cart Icon */}
+            <CartIcon />
 
             {/* Auth Section - Sign In or Profile Dropdown */}
             {status === 'loading' ? (
@@ -104,14 +103,7 @@ export function Header() {
                       <LayoutDashboard className="h-4 w-4" />
                       Dashboard
                     </Link>
-                    <Link
-                      href="/settings"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      <Settings className="h-4 w-4" />
-                      Settings
-                    </Link>
+                 
                     <div className="border-t border-white/10 mt-2 pt-2">
                       <button
                         onClick={() => signOut({ callbackUrl: '/' })}
@@ -155,8 +147,11 @@ export function Header() {
               <Link href="/shop" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
                 Shop
               </Link>
-              <Link href="/admin" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
-                Admin
+              <Link href="/about" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                About
+              </Link>
+              <Link href="/contact" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                Contact
               </Link>
               {session?.user ? (
                 <>

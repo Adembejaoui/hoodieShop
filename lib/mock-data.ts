@@ -154,7 +154,7 @@ export const benefits = [
   {
     icon: '⚡',
     title: 'Fast Delivery',
-    description: 'Free shipping on orders over $50, delivered in 3-5 days',
+    description: 'Free shipping , delivered in 3-5 days',
   },
   {
     icon: '🎨',

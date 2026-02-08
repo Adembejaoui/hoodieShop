@@ -72,7 +72,7 @@ export default function TermsPage() {
         </section>
 
         <div className="mt-8">
-          <Link href="/register">
+          <Link href="/auth">
             <Button>Back to Registration</Button>
           </Link>
         </div>

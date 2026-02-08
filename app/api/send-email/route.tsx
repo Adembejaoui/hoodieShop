@@ -3,9 +3,11 @@ import nodemailer from "nodemailer";
 
 interface EmailRequest {
   to: string;
-  type: "welcome" | "test";
+  type: "welcome" | "test" | "contact_reply";
   data?: {
     userName?: string;
+    subject?: string;
+    message?: string;
   };
 }
 
@@ -102,6 +104,34 @@ export async function POST(request: Request) {
               <h2 style="color: #1f2937; margin-top: 0;">Test Email</h2>
               <p style="color: #4b5563;">This is a test email from Hoodie Legends!</p>
               <p style="color: #4b5563;">If you received this, your email system is working correctly.</p>
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+              <p style="color: #9ca3af; font-size: 12px; text-align: center;">Hoodie Legends - Wear the Power of Anime</p>
+            </div>
+          </body>
+          </html>
+        `;
+        break;
+      case "contact_reply":
+        subject = `Re: ${body.data?.subject || "Contact Form"}`;
+        emailHtml = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+              <h1 style="color: white; margin: 0; font-size: 24px;">Hoodie Legends</h1>
+            </div>
+            <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px;">
+              <h2 style="color: #1f2937; margin-top: 0;">Reply to Your Message</h2>
+              <p style="color: #4b5563;">Hi ${body.data?.userName || "there"},</p>
+              <p style="color: #4b5563;">Thank you for contacting us! Here is our response:</p>
+              <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                <p style="color: #1f2937; white-space: pre-wrap;">${body.data?.message || ""}</p>
+              </div>
+              <p style="color: #4b5563;">If you have any further questions, feel free to reply to this email.</p>
               <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
               <p style="color: #9ca3af; font-size: 12px; text-align: center;">Hoodie Legends - Wear the Power of Anime</p>
             </div>
