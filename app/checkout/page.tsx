@@ -613,7 +613,7 @@ export default function CheckoutPage() {
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Lock className="w-4 h-4" />
                         <span className="text-sm">
-                          <Link href="/login" className="text-primary hover:underline font-medium">
+                          <Link href="/auth" className="text-primary hover:underline font-medium">
                             Log in
                           </Link>{" "}
                           to apply coupon codes

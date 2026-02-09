@@ -43,7 +43,7 @@ export async function POST(
   try {
     const { productId } = await params;
     const body = await request.json();
-    const { color, size, price, stockQty } = body;
+    const { color, size, price, stockQty, frontImageURL, backImageURL } = body;
 
     // Check if variant already exists
     const existingVariant = await prisma.variant.findFirst({
@@ -68,6 +68,8 @@ export async function POST(
         size,
         price: parseFloat(price),
         stockQty: stockQty || 0,
+        frontImageURL: frontImageURL || null,
+        backImageURL: backImageURL || null,
       },
     });
 
@@ -99,6 +101,8 @@ export async function PUT(
           data: {
             price: variant.price ? parseFloat(variant.price) : undefined,
             stockQty: variant.stockQty,
+            frontImageURL: variant.frontImageURL,
+            backImageURL: variant.backImageURL,
           },
         })
       )

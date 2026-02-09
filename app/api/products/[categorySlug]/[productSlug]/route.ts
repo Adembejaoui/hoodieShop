@@ -33,7 +33,9 @@ export async function GET(request: Request, { params }: RouteParams) {
       },
       include: {
         category: true,
-        variants: true,
+        colors: true,
+        sizeStocks: true,
+        variants: true, // Kept for backward compatibility
       },
     });
 
@@ -44,14 +46,24 @@ export async function GET(request: Request, { params }: RouteParams) {
       );
     }
 
+    // Check if using new simplified format (colors + sizeStocks) or legacy (variants)
+    const useNewFormat = product.colors.length > 0 && product.sizeStocks.length > 0;
+
     // Transform the response to convert Decimal to number
     const transformedProduct = {
       ...product,
       basePrice: Number(product.basePrice),
+      colors: product.colors.map((color) => ({
+        ...color,
+      })),
+      sizeStocks: product.sizeStocks.map((size) => ({
+        ...size,
+      })),
       variants: product.variants.map((variant) => ({
         ...variant,
         price: Number(variant.price),
       })),
+      _useNewFormat: useNewFormat,
     };
 
     return NextResponse.json(transformedProduct);

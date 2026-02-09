@@ -35,16 +35,9 @@ export async function GET() {
       },
     });
 
-    // Get wallet balance if wallet exists
-    const wallet = await prisma.wallet.findUnique({
-      where: { userId: session.user.id },
-      select: { balance: true },
-    });
-
     return NextResponse.json({ 
       user: user ? {
         ...user,
-        balance: wallet ? Number(wallet.balance) : 0,
         hasPassword: !!user.password,
       } : null,
     });

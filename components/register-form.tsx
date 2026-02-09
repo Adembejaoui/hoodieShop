@@ -88,7 +88,7 @@ export function RegisterForm({ className, darkMode = false }: RegisterFormProps)
       }
 
       // Registration successful
-      router.push("/login?registered=true");
+      router.push("/auth?registered=true");
     } catch (error) {
       setGeneralError("An error occurred. Please try again.");
     } finally {

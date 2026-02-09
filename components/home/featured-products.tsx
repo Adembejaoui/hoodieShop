@@ -15,8 +15,6 @@ interface Product {
   description: string | null
   basePrice: number
   printPosition: string
-  frontImageURL: string | null
-  backImageURL: string | null
   category: {
     name: string
     slug: string
@@ -27,6 +25,8 @@ interface Product {
     size: string
     price: number
     stockQty: number
+    frontImageURL: string | null
+    backImageURL: string | null
   }>
   totalStock: number
 }
@@ -175,15 +175,24 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
 
                   {/* Image Container */}
                   <div className="relative h-72 w-full bg-gradient-to-br from-purple-900/20 to-pink-900/20 overflow-hidden">
-                    <ProductImage
-                      frontImage={product.frontImageURL || '/placeholder.svg'}
-                      backImage={product.backImageURL || undefined}
-                      printType={getPrintType(product.printPosition)}
-                      productName={product.name}
-                      width={300}
-                      height={300}
-                      className="h-72 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
+                    {/* Get first variant's images */}
+                    {(() => {
+                      const firstVariant = product.variants[0];
+                      const frontImage = firstVariant?.frontImageURL || null;
+                      const backImage = firstVariant?.backImageURL || null;
+                      
+                      return (
+                        <ProductImage
+                          frontImage={frontImage || '/placeholder.svg'}
+                          backImage={backImage || undefined}
+                          printType={getPrintType(product.printPosition)}
+                          productName={product.name}
+                          width={300}
+                          height={300}
+                          className="h-72 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      );
+                    })()}
                     
                     {/* Badge */}
                     {product.totalStock < 20 && (

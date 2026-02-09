@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart, CartItem } from "@/lib/cart-context";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface AddToCartButtonProps {
   productId: string;
@@ -13,8 +13,9 @@ interface AddToCartButtonProps {
   printPosition: "BACK" | "FRONT" | "BOTH";
   colors: string[];
   sizes: string[];
-  variants: Array<{ color: string; size: string; stockQty: number }>;
-  defaultColor?: string;
+  variants: Array<{ color: string; size: string; stockQty: number; frontImageURL?: string | null; backImageURL?: string | null }>;
+  selectedColor?: string;
+  selectedSize?: string;
   defaultSize?: string;
   className?: string;
 }
@@ -30,27 +31,43 @@ export function AddToCartButton({
   colors,
   sizes,
   variants,
-  defaultColor,
+  selectedColor: propSelectedColor,
+  selectedSize: propSelectedSize,
   defaultSize,
   className = "",
 }: AddToCartButtonProps) {
   const { addItem } = useCart();
-  const [selectedColor, setSelectedColor] = useState(defaultColor || colors[0] || "");
-  const [selectedSize, setSelectedSize] = useState(defaultSize || sizes[0] || "");
+  const [selectedColor, setSelectedColor] = useState(propSelectedColor || colors[0] || "");
+  const [selectedSize, setSelectedSize] = useState(propSelectedSize || defaultSize || sizes[0] || "");
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
+
+  // Update selectedColor when prop changes
+  useEffect(() => {
+    if (propSelectedColor) {
+      setSelectedColor(propSelectedColor);
+    }
+  }, [propSelectedColor]);
+
+  // Update selectedSize when prop changes
+  useEffect(() => {
+    if (propSelectedSize) {
+      setSelectedSize(propSelectedSize);
+    }
+  }, [propSelectedSize]);
 
   // Check if selected combination is in stock
   const isInStock = variants.some(
     (v) => v.color === selectedColor && v.size === selectedSize && v.stockQty > 0
   );
 
-  // Get stock quantity for selected combination
+  // Get stock quantity and images for selected combination
   const selectedVariant = variants.find(
     (v) => v.color === selectedColor && v.size === selectedSize
   );
   const maxQuantity = selectedVariant?.stockQty || 0;
+  const variantImage = selectedVariant?.frontImageURL || image;
 
   const handleAddToCart = async () => {
     if (!selectedColor || !selectedSize || !isInStock) return;
@@ -69,7 +86,7 @@ export function AddToCartButton({
       size: selectedSize,
       price,
       quantity,
-      image,
+      image: variantImage,
       printPosition,
     });
 

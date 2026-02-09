@@ -27,7 +27,6 @@ model User {
   orders        Order[]
   addresses     Address[]
   wishlist      WishlistItem[]
-  wallet        Wallet?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -111,36 +110,68 @@ model Category {
 
 // Product Model - Represents a hoodie design
 model Product {
-  id            String         @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String
   slug          String
   description   String?
-  basePrice     Decimal        @db.Decimal(10, 2)
-  printPosition PrintPosition  @default(BOTH)
-  frontImageURL String?
-  backImageURL  String?
-  category      Category       @relation(fields: [categoryId], references: [id])
+  basePrice     Decimal         @db.Decimal(10, 2)
+  printPosition PrintPosition   @default(BOTH)
+  category      Category        @relation(fields: [categoryId], references: [id])
   categoryId    String
-  variants      Variant[]
-  wishlist      WishlistItem[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  colors         ProductColor[]
+  sizeStocks     ProductSizeStock[]
+  variants       Variant[] // Kept for backward compatibility
+  wishlist       WishlistItem[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
   @@unique([categoryId, slug])
   @@map("products")
 }
 
-// Variant Model - Color/size combinations with stock
+// ProductColor Model - Colors with images for a product
+model ProductColor {
+  id            String   @id @default(cuid())
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId     String
+  color         String   // e.g., "Black", "White", "Navy"
+  frontImageURL String?
+  backImageURL  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([productId, color])
+  @@map("product_colors")
+}
+
+// ProductSizeStock Model - Size availability per product
+model ProductSizeStock {
+  id          String   @id @default(cuid())
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   String
+  size        String   // e.g., "XS", "S", "M", "L", "XL", "XXL"
+  stockQty    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([productId, size])
+  @@map("product_size_stocks")
+}
+
+// Variant Model - Legacy color/size combinations (kept for backward compatibility)
+// New products should use ProductColor + ProductSizeStock
 model Variant {
-  id         String   @id @default(cuid())
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId  String
-  color      String
-  size       String
-  price      Decimal  @db.Decimal(10, 2)
-  stockQty   Int      @default(0)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           String   @id @default(cuid())
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId    String
+  color        String
+  size         String
+  price        Decimal  @db.Decimal(10, 2)
+  stockQty     Int      @default(0)
+  frontImageURL String?
+  backImageURL  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@unique([productId, color, size])
   @@map("variants")
@@ -311,39 +342,6 @@ model WishlistItem {
   @@index([userId])
   @@map("wishlist_items")
 }
-
-// Wallet/Store Credit Model
-model Wallet {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  balance     Decimal  @db.Decimal(10, 2) @default(0)
-  currency    String   @default("USD")
-  transactions WalletTransaction[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  @@map("wallets")
-}
-
-// Wallet Transaction Model
-model WalletTransaction {
-  id          String   @id @default(cuid())
-  walletId   String
-  wallet     Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  
-  amount     Decimal  @db.Decimal(10, 2)
-  type       String   // credit, debit
-  description String?
-  orderId    String?  // Linked order if applicable
-  
-  createdAt  DateTime @default(now())
-  
-  @@index([walletId])
-  @@map("wallet_transactions")
-}
-
 // Contact Message Model - Stores contact form submissions
 model ContactMessage {
   id          String   @id @default(cuid())

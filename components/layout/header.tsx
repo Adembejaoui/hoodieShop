@@ -14,6 +14,9 @@ export function Header() {
   const profileRef = useRef<HTMLDivElement>(null)
   const { data: session, status } = useSession()
 
+  // Check if user is admin
+  const isAdmin = session?.user?.role === "ADMIN"
+
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -43,22 +46,31 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden gap-8 md:flex">
-            <Link href="/" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
-              Home
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
-            </Link>
-            <Link href="/shop" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
-              Shop
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
-            </Link>
-            <Link href="/about" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
-              About
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
-            </Link>
-            <Link href="/contact" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
-              Contact
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
-            </Link>
+            {isAdmin ? (
+              <Link href="/admin/dashboard/overview" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+                Dashboard
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+              </Link>
+            ) : (
+              <>
+                <Link href="/" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+                  Home
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+                </Link>
+                <Link href="/shop" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+                  Shop
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+                </Link>
+                <Link href="/about" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+                  About
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+                </Link>
+                <Link href="/contact" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+                  Contact
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+                </Link>
+              </>
+            )}
           </nav>
 
           {/* Right Actions */}
@@ -96,12 +108,12 @@ export function Header() {
                     
                     {/* Dropdown Items */}
                     <Link
-                      href="/dashboard"
+                      href={isAdmin ? "/admin/dashboard/overview" : "/dashboard"}
                       className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors"
                       onClick={() => setIsProfileOpen(false)}
                     >
                       <LayoutDashboard className="h-4 w-4" />
-                      Dashboard
+                      {isAdmin ? "Admin Dashboard" : "Dashboard"}
                     </Link>
                  
                     <div className="border-t border-white/10 mt-2 pt-2">
@@ -141,26 +153,36 @@ export function Header() {
         {isOpen && (
           <nav className="border-t border-white/10 py-4 md:hidden">
             <div className="flex flex-col gap-4">
-              <Link href="/" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
-                Home
-              </Link>
-              <Link href="/shop" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
-                Shop
-              </Link>
-              <Link href="/about" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
-                About
-              </Link>
-              <Link href="/contact" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
-                Contact
-              </Link>
+              {isAdmin ? (
+                <Link href="/admin/dashboard/overview" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                  Admin Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link href="/" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                    Home
+                  </Link>
+                  <Link href="/shop" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                    Shop
+                  </Link>
+                  <Link href="/about" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                    About
+                  </Link>
+                  <Link href="/contact" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                    Contact
+                  </Link>
+                </>
+              )}
               {session?.user ? (
                 <>
-                  <Link href="/dashboard" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
-                    Dashboard
+                  <Link href={isAdmin ? "/admin/dashboard/overview" : "/dashboard"} className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                    {isAdmin ? "Admin Dashboard" : "Dashboard"}
                   </Link>
-                  <Link href="/settings" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
-                    Settings
-                  </Link>
+                  {!isAdmin && (
+                    <Link href="/settings" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                      Settings
+                    </Link>
+                  )}
                   <button
                     onClick={() => signOut({ callbackUrl: '/' })}
                     className="text-sm font-medium text-red-400 transition-colors hover:text-red-300 text-left"

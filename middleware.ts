@@ -6,24 +6,19 @@ export default withAuth(
     const token = req.nextauth.token;
     const pathname = req.nextUrl.pathname;
 
+    // Check if user is blocked
+    if (token?.isBlocked && pathname !== "/blocked" && !pathname.startsWith("/api/")) {
+      return NextResponse.redirect(new URL("/blocked", req.url));
+    }
+
     // Admin routes protection - only admins can access
     if (pathname.startsWith("/admin") && token?.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
 
-    // Protected API routes - only admins can access
-    if (pathname.startsWith("/api/admin") && token?.role !== "ADMIN") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     // Protected dashboard routes - require authentication
     if (pathname.startsWith("/dashboard") && !token) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-
-    // Protected dashboard API routes - require authentication
-    if (pathname.startsWith("/api/dashboard") && !token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.redirect(new URL("/auth", req.url));
     }
 
     return NextResponse.next();
@@ -38,8 +33,23 @@ export default withAuth(
           return true;
         }
         
+        // Allow access to NextAuth signin callback
+        if (pathname.startsWith("/api/auth/signin")) {
+          return true;
+        }
+        
         // Allow access to login/register pages
         if (pathname === "/login" || pathname === "/register") {
+          return true;
+        }
+        
+        // Allow access to blocked page
+        if (pathname === "/blocked") {
+          return true;
+        }
+        
+        // Allow access to unauthorized page
+        if (pathname === "/unauthorized") {
           return true;
         }
         
@@ -117,6 +127,8 @@ export const config = {
      * Match all request paths except:
      * - auth page
      * - login/register pages
+     * - blocked page
+     * - unauthorized page
      * - terms page
      * - home page
      * - about page
@@ -130,6 +142,6 @@ export const config = {
      * - public folder
      * - api/auth routes
      */
-    "/((?!auth|login|register|terms|about|contact|cart|checkout|shop|_next/static|_next/image|favicon.ico|public/).*)",
+    "/((?!auth|login|register|blocked|unauthorized|terms|about|contact|cart|checkout|shop|_next/static|_next/image|favicon.ico|public/).*)",
   ],
 };

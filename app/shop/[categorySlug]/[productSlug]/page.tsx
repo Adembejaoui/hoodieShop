@@ -15,6 +15,8 @@ interface Variant {
   size: string;
   price: string | number;
   stockQty: number;
+  frontImageURL: string | null;
+  backImageURL: string | null;
 }
 
 interface Product {
@@ -24,8 +26,6 @@ interface Product {
   description: string | null;
   basePrice: string | number;
   printPosition: "BACK" | "FRONT" | "BOTH";
-  frontImageURL: string | null;
-  backImageURL: string | null;
   categoryId: string;
   category: Category;
   variants: Variant[];
@@ -129,9 +129,10 @@ export default function ProductDetailPage() {
         {/* Product Images */}
         <div className="space-y-4">
           <div className="aspect-square bg-muted rounded-lg overflow-hidden">
-            {product.frontImageURL ? (
+            {/* Show first variant's front image */}
+            {product.variants[0]?.frontImageURL ? (
               <img
-                src={product.frontImageURL}
+                src={product.variants[0].frontImageURL!}
                 alt={`${product.name} - Front`}
                 className="w-full h-full object-cover"
               />
@@ -141,10 +142,11 @@ export default function ProductDetailPage() {
               </div>
             )}
           </div>
-          {product.backImageURL && (
+          {/* Show first variant's back image if available */}
+          {product.variants[0]?.backImageURL && (
             <div className="aspect-square bg-muted rounded-lg overflow-hidden">
               <img
-                src={product.backImageURL}
+                src={product.variants[0].backImageURL!}
                 alt={`${product.name} - Back`}
                 className="w-full h-full object-cover"
               />

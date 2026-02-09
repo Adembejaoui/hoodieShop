@@ -45,7 +45,7 @@ async function sendWelcomeEmail(email: string, userName: string) {
         <p style="color: #4b5563;">Thank you for joining the Hoodie Legends community! We're thrilled to have you on board.</p>
         <p style="color: #4b5563;">Get ready to wear the power of anime with our exclusive hoodies and apparel.</p>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${baseUrl}/login" style="background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">Start Shopping</a>
+          <a href="${baseUrl}/shop" style="background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">Start Shopping</a>
         </div>
         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
         <p style="color: #9ca3af; font-size: 12px; text-align: center;">Hoodie Legends - Wear the Power of Anime</p>

@@ -1,4 +1,4 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -39,7 +39,18 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user || !user.password) {
+          // Check if user exists but was created via OAuth (no password)
+          const existingUser = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          });
+          if (existingUser && !existingUser.password) {
+            throw new Error("This account was created via Google. Please sign in with Google instead.");
+          }
           throw new Error("Invalid credentials");
+        }
+
+        if (user.isBlocked) {
+          throw new Error("Your account has been blocked. Please contact support.");
         }
 
         const isPasswordValid = await bcrypt.compare(
@@ -71,27 +82,76 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
-      if (user) {
+      console.log("JWT callback:", {
+        hasUser: !!user,
+        hasAccount: !!account,
+        provider: account?.provider,
+        tokenId: token?.id,
+        tokenRole: token?.role,
+        userEmail: user?.email
+      });
+      
+      // First login - fetch role from database
+      if (user && account?.provider === "google") {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email! },
+          select: { id: true, isBlocked: true, role: true },
+        });
+        
+        console.log("JWT callback - DB user:", dbUser);
+        
+        if (dbUser) {
+          token.id = dbUser.id;
+          token.role = dbUser.role;
+          token.isBlocked = dbUser.isBlocked;
+        } else {
+          token.id = user.id;
+          token.role = "CUSTOMER";
+          token.isBlocked = false;
+        }
+        token.provider = account.provider;
+      } else if (user) {
+        // Credentials provider - user object already has the role
         token.id = user.id;
         token.role = user.role;
-        token.provider = account?.provider;
+        token.provider = "credentials";
+      } else {
+        // Token refresh - fetch fresh user data from database
+        if (token.id) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { isBlocked: true, role: true },
+          });
+          if (dbUser) {
+            token.isBlocked = dbUser.isBlocked;
+            if (dbUser.role) {
+              token.role = dbUser.role;
+            }
+          }
+        }
       }
       
       return token;
     },
     async session({ session, token }) {
+      console.log("Session callback - token:", {
+        id: token?.id,
+        role: token?.role,
+        isBlocked: token?.isBlocked,
+        hasSession: !!session,
+        hasSessionUser: !!session?.user
+      });
+      
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as UserRole | undefined;
+        (session.user as any).isBlocked = token.isBlocked as boolean;
+        console.log("Session callback - set user role:", session.user.role);
       }
       return session;
     },
     async signIn({ user, account, profile }) {
-      console.log("SignIn callback:", { 
-        user: user?.email, 
-        account: account?.provider,
-        profile: profile 
-      });
+      let userRole: string | undefined | null;
       
       if (account?.provider === "google") {
         // Check if user already exists with this email
@@ -127,28 +187,52 @@ export const authOptions: NextAuthOptions = {
               }
             },
           });
-          console.log("New Google user created:", user.email);
-        } else if (existingUser.accounts.length === 0) {
-          // User exists but no Google account linked - link it
-          await prisma.account.create({
-            data: {
-              userId: existingUser.id,
-              type: account.type,
-              provider: account.provider,
-              providerAccountId: account.providerAccountId,
-              access_token: account.access_token,
-              refresh_token: account.refresh_token,
-              expires_at: account.expires_at,
-              token_type: account.token_type,
-              scope: account.scope,
-              id_token: account.id_token,
-            }
-          });
-          console.log("Google account linked to existing user:", user.email);
+          userRole = "CUSTOMER";
         } else {
-          // User already has Google account linked
-          console.log("User already has Google account:", user.email);
+          // Fetch fresh user data from database to get updated role and isBlocked status
+          const freshUser = await prisma.user.findUnique({
+            where: { id: existingUser.id },
+            select: { isBlocked: true, role: true },
+          });
+          
+          if (!freshUser) {
+            return false;
+          }
+          
+          // Check if user is blocked using fresh data
+          if (freshUser.isBlocked) {
+            return false;
+          }
+          
+          userRole = freshUser.role || existingUser.role;
+          
+          if (existingUser.accounts.length === 0) {
+            // User exists but no Google account linked - link it
+            await prisma.account.create({
+              data: {
+                userId: existingUser.id,
+                type: account.type,
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+                access_token: account.access_token,
+                refresh_token: account.refresh_token,
+                expires_at: account.expires_at,
+                token_type: account.token_type,
+                scope: account.scope,
+                id_token: account.id_token,
+              }
+            });
+          }
         }
+      } else {
+        // For credentials provider, user role is set in authorize callback
+        userRole = user.role;
+      }
+      
+      // Only redirect OAuth users to admin dashboard
+      // For Credentials provider, redirect is handled client-side
+      if (userRole === "ADMIN" && account?.provider !== "credentials") {
+        return "/admin/dashboard/overview";
       }
       
       return true;
@@ -158,8 +242,8 @@ export const authOptions: NextAuthOptions = {
     async createUser({ user }) {
       console.log("New user created:", user.email);
     },
-    async signIn({ user, account, isNewUser }) {
-      console.log("User signed in:", { user: user?.email, provider: account?.provider, isNewUser });
+    async signIn({ user, isNewUser }) {
+      console.log("User signed in:", { user: user?.email, isNewUser });
     },
   },
   debug: process.env.NODE_ENV === "development",

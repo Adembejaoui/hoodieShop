@@ -50,6 +50,21 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id || null;
 
+    // Check if user is blocked (if logged in)
+    if (userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { isBlocked: true, email: true },
+      });
+      
+      if (user?.isBlocked) {
+        return NextResponse.json(
+          { error: "Your account has been blocked. You cannot place orders." },
+          { status: 403 }
+        );
+      }
+    }
+
     // Validate required fields
     if (!body.items || body.items.length === 0) {
       return NextResponse.json(

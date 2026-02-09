@@ -40,7 +40,11 @@ interface WishlistItem {
     name: string;
     slug: string;
     basePrice: number;
-    frontImageURL: string | null;
+    variants: Array<{
+      color: string;
+      size: string;
+      frontImageURL: string | null;
+    }>;
     category: {
       name: string;
       slug: string;
@@ -54,7 +58,6 @@ interface User {
   email: string | null;
   image: string | null;
   phone: string | null;
-  balance: number;
   hasPassword: boolean;
   createdAt: string;
   _count: {
@@ -672,12 +675,6 @@ export default function DashboardPage() {
                   <span className="text-muted-foreground">Wishlist Items</span>
                   <span className="font-medium">{user?._count?.wishlist || 0}</span>
                 </div>
-                {user && user.balance > 0 && (
-                  <div className="flex justify-between text-sm pt-2 border-t">
-                    <span className="text-muted-foreground">Store Credit</span>
-                    <span className="font-medium text-green-600">${Number(user.balance).toFixed(2)}</span>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -821,9 +818,9 @@ export default function DashboardPage() {
                     {wishlist.map((item) => (
                       <div key={item.id} className="bg-card rounded-lg border overflow-hidden group">
                         <div className="aspect-square bg-secondary relative">
-                          {item.product.frontImageURL && (
+                          {item.product.variants[0]?.frontImageURL && (
                             <img
-                              src={item.product.frontImageURL}
+                              src={item.product.variants[0].frontImageURL!}
                               alt={item.product.name}
                               className="w-full h-full object-cover"
                             />

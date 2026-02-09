@@ -16,7 +16,7 @@ const prisma =
     adapter,
   });
 
-// Hoodie image URLs provided by user
+// Hoodie image URLs provided by user - base print URLs
 const BACK_PRINT_URLS = [
   "https://pmsy56qp4f.ufs.sh/f/kX9qmKHfPtiXlE9xUfhZvWGhS9aQkE6PqrjZLeisIRyz3Twp",
   "https://pmsy56qp4f.ufs.sh/f/kX9qmKHfPtiXtXAm5YgycTtoMk6NZBOJ0m1iQUlXvdIEV7Rn",
@@ -28,6 +28,23 @@ const FRONT_PRINT_URLS = [
   "https://pmsy56qp4f.ufs.sh/f/kX9qmKHfPtiXEes6HwkGHFcC7sTIztnmLAkPMOE953beurVo",
   "https://pmsy56qp4f.ufs.sh/f/kX9qmKHfPtiXb4YzzBSqKC9uwdsS37l5t8kWmIUGa0TVL4yv",
 ];
+
+// Hoodie base color images - different colors of hoodies
+// Using the same print URLs from FRONT_PRINT_URLS and BACK_PRINT_URLS
+const HOODIE_BASE_URLS: Record<string, { front: string; back: string }> = {
+  Black: {
+    front: FRONT_PRINT_URLS[0],
+    back: BACK_PRINT_URLS[0],
+  },
+  White: {
+    front: FRONT_PRINT_URLS[1],
+    back: BACK_PRINT_URLS[1],
+  },
+  Gray: {
+    front: FRONT_PRINT_URLS[2],
+    back: BACK_PRINT_URLS[2],
+  },
+};
 
 // Seed data structure
 const categories = [
@@ -69,6 +86,7 @@ const categories = [
 ];
 
 // Products for each category with user-provided hoodie URLs
+// Note: Print images are now assigned per variant (per color)
 const productsData: Record<
   string,
   Array<{
@@ -77,8 +95,6 @@ const productsData: Record<
     description: string;
     basePrice: number;
     printPosition: PrintPosition;
-    frontImageURL: string;
-    backImageURL: string | null;
   }>
 > = {
   "one-piece": [
@@ -88,8 +104,6 @@ const productsData: Record<
       description: "Premium hoodie featuring Luffy's Gear 5 transformation",
       basePrice: 79.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[0],
-      backImageURL: BACK_PRINT_URLS[0],
     },
     {
       name: "Zoro Bandana Hoodie",
@@ -97,8 +111,6 @@ const productsData: Record<
       description: "Hoodie with Zoro's iconic green bandana design",
       basePrice: 69.99,
       printPosition: "FRONT",
-      frontImageURL: FRONT_PRINT_URLS[1],
-      backImageURL: null,
     },
     {
       name: "Sanji Cooking Hoodie",
@@ -106,8 +118,6 @@ const productsData: Record<
       description: "Hoodie featuring Sanji's cooking theme",
       basePrice: 69.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[2],
-      backImageURL: BACK_PRINT_URLS[1],
     },
     {
       name: "Pirate Skull Hoodie",
@@ -115,8 +125,6 @@ const productsData: Record<
       description: "Classic pirate skull and crossbones design",
       basePrice: 59.99,
       printPosition: "BACK",
-      frontImageURL: FRONT_PRINT_URLS[0],
-      backImageURL: BACK_PRINT_URLS[2],
     },
   ],
   "naruto": [
@@ -126,8 +134,6 @@ const productsData: Record<
       description: "Hoodie featuring Naruto's iconic Rasengan",
       basePrice: 79.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[1],
-      backImageURL: BACK_PRINT_URLS[0],
     },
     {
       name: "Sasuke Sharingan Hoodie",
@@ -135,8 +141,6 @@ const productsData: Record<
       description: "Hoodie with Sasuke's Sharingan design",
       basePrice: 69.99,
       printPosition: "FRONT",
-      frontImageURL: FRONT_PRINT_URLS[2],
-      backImageURL: null,
     },
     {
       name: "Akatsuki Cloud Hoodie",
@@ -144,8 +148,6 @@ const productsData: Record<
       description: "Akatsuki cloud design hoodie",
       basePrice: 89.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[0],
-      backImageURL: BACK_PRINT_URLS[1],
     },
     {
       name: "Itachi Uchiha Hoodie",
@@ -153,8 +155,6 @@ const productsData: Record<
       description: "Hoodie with Itachi's Uchiha crest",
       basePrice: 79.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[1],
-      backImageURL: BACK_PRINT_URLS[2],
     },
   ],
   "demon-slayer": [
@@ -164,8 +164,6 @@ const productsData: Record<
       description: "Hoodie featuring Tanjiro's Hinokami Kagura",
       basePrice: 79.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[2],
-      backImageURL: BACK_PRINT_URLS[0],
     },
     {
       name: "Zenitsu Thunder Hoodie",
@@ -173,8 +171,6 @@ const productsData: Record<
       description: "Hoodie with Zenitsu's lightning bolt",
       basePrice: 69.99,
       printPosition: "FRONT",
-      frontImageURL: FRONT_PRINT_URLS[0],
-      backImageURL: null,
     },
     {
       name: "Nezuko Demon Hoodie",
@@ -182,8 +178,6 @@ const productsData: Record<
       description: "Hoodie with Nezuko's bamboo muzzle design",
       basePrice: 74.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[1],
-      backImageURL: BACK_PRINT_URLS[1],
     },
     {
       name: "Water Breathing Hoodie",
@@ -191,8 +185,6 @@ const productsData: Record<
       description: "Water breathing pattern hoodie",
       basePrice: 64.99,
       printPosition: "BACK",
-      frontImageURL: FRONT_PRINT_URLS[2],
-      backImageURL: BACK_PRINT_URLS[2],
     },
   ],
   "attack-on-titan": [
@@ -202,8 +194,6 @@ const productsData: Record<
       description: "Hoodie featuring the Survey Corps wings",
       basePrice: 79.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[0],
-      backImageURL: BACK_PRINT_URLS[0],
     },
     {
       name: "Eren Founding Hoodie",
@@ -211,8 +201,6 @@ const productsData: Record<
       description: "Hoodie with Eren's founding titan form",
       basePrice: 89.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[1],
-      backImageURL: BACK_PRINT_URLS[1],
     },
     {
       name: "Levi Ackerman Hoodie",
@@ -220,8 +208,6 @@ const productsData: Record<
       description: "Hoodie featuring Levi's survey corps uniform",
       basePrice: 79.99,
       printPosition: "FRONT",
-      frontImageURL: FRONT_PRINT_URLS[2],
-      backImageURL: null,
     },
     {
       name: "Titan Shifters Hoodie",
@@ -229,8 +215,6 @@ const productsData: Record<
       description: "Hoodie with titan shifter emblem",
       basePrice: 74.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[0],
-      backImageURL: BACK_PRINT_URLS[2],
     },
   ],
   "my-hero-academia": [
@@ -240,8 +224,6 @@ const productsData: Record<
       description: "Hoodie featuring All Might's hero symbol",
       basePrice: 79.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[1],
-      backImageURL: BACK_PRINT_URLS[0],
     },
     {
       name: "Midoriya Deku Hoodie",
@@ -249,8 +231,6 @@ const productsData: Record<
       description: "Hoodie with Midoriya's Plus Ultra design",
       basePrice: 69.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[2],
-      backImageURL: BACK_PRINT_URLS[1],
     },
     {
       name: "Bakugo Explosion Hoodie",
@@ -258,8 +238,6 @@ const productsData: Record<
       description: "Hoodie featuring Bakugo's explosion quirk",
       basePrice: 69.99,
       printPosition: "FRONT",
-      frontImageURL: FRONT_PRINT_URLS[0],
-      backImageURL: null,
     },
     {
       name: "Todoroki Half-Cold Hoodie",
@@ -267,28 +245,26 @@ const productsData: Record<
       description: "Hoodie with Todoroki's dual quirk design",
       basePrice: 74.99,
       printPosition: "BOTH",
-      frontImageURL: FRONT_PRINT_URLS[1],
-      backImageURL: BACK_PRINT_URLS[2],
     },
   ],
 };
 
-// Size and color variants for hoodies
+// Size and color variants for hoodies with print images per color
 const sizeVariantData = [
-  { color: "Black", size: "S", priceModifier: 0, stockQty: 10 },
-  { color: "Black", size: "M", priceModifier: 0, stockQty: 15 },
-  { color: "Black", size: "L", priceModifier: 0, stockQty: 12 },
-  { color: "Black", size: "XL", priceModifier: 5, stockQty: 8 },
-  { color: "Black", size: "XXL", priceModifier: 5, stockQty: 5 },
-  { color: "White", size: "S", priceModifier: 0, stockQty: 8 },
-  { color: "White", size: "M", priceModifier: 0, stockQty: 12 },
-  { color: "White", size: "L", priceModifier: 0, stockQty: 10 },
-  { color: "White", size: "XL", priceModifier: 5, stockQty: 6 },
-  { color: "White", size: "XXL", priceModifier: 5, stockQty: 4 },
-  { color: "Gray", size: "S", priceModifier: 0, stockQty: 6 },
-  { color: "Gray", size: "M", priceModifier: 0, stockQty: 10 },
-  { color: "Gray", size: "L", priceModifier: 0, stockQty: 8 },
-  { color: "Gray", size: "XL", priceModifier: 5, stockQty: 5 },
+  { color: "Black", size: "S", priceModifier: 0, stockQty: 10, frontImageURL: HOODIE_BASE_URLS["Black"].front, backImageURL: HOODIE_BASE_URLS["Black"].back },
+  { color: "Black", size: "M", priceModifier: 0, stockQty: 15, frontImageURL: HOODIE_BASE_URLS["Black"].front, backImageURL: HOODIE_BASE_URLS["Black"].back },
+  { color: "Black", size: "L", priceModifier: 0, stockQty: 12, frontImageURL: HOODIE_BASE_URLS["Black"].front, backImageURL: HOODIE_BASE_URLS["Black"].back },
+  { color: "Black", size: "XL", priceModifier: 5, stockQty: 8, frontImageURL: HOODIE_BASE_URLS["Black"].front, backImageURL: HOODIE_BASE_URLS["Black"].back },
+  { color: "Black", size: "XXL", priceModifier: 5, stockQty: 5, frontImageURL: HOODIE_BASE_URLS["Black"].front, backImageURL: HOODIE_BASE_URLS["Black"].back },
+  { color: "White", size: "S", priceModifier: 0, stockQty: 8, frontImageURL: HOODIE_BASE_URLS["White"].front, backImageURL: HOODIE_BASE_URLS["White"].back },
+  { color: "White", size: "M", priceModifier: 0, stockQty: 12, frontImageURL: HOODIE_BASE_URLS["White"].front, backImageURL: HOODIE_BASE_URLS["White"].back },
+  { color: "White", size: "L", priceModifier: 0, stockQty: 10, frontImageURL: HOODIE_BASE_URLS["White"].front, backImageURL: HOODIE_BASE_URLS["White"].back },
+  { color: "White", size: "XL", priceModifier: 5, stockQty: 6, frontImageURL: HOODIE_BASE_URLS["White"].front, backImageURL: HOODIE_BASE_URLS["White"].back },
+  { color: "White", size: "XXL", priceModifier: 5, stockQty: 4, frontImageURL: HOODIE_BASE_URLS["White"].front, backImageURL: HOODIE_BASE_URLS["White"].back },
+  { color: "Gray", size: "S", priceModifier: 0, stockQty: 6, frontImageURL: HOODIE_BASE_URLS["Gray"].front, backImageURL: HOODIE_BASE_URLS["Gray"].back },
+  { color: "Gray", size: "M", priceModifier: 0, stockQty: 10, frontImageURL: HOODIE_BASE_URLS["Gray"].front, backImageURL: HOODIE_BASE_URLS["Gray"].back },
+  { color: "Gray", size: "L", priceModifier: 0, stockQty: 8, frontImageURL: HOODIE_BASE_URLS["Gray"].front, backImageURL: HOODIE_BASE_URLS["Gray"].back },
+  { color: "Gray", size: "XL", priceModifier: 5, stockQty: 5, frontImageURL: HOODIE_BASE_URLS["Gray"].front, backImageURL: HOODIE_BASE_URLS["Gray"].back },
 ];
 
 // Sample coupons for testing
@@ -347,6 +323,11 @@ async function main() {
         `🎨 Creating products for ${category.name}...`
       );
 
+      // Assign print images based on category index
+      const categoryIndex = createdCategories.findIndex(c => c.id === category.id);
+      const frontPrint = FRONT_PRINT_URLS[categoryIndex % FRONT_PRINT_URLS.length];
+      const backPrint = BACK_PRINT_URLS[categoryIndex % BACK_PRINT_URLS.length];
+
       for (const productData of categoryProducts) {
         const product = await prisma.product.create({
           data: {
@@ -355,19 +336,20 @@ async function main() {
             description: productData.description,
             basePrice: productData.basePrice,
             printPosition: productData.printPosition,
-            frontImageURL: productData.frontImageURL,
-            backImageURL: productData.backImageURL,
             categoryId: category.id,
           },
         });
 
-        // Create variants for this product
+        // Create variants with print images per color
         const variants = sizeVariantData.map((variant) => ({
           productId: product.id,
           color: variant.color,
           size: variant.size,
           price: productData.basePrice + variant.priceModifier,
           stockQty: variant.stockQty,
+          // Use base hoodie color images with print overlays
+          frontImageURL: variant.frontImageURL,
+          backImageURL: variant.backImageURL,
         }));
 
         await prisma.variant.createMany({
@@ -381,8 +363,10 @@ async function main() {
     // Create coupons
     console.log("🏷️ Creating coupons...");
     for (const coupon of coupons) {
-      await prisma.coupon.create({
-        data: {
+      await prisma.coupon.upsert({
+        where: { code: coupon.code },
+        update: {},
+        create: {
           code: coupon.code,
           description: coupon.description,
           type: coupon.type,
@@ -392,7 +376,7 @@ async function main() {
           expiresAt: coupon.expiresAt,
         },
       });
-      console.log(`  ✅ Created coupon: ${coupon.code}`);
+      console.log(`  ✅ Created/updated coupon: ${coupon.code}`);
     }
 
     console.log("🎉 Seed completed successfully!");

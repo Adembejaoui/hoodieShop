@@ -19,6 +19,8 @@ interface Variant {
   size: string;
   price: number;
   stockQty: number;
+  frontImageURL: string | null;
+  backImageURL: string | null;
 }
 
 interface Product {
@@ -28,8 +30,6 @@ interface Product {
   description: string | null;
   basePrice: number;
   printPosition: "BACK" | "FRONT" | "BOTH";
-  frontImageURL: string | null;
-  backImageURL: string | null;
   categoryId: string;
   category: Category;
   variants: Variant[];
@@ -112,8 +112,8 @@ export default function ShopPage() {
   // Fetch all available filter options (called once)
   const fetchFilterOptions = useCallback(async () => {
     try {
-      // Fetch without filters to get all available options
-      const res = await fetch("/api/products?limit=1");
+      // Fetch all products to get all available options (use a high limit to get all colors/sizes)
+      const res = await fetch("/api/products?limit=100");
       const data = await res.json();
       if (data.colors && data.colors.length > 0) {
         setAvailableColors(data.colors);
@@ -563,7 +563,11 @@ function ProductCard({ product }: { product: Product }) {
   const { addItem } = useContext(CartContext)!;
   const { data: session } = useSession();
 
-  const currentImage = product.frontImageURL || product.backImageURL;
+  // Get first variant's images
+  const firstVariant = product.variants[0];
+  const variantFrontImage = firstVariant?.frontImageURL || null;
+  const variantBackImage = firstVariant?.backImageURL || null;
+  const currentImage = variantFrontImage || variantBackImage;
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -581,7 +585,7 @@ function ProductCard({ product }: { product: Product }) {
         size: firstVariant.size,
         price: Number(firstVariant.price),
         quantity: 1,
-        image: product.frontImageURL,
+        image: firstVariant.frontImageURL || variantFrontImage,
         printPosition: product.printPosition,
       });
     }
@@ -625,7 +629,7 @@ function ProductCard({ product }: { product: Product }) {
               src={currentImage}
               alt={product.name}
               className={`w-full h-full object-cover transition-opacity duration-300 ${
-                product.printPosition === "BOTH" && product.backImageURL
+                product.printPosition === "BOTH" && variantBackImage
                   ? isHovered ? "opacity-0" : "opacity-100"
                   : "opacity-100"
               }`}
@@ -637,9 +641,9 @@ function ProductCard({ product }: { product: Product }) {
           )}
           
           {/* Back Image (shown on hover for BOTH print) */}
-          {product.printPosition === "BOTH" && product.backImageURL && (
+          {product.printPosition === "BOTH" && variantBackImage && (
             <img
-              src={product.backImageURL}
+              src={variantBackImage}
               alt={`${product.name} - Back`}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
                 isHovered ? "opacity-100" : "opacity-0"
@@ -679,7 +683,7 @@ function ProductCard({ product }: { product: Product }) {
           </button>
 
           {/* Hover indicator */}
-          {product.printPosition === "BOTH" && product.backImageURL && (
+          {product.printPosition === "BOTH" && variantBackImage && (
             <div className={`absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs transition-opacity duration-300 ${
               isHovered ? "opacity-100" : "opacity-0"
             }`}>

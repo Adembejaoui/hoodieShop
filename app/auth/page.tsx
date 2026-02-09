@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/login-form";
 import { RegisterForm } from "@/components/register-form";
 
@@ -53,12 +55,69 @@ function AuthContent() {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const searchParams = useSearchParams();
   const showSuccess = searchParams.get("registered") === "true";
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
+  // Redirect to home if already logged in
   useEffect(() => {
+    console.log("Auth useEffect - status:", status, "session:", session ? { hasUser: !!session.user, role: (session.user as any)?.role } : null);
+    
+    // Show success message when user just registered
     if (showSuccess) {
       setActiveTab("login");
     }
-  }, [showSuccess]);
+    
+    // Wait for session to be ready before checking
+    if (status === "loading") {
+      return; // Wait for session to load
+    }
+    
+    // Redirect to appropriate page if already logged in
+    if (status === "authenticated" && session?.user) {
+      // Check if user is admin
+      const userRole = (session.user as any).role;
+      console.log("Auth useEffect - authenticated, userRole:", userRole);
+      const callbackUrl = searchParams.get("callbackUrl");
+      
+      // If there's a callbackUrl, use it (properly decoded)
+      if (callbackUrl) {
+        const decodedCallbackUrl = decodeURIComponent(callbackUrl);
+        // If callbackUrl is admin and user is not admin, redirect to shop
+        if (decodedCallbackUrl.includes("/admin") && userRole !== "ADMIN") {
+          console.log("Auth useEffect - redirecting to /shop (not admin)");
+          router.push("/shop");
+        } else {
+          console.log("Auth useEffect - redirecting to callbackUrl:", decodedCallbackUrl);
+          router.push(decodedCallbackUrl);
+        }
+      } else if (userRole === "ADMIN") {
+        console.log("Auth useEffect - redirecting to /admin/dashboard/overview");
+        router.push("/admin/dashboard/overview");
+      } else {
+        console.log("Auth useEffect - redirecting to /shop");
+        router.push("/shop");
+      }
+    } else if (status === "unauthenticated") {
+      console.log("Auth useEffect - user is unauthenticated, staying on login page");
+    }
+  }, [status, session, showSuccess, router, searchParams]);
+
+  // Show loading while checking session
+  if (status === "loading") {
+    return (
+      <>
+        <AnimeBackground />
+        <div className="relative min-h-screen flex items-center justify-center p-4">
+          <div className="w-full max-w-md backdrop-blur-xl bg-black/40 rounded-3xl border border-white/10 shadow-2xl p-8 text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-white/10 rounded w-1/2 mx-auto mb-4" />
+              <div className="h-4 bg-white/10 rounded w-3/4 mx-auto" />
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   const tabs = [
     { key: "login" as const, label: "Sign In" },

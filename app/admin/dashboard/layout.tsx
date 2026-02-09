@@ -12,12 +12,14 @@ import {
   Users,
   DollarSign,
   MessageSquare,
+  Folder,
 } from "lucide-react";
 
 const navItems = [
   { href: "/admin/dashboard/overview", label: "Overview", icon: TrendingUp },
-  { href: "/admin/dashboard/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/dashboard/products", label: "Products", icon: Package },
+  { href: "/admin/dashboard/categories", label: "Categories", icon: Folder },
+  { href: "/admin/dashboard/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/dashboard/customers", label: "Customers", icon: Users },
   { href: "/admin/dashboard/coupons", label: "Coupons", icon: DollarSign },
   { href: "/admin/dashboard/messages", label: "Messages", icon: MessageSquare },
