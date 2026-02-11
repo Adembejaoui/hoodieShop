@@ -1,10 +1,14 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
+import { securityHeaders } from "./middleware/security-headers";
 
 export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
     const pathname = req.nextUrl.pathname;
+
+    // Apply security headers to all responses
+    const response = securityHeaders(req);
 
     // Check if user is blocked
     if (token?.isBlocked && pathname !== "/blocked" && !pathname.startsWith("/api/")) {
@@ -21,7 +25,7 @@ export default withAuth(
       return NextResponse.redirect(new URL("/auth", req.url));
     }
 
-    return NextResponse.next();
+    return response;
   },
   {
     callbacks: {

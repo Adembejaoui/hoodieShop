@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 import nodemailer from "nodemailer";
+import { applyRateLimit } from "@/lib/security/rate-limit";
 
 // Zod validation schema
 const registerSchema = z.object({
@@ -63,6 +64,23 @@ async function sendWelcomeEmail(email: string, userName: string) {
 }
 
 export async function POST(request: Request) {
+  // Apply rate limiting for registration (prevent brute force)
+  const rateLimitResult = await applyRateLimit(request, 'auth');
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { error: "Too many registration attempts. Please try again in a minute." },
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+          'Retry-After': '60',
+        },
+      }
+    );
+  }
+  
   try {
     const body = await request.json();
 

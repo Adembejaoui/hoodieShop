@@ -1,10 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
+// Verify admin session (middleware already validated)
+async function verifyAdmin(): Promise<NextResponse | null> {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return NextResponse.json(
+      { error: "Forbidden", message: "Admin access required" },
+      { status: 403 }
+    );
+  }
+  return null;
+}
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await verifyAdmin();
+  if (authError) return authError;
+  
   try {
     const { id } = await params;
     const { status } = await request.json();
@@ -32,6 +49,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await verifyAdmin();
+  if (authError) return authError;
+  
   try {
     const { id } = await params;
     const order = await prisma.order.findUnique({

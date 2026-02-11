@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useReducer, useEffect, ReactNode, useState } from "react";
+import { encryptData, decryptData } from "@/lib/crypto-utils";
 
 // Types
 export interface CartItem {
@@ -42,6 +43,7 @@ interface CartContextType {
   clearCart: () => void;
   toggleCart: () => void;
   closeCart: () => void;
+  isLoading: boolean;
 }
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -119,24 +121,74 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 // Provider component
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, { items: [], isOpen: false });
+  const [isLoading, setIsLoading] = useState(true);
+  const [pendingSave, setPendingSave] = useState<CartItem[] | null>(null);
 
-  // Load cart from localStorage on mount
+  // Load cart from encrypted localStorage on mount and validate prices
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      try {
-        const items = JSON.parse(savedCart);
-        dispatch({ type: "LOAD_CART", payload: items });
-      } catch (error) {
-        console.error("Failed to load cart from localStorage:", error);
+    const loadCart = async () => {
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        try {
+          // Try to decrypt the cart data
+          const items = await decryptData<CartItem[]>(savedCart);
+          
+          if (items && Array.isArray(items) && items.length > 0) {
+            // Fetch fresh prices from server to validate
+            fetch("/api/products/prices", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ 
+                productIds: items.map((item: CartItem) => item.productId) 
+              }),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.prices) {
+                  // Validate and update prices from server
+                  const validatedItems = items.map((item: CartItem) => {
+                    const serverPrice = data.prices[item.productId];
+                    if (serverPrice && serverPrice.price !== item.price) {
+                      // Price was manipulated, use server price
+                      console.warn(`Price mismatch for ${item.name}: stored ${item.price}, server ${serverPrice.price}. Using server price.`);
+                      return { ...item, price: serverPrice.price, name: serverPrice.name };
+                    }
+                    return item;
+                  });
+                  dispatch({ type: "LOAD_CART", payload: validatedItems });
+                } else {
+                  // No price data returned, use items as-is (fallback)
+                  dispatch({ type: "LOAD_CART", payload: items });
+                }
+              })
+              .catch((error) => {
+                console.error("Failed to validate cart prices:", error);
+                // On error, still load the cart but log it
+                dispatch({ type: "LOAD_CART", payload: items });
+              });
+            return; // Will dispatch after validation
+          }
+        } catch (error) {
+          console.error("Failed to load cart from localStorage:", error);
+        }
       }
-    }
+      setIsLoading(false);
+    };
+
+    loadCart();
   }, []);
 
-  // Save cart to localStorage on change
+  // Save cart to encrypted localStorage on change
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(state.items));
-  }, [state.items]);
+    const saveCart = async () => {
+      if (!isLoading && state.items.length >= 0) {
+        const encryptedCart = await encryptData(state.items);
+        localStorage.setItem("cart", encryptedCart);
+      }
+    };
+
+    saveCart();
+  }, [state.items, isLoading]);
 
   // Computed values
   const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
@@ -183,6 +235,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         toggleCart,
         closeCart,
+        isLoading,
       }}
     >
       {children}

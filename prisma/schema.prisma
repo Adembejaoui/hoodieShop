@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
 }
 
 // Add seed configuration
@@ -376,4 +376,39 @@ enum ContactStatus {
   READ
   REPLIED
   CLOSED
+}
+
+// Security Audit Log - Tracks suspicious order manipulation attempts
+model SecurityLog {
+  id          String   @id @default(cuid())
+  
+  // Event details
+  type        String   // e.g., "ORDER_MANIPULATION", "PRICE_TAMPERING"
+  severity    String   @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  
+  // User information
+  userId      String?
+  email       String?
+  ipAddress   String?
+  userAgent   String?
+  
+  // Event details
+  manipulationAttempts Int @default(0)
+  errors      String[] // Array of validation error messages
+  details     String?  @db.Text // JSON string with full details
+  
+  // Status
+  resolved    Boolean  @default(false)
+  resolvedBy  String?
+  resolvedAt  DateTime?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  
+  @@index([type])
+  @@index([severity])
+  @@index([userId])
+  @@index([ipAddress])
+  @@index([createdAt])
+  @@map("security_logs")
 }

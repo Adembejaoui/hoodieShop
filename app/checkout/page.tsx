@@ -244,7 +244,8 @@ function CheckoutContent() {
         clearCart();
         setIsSuccess(true);
       } else {
-        throw new Error("Failed to place order");
+        const data = await response.json();
+        alert(data.error || "Failed to place order. Please try again.");
       }
     } catch (error) {
       console.error("Error placing order:", error);

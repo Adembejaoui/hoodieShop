@@ -1,8 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { applyRateLimit } from "@/lib/security/rate-limit";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 // POST /api/contact - Submit a contact message
 export async function POST(request: NextRequest) {
+  // Apply rate limiting for contact form
+  const rateLimitResult = await applyRateLimit(request, 'contact');
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again in a minute." },
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+          'Retry-After': '60',
+        },
+      }
+    );
+  }
+  
   try {
     const contentType = request.headers.get("content-type");
     let name, email, subject, message;
@@ -64,8 +84,17 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET /api/contact - List contact messages (admin only in a real app)
+// GET /api/contact - List contact messages (admin only)
 export async function GET(request: NextRequest) {
+  // Verify admin from session (middleware already validated)
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return NextResponse.json(
+      { error: "Forbidden", message: "Admin access required" },
+      { status: 403 }
+    );
+  }
+  
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
