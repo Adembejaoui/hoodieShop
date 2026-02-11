@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 
 // No validation schema needed - we get user from session
 
@@ -21,8 +22,7 @@ export async function POST(request: NextRequest) {
     const userId = session.user.id;
 
     // Find user by ID (from session)
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+    const userIncludeOptions = {
       include: {
         accounts: {
           select: {
@@ -42,6 +42,11 @@ export async function POST(request: NextRequest) {
           },
         },
       },
+    } as const;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      ...userIncludeOptions,
     });
 
     if (!user) {
@@ -52,8 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's orders
-    const orders = await prisma.order.findMany({
-      where: { userId: user.id },
+    const orderIncludeOptions = {
       include: {
         items: true,
         coupon: {
@@ -64,6 +68,11 @@ export async function POST(request: NextRequest) {
           },
         },
       },
+    } as const;
+
+    const orders = await prisma.order.findMany({
+      where: { userId: user.id },
+      ...orderIncludeOptions,
       orderBy: { placedAt: 'desc' },
     });
 
@@ -84,11 +93,11 @@ export async function POST(request: NextRequest) {
           createdAt: user.createdAt.toISOString(),
           updatedAt: user.updatedAt.toISOString(),
         },
-        linkedAccounts: user.accounts.map((account) => ({
+        linkedAccounts: user.accounts.map((account: Prisma.AccountGetPayload<typeof userIncludeOptions.include.accounts>) => ({
           provider: account.provider,
           providerAccountId: account.providerAccountId,
         })),
-        addresses: user.addresses.map((addr) => ({
+        addresses: user.addresses.map((addr: Prisma.AddressGetPayload<typeof userIncludeOptions.include.addresses>) => ({
           name: addr.name,
           recipientName: addr.recipientName,
           streetAddress: addr.address,
@@ -98,15 +107,15 @@ export async function POST(request: NextRequest) {
           phone: addr.phone,
           isDefault: addr.isDefault,
         })),
-        wishlist: user.wishlist.map((item) => ({
+        wishlist: user.wishlist.map((item: Prisma.WishlistItemGetPayload<typeof userIncludeOptions.include.wishlist>) => ({
           productName: item.product.name,
           productSlug: item.product.slug,
           addedAt: item.createdAt.toISOString(),
         })),
-        orders: orders.map((order) => ({
+        orders: orders.map((order: Prisma.OrderGetPayload<typeof orderIncludeOptions>) => ({
           orderNumber: order.orderNumber,
           status: order.status,
-          items: order.items.map((item) => ({
+          items: order.items.map((item: Prisma.OrderItemGetPayload<typeof orderIncludeOptions.include.items>) => ({
             name: item.name,
             color: item.color,
             size: item.size,

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 interface RouteParams {
   params: Promise<{
@@ -25,18 +26,22 @@ export async function GET(request: Request, { params }: RouteParams) {
       );
     }
 
+    const includeOptions = {
+      include: {
+        category: true,
+        colors: true,
+        sizeStocks: true,
+        variants: true,
+      },
+    } as const;
+
     // Then find the product by category and slug
     const product = await prisma.product.findFirst({
       where: {
         slug: productSlug,
         categoryId: category.id,
       },
-      include: {
-        category: true,
-        colors: true,
-        sizeStocks: true,
-        variants: true, // Kept for backward compatibility
-      },
+      ...includeOptions,
     });
 
     if (!product) {
@@ -53,13 +58,13 @@ export async function GET(request: Request, { params }: RouteParams) {
     const transformedProduct = {
       ...product,
       basePrice: Number(product.basePrice),
-      colors: product.colors.map((color) => ({
+      colors: product.colors.map((color: Prisma.ProductColorGetPayload<typeof includeOptions.include.colors>) => ({
         ...color,
       })),
-      sizeStocks: product.sizeStocks.map((size) => ({
+      sizeStocks: product.sizeStocks.map((size: Prisma.ProductSizeStockGetPayload<typeof includeOptions.include.sizeStocks>) => ({
         ...size,
       })),
-      variants: product.variants.map((variant) => ({
+      variants: product.variants.map((variant: Prisma.VariantGetPayload<typeof includeOptions.include.variants>) => ({
         ...variant,
         price: Number(variant.price),
       })),

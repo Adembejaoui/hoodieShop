@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Prisma } from "@prisma/client";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
@@ -19,7 +20,7 @@ export async function GET() {
   
   try {
     // Fetch products with related data
-    const products = await prisma.product.findMany({
+    const includeOptions = {
       include: {
         category: true,
         colors: true,
@@ -34,6 +35,10 @@ export async function GET() {
           },
         },
       },
+    } as const;
+
+    const products = await prisma.product.findMany({
+      ...includeOptions,
       orderBy: {
         createdAt: "desc",
       },
@@ -41,7 +46,7 @@ export async function GET() {
     });
 
     // Transform products
-    const productsWithFormat = products.map((product) => ({
+    const productsWithFormat = products.map((product: Prisma.ProductGetPayload<typeof includeOptions>) => ({
       ...product,
       basePrice: Number(product.basePrice),
       _useNewFormat: product.colors.length > 0 && product.sizeStocks.length > 0,

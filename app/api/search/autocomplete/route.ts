@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,6 +12,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ results: { products: [], categories: [] } });
     }
 
+    const productIncludeOptions = {
+      include: {
+        category: true,
+        colors: { take: 1 },
+      },
+    } as const;
+
     // Search products
     const products = await prisma.product.findMany({
       where: {
@@ -19,10 +27,7 @@ export async function GET(request: NextRequest) {
           { description: { contains: query, mode: "insensitive" } },
         ],
       },
-      include: {
-        category: true,
-        colors: { take: 1 },
-      },
+      ...productIncludeOptions,
       take: limit,
     });
 
@@ -38,7 +43,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       results: {
-        products: products.map(p => ({
+        products: products.map((p: Prisma.ProductGetPayload<typeof productIncludeOptions>) => ({
           id: p.id,
           name: p.name,
           slug: p.slug,
@@ -47,7 +52,7 @@ export async function GET(request: NextRequest) {
           price: Number(p.basePrice),
           image: p.colors[0]?.frontImageURL,
         })),
-        categories: categories.map(c => ({
+        categories: categories.map((c: Prisma.CategoryGetPayload<{}>) => ({
           id: c.id,
           name: c.name,
           slug: c.slug,

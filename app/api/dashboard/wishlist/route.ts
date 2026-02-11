@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Prisma } from "@prisma/client";
 
 // GET /api/dashboard/wishlist - List user wishlist
 export async function GET() {
@@ -15,8 +16,7 @@ export async function GET() {
       );
     }
 
-    const wishlist = await prisma.wishlistItem.findMany({
-      where: { userId: session.user.id },
+    const includeOptions = {
       include: {
         product: {
           include: {
@@ -25,11 +25,16 @@ export async function GET() {
           },
         },
       },
+    } as const;
+
+    const wishlist = await prisma.wishlistItem.findMany({
+      where: { userId: session.user.id },
+      ...includeOptions,
       orderBy: { createdAt: "desc" },
     });
 
     // Transform data
-    const wishlistWithDetails = wishlist.map((item) => ({
+    const wishlistWithDetails = wishlist.map((item: Prisma.WishlistItemGetPayload<typeof includeOptions>) => ({
       id: item.id,
       product: {
         ...item.product,

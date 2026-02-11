@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 // GET /api/products - List all products with optional filters
 export async function GET(request: NextRequest) {
@@ -90,16 +91,20 @@ export async function GET(request: NextRequest) {
       ];
     }
 
+    const includeOptions = {
+      include: {
+        category: true,
+        colors: true,
+        sizeStocks: true,
+        variants: true,
+      },
+    } as const;
+
     // Get paginated products with filters and count
     const [products, totalCount] = await Promise.all([
       prisma.product.findMany({
         where,
-        include: {
-          category: true,
-          colors: true,
-          sizeStocks: true,
-          variants: true,
-        },
+        ...includeOptions,
         orderBy: {
           [sortBy]: sortOrder,
         },
@@ -113,7 +118,7 @@ export async function GET(request: NextRequest) {
     const allColors = new Set<string>();
     const allSizes = new Set<string>();
 
-    products.forEach((product) => {
+    products.forEach((product: Prisma.ProductGetPayload<typeof includeOptions>) => {
       // Get colors from new format
       product.colors.forEach((c) => {
         allColors.add(c.color);
@@ -132,7 +137,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Transform products
-    const productsWithStock = products.map((product) => {
+    const productsWithStock = products.map((product: Prisma.ProductGetPayload<typeof includeOptions>) => {
       // Check if using new format
       const useNewFormat = product.colors.length > 0 && product.sizeStocks.length > 0;
 

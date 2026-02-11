@@ -3,6 +3,17 @@ import prisma from '@/lib/prisma';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hoodielegends.com';
 
+interface CategoryResult {
+  slug: string;
+  updatedAt: Date;
+}
+
+interface ProductResult {
+  slug: string;
+  category: { slug: string };
+  updatedAt: Date;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch all categories and products from database
   const categories = await prisma.category.findMany({
@@ -10,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       slug: true,
       updatedAt: true,
     },
-  });
+  }) as CategoryResult[];
 
   const products = await prisma.product.findMany({
     select: {
@@ -20,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       updatedAt: true,
     },
-  });
+  }) as ProductResult[];
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
