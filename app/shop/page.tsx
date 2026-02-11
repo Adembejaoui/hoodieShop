@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useContext, useRef } from "react";
+import { useState, useEffect, useCallback, useContext, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CartContext } from "@/lib/cart-context";
@@ -73,7 +73,7 @@ interface ErrorResponse {
 const DEFAULT_COLORS = ["Black", "White", "Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Gray", "Navy", "Brown"];
 const DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
 
-export default function ShopPage() {
+function ShopContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -858,5 +858,13 @@ function Pagination({
         Next
       </button>
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background py-12 flex items-center justify-center"><p>Loading shop...</p></div>}>
+      <ShopContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CartContext, CartItem } from "@/lib/cart-context";
@@ -35,7 +35,7 @@ interface UserAddress {
   isDefault: boolean;
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const { items, subtotal, clearCart } = useContext(CartContext)!;
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -694,5 +694,13 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background py-12 flex items-center justify-center"><p>Loading checkout...</p></div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }
