@@ -64,6 +64,7 @@ interface ProductFormData {
   categoryId: string;
   colors: ProductColor[];
   sizeStocks: ProductSizeStock[];
+  availableSizes: string[];
 }
 
 const initialColor: ProductColor = {
@@ -85,7 +86,8 @@ const initialFormData: ProductFormData = {
   printPosition: "BOTH",
   categoryId: "",
   colors: [{ ...initialColor }],
-  sizeStocks: [{ ...initialSizeStock }],
+  sizeStocks: [],
+  availableSizes: [],
 };
 
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "3XL"];
@@ -149,7 +151,8 @@ export default function ProductsPage() {
       ...initialFormData,
       categoryId: categories[0]?.id || "",
       colors: [{ ...initialColor }],
-      sizeStocks: SIZES.map((size) => ({ size, stockQty: 0 })),
+      sizeStocks: [],
+      availableSizes: [],
     });
     setError(null);
     setSuccess(null);
@@ -181,6 +184,9 @@ export default function ProductsPage() {
           size: s.size,
           stockQty: s.stockQty,
         })),
+        availableSizes: product.sizeStocks
+          .filter((s) => s.stockQty > 0)
+          .map((s) => s.size),
       });
     } else {
       // Legacy format - convert to new format
@@ -215,6 +221,7 @@ export default function ProductsPage() {
             stockQty: variant?.stockQty || 0,
           };
         }),
+        availableSizes: [...new Set(product.variants.filter((v) => v.stockQty > 0).map((v) => v.size))],
       });
     }
 
@@ -277,32 +284,62 @@ export default function ProductsPage() {
     setFormData({ ...formData, colors: newColors });
   };
 
-  // Size stock management
-  const updateSizeStock = (size: string, stockQty: number) => {
-    const newSizeStocks = formData.sizeStocks.map((s) =>
-      s.size === size ? { ...s, stockQty } : s
-    );
-    setFormData({ ...formData, sizeStocks: newSizeStocks });
+  // Size management
+  const toggleSize = (size: string) => {
+    const newAvailableSizes = formData.availableSizes.includes(size)
+      ? formData.availableSizes.filter((s) => s !== size)
+      : [...formData.availableSizes, size];
+    setFormData({ ...formData, availableSizes: newAvailableSizes });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    
+    // Validate that all colors have both images
+    const missingImages: string[] = [];
+    formData.colors.forEach((color, index) => {
+      const colorName = color.color || `Color ${index + 1}`;
+      if (!color.frontImageURL) {
+        missingImages.push(`${colorName} - Front Image`);
+      }
+      if (!color.backImageURL) {
+        missingImages.push(`${colorName} - Back Image`);
+      }
+    });
+    
+    if (missingImages.length > 0) {
+      setError(`Please upload all required images:\n${missingImages.join('\n')}`);
+      return;
+    }
+    
+    // Validate that at least one size is selected
+    if (formData.availableSizes.length === 0) {
+      setError("Please select at least one available size");
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
+      // Generate sizeStocks from availableSizes
+      const generatedSizeStocks = formData.availableSizes.map((size) => ({
+        size,
+        stockQty: 10, // Default stock for available sizes
+      }));
+
       const payload = {
         product: {
           name: formData.name,
           slug: formData.slug,
           description: formData.description || null,
           basePrice: formData.basePrice,
-          printPosition: formData.printPosition,
           categoryId: formData.categoryId,
+          printPosition: formData.printPosition,
         },
         colors: formData.colors.filter((c) => c.color.trim() !== ""),
-        sizeStocks: formData.sizeStocks.filter((s) => s.size !== ""),
+        sizeStocks: generatedSizeStocks,
         useNewFormat: true,
       };
 
@@ -390,8 +427,8 @@ export default function ProductsPage() {
                   ? product.colors
                   : [...new Set(product.variants.map((v) => v.color))];
                 const sizes = product._useNewFormat
-                  ? product.sizeStocks
-                  : [...new Set(product.variants.map((v) => v.size))];
+                  ? product.sizeStocks.filter((ss) => ss.stockQty > 0)
+                  : product.variants.filter((v) => v.stockQty > 0);
 
                 return (
                   <tr key={product.id} className="border-b hover:bg-muted/25">
@@ -427,14 +464,26 @@ export default function ProductsPage() {
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex flex-wrap gap-1">
-                        {sizes.slice(0, 4).map((s, i) => (
-                          <span
-                            key={i}
-                            className="px-2 py-0.5 bg-secondary rounded text-xs"
-                          >
-                            {typeof s === "string" ? s : s.size}
-                          </span>
-                        ))}
+                        {sizes.slice(0, 4).map((s, i) => {
+                          const sizeName = typeof s === "string" ? s : s.size;
+                          const sizeStock = product._useNewFormat
+                            ? product.sizeStocks.find((ss) => ss.size === sizeName)
+                            : product.variants.find((v) => v.size === sizeName);
+                          const stockQty = sizeStock?.stockQty || 0;
+                          const isAvailable = stockQty > 0;
+                          return (
+                            <span
+                              key={i}
+                              className={`px-2 py-0.5 rounded text-xs ${
+                                isAvailable
+                                  ? "bg-green-500/20 text-green-500"
+                                  : "bg-red-500/20 text-red-500 line-through"
+                              }`}
+                            >
+                              {sizeName}
+                            </span>
+                          );
+                        })}
                         {sizes.length > 4 && (
                           <span className="text-xs text-muted-foreground">
                             +{sizes.length - 4}
@@ -640,6 +689,13 @@ export default function ProductsPage() {
                     <Plus className="w-4 h-4 mr-1" /> Add Color
                   </Button>
                 </div>
+                
+                <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-md">
+                  <p className="text-sm text-blue-400">
+                    <strong>Required:</strong> Each color must have both a front image and a back image.
+                    These images will be displayed on the product page with a flip toggle.
+                  </p>
+                </div>
 
                 <div className="space-y-4">
                   {formData.colors.map((color, index) => (
@@ -665,7 +721,7 @@ export default function ProductsPage() {
 
                       <div className="flex-1 min-w-[120px]">
                         <label className="block text-xs font-medium mb-1">
-                          Front Image
+                          Front Image <span className="text-red-500">*</span>
                         </label>
                         <DelayedImageUpload
                           value={color.frontImageURL || ""}
@@ -673,22 +729,25 @@ export default function ProductsPage() {
                             updateColor(index, "frontImageURL", url)
                           }
                         />
+                        {!color.frontImageURL && (
+                          <p className="text-xs text-red-400 mt-1">Required</p>
+                        )}
                       </div>
 
-                      {/* Show Back Image only if printPosition is not FRONT */}
-                      {formData.printPosition !== "FRONT" && (
-                        <div className="flex-1 min-w-[120px]">
-                          <label className="block text-xs font-medium mb-1">
-                            Back Image
-                          </label>
-                          <DelayedImageUpload
-                            value={color.backImageURL || ""}
-                            onChange={(url) =>
-                              updateColor(index, "backImageURL", url)
-                            }
-                          />
-                        </div>
-                      )}
+                      <div className="flex-1 min-w-[120px]">
+                        <label className="block text-xs font-medium mb-1">
+                          Back Image <span className="text-red-500">*</span>
+                        </label>
+                        <DelayedImageUpload
+                          value={color.backImageURL || ""}
+                          onChange={(url) =>
+                            updateColor(index, "backImageURL", url)
+                          }
+                        />
+                        {!color.backImageURL && (
+                          <p className="text-xs text-red-400 mt-1">Required</p>
+                        )}
+                      </div>
 
                       <div className="w-full flex justify-end">
                         <Button
@@ -708,39 +767,33 @@ export default function ProductsPage() {
 
               {/* Size Stock Section */}
               <div className="space-y-4">
-                <h4 className="font-medium">Size Stock</h4>
+                <h4 className="font-medium">Available Sizes</h4>
                 <p className="text-sm text-muted-foreground">
-                  Set stock quantity for each size. All colors will have these
-                  sizes available.
+                  Select which sizes are available for this product.
                 </p>
 
-                <div className="grid grid-cols-4 gap-3">
+                <div className="flex flex-wrap gap-3">
                   {SIZES.map((size) => {
-                    const sizeStock = formData.sizeStocks.find(
-                      (s) => s.size === size
-                    );
+                    const isAvailable = formData.availableSizes.includes(size);
                     return (
-                      <div key={size} className="p-3 border rounded-md">
-                        <label className="block text-sm font-medium mb-1">
-                          {size}
-                        </label>
-                        <input
-                          type="number"
-                          min="0"
-                          value={sizeStock?.stockQty || 0}
-                          onChange={(e) =>
-                            updateSizeStock(size, parseInt(e.target.value) || 0)
-                          }
-                          className="w-full px-3 py-2 border rounded-md bg-black text-white"
-                        />
-                      </div>
+                      <button
+                        key={size}
+                        type="button"
+                        onClick={() => toggleSize(size)}
+                        className={`w-12 h-12 rounded-md border-2 font-medium transition-all ${
+                          isAvailable
+                            ? "border-green-500 bg-green-500/20 text-green-500"
+                            : "border-gray-600 bg-gray-800 text-gray-400 opacity-50"
+                        }`}
+                      >
+                        {size}
+                      </button>
                     );
                   })}
                 </div>
 
                 <div className="text-sm text-muted-foreground">
-                  Total stock:{" "}
-                  {formData.sizeStocks.reduce((sum, s) => sum + s.stockQty, 0)}
+                  Selected: {formData.availableSizes.length} sizes
                 </div>
               </div>
 

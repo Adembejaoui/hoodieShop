@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback, useContext, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { CartContext } from "@/lib/cart-context";
 import { useSession } from "next-auth/react";
 import { Search, ShoppingCart, Heart, Lock } from "lucide-react";
+import { ProductImage } from "@/components/product/product-image";
 
 interface Category {
   id: string;
@@ -32,7 +34,19 @@ interface Product {
   printPosition: "BACK" | "FRONT" | "BOTH";
   categoryId: string;
   category: Category;
+  colors: Array<{
+    id: string;
+    color: string;
+    frontImageURL: string | null;
+    backImageURL: string | null;
+  }>;
+  sizeStocks: Array<{
+    id: string;
+    size: string;
+    stockQty: number;
+  }>;
   variants: Variant[];
+  _useNewFormat?: boolean;
 }
 
 interface PaginationData {
@@ -57,15 +71,17 @@ interface ErrorResponse {
 
 // All available filter options (loaded once and persisted)
 const DEFAULT_COLORS = ["Black", "White", "Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Gray", "Navy", "Brown"];
-const DEFAULT_SIZES = ["XS", "S", "M", "L", "XL", "XXL", "3XL"];
+const DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
 
 export default function ShopPage() {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [availableColors, setAvailableColors] = useState<string[]>([]);
   const [availableSizes, setAvailableSizes] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
 
   // Filter state
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -101,13 +117,24 @@ export default function ShopPage() {
         const data = await res.json();
         if (data.categories && Array.isArray(data.categories)) {
           setCategories(data.categories);
+          
+          // Check for category query param and set selected category
+          const categorySlug = searchParams.get("category");
+          if (categorySlug) {
+            const matchingCategory = data.categories.find((c: Category) => c.slug === categorySlug);
+            if (matchingCategory) {
+              setSelectedCategory(matchingCategory.id);
+            }
+          }
+          setCategoriesLoaded(true);
         }
       } catch (err) {
         console.error("Error fetching categories:", err);
+        setCategoriesLoaded(true);
       }
     };
     fetchCategories();
-  }, []);
+  }, [searchParams]);
 
   // Fetch all available filter options (called once)
   const fetchFilterOptions = useCallback(async () => {
@@ -153,12 +180,15 @@ export default function ShopPage() {
       params.set("sortBy", sortBy);
 
       const res = await fetch(`/api/products?${params.toString()}`);
-      const data = await res.json();
-
+      
       if (!res.ok) {
-        setError((data as ErrorResponse).error || "Failed to fetch products");
+        const errorData = await res.json().catch(() => ({}));
+        setError(`Failed to fetch products (${res.status})`);
+        setLoading(false);
         return;
       }
+      
+      const data = await res.json();
 
       setProducts(data.products);
       setPagination(data.pagination);
@@ -168,11 +198,28 @@ export default function ShopPage() {
     } finally {
       setLoading(false);
     }
-  }, [selectedCategory, selectedPrintPosition, searchQuery, selectedSize, selectedColor, pagination.page, sortBy]);
+  }, [selectedCategory, selectedPrintPosition, searchQuery, selectedSize, selectedColor, pagination.page]);
+
+  const previousPageRef = useRef<number | null>(null);
+  const previousFiltersRef = useRef<string>('');
+
+  // Create a stable filter signature
+  const filterSignature = `${selectedCategory}-${selectedPrintPosition}-${searchQuery}-${selectedSize}-${selectedColor}-${sortBy}`;
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    const isInitialLoad = previousPageRef.current === null;
+    const filtersChanged = filterSignature !== previousFiltersRef.current;
+    const pageChanged = pagination.page !== previousPageRef.current;
+    
+    // Don't fetch until categories are loaded
+    if (!categoriesLoaded) return;
+    
+    if (isInitialLoad || filtersChanged || pageChanged) {
+      fetchProducts();
+      previousPageRef.current = pagination.page;
+      previousFiltersRef.current = filterSignature;
+    }
+  }, [selectedCategory, selectedPrintPosition, searchQuery, selectedSize, selectedColor, sortBy, pagination.page, fetchProducts, filterSignature, categoriesLoaded]);
 
   // Clear all filters
   const clearFilters = () => {
@@ -343,11 +390,11 @@ export default function ShopPage() {
               )}
 
               {/* Sizes - Always visible with all options */}
-              {availableSizes.length > 0 && (
+              {DEFAULT_SIZES.length > 0 && (
                 <div>
                   <h3 className="font-semibold mb-3">Sizes</h3>
                   <div className="grid grid-cols-3 gap-2">
-                    {availableSizes.map((size) => (
+                    {DEFAULT_SIZES.map((size) => (
                       <button
                         key={size}
                         onClick={() => {
@@ -403,142 +450,49 @@ export default function ShopPage() {
               </select>
             </div>
 
-            {/* Filter Navbar */}
-            <div className="flex flex-wrap items-center gap-3 mb-6 p-3 bg-card rounded-lg border">
-              <span className="text-sm font-medium">Quick Filters:</span>
-              
-              {/* Print Position Quick Filter */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Print:</span>
-                <button
-                  onClick={() => {
-                    setSelectedPrintPosition(selectedPrintPosition === "FRONT" ? "" : "FRONT");
-                    setPagination((prev) => ({ ...prev, page: 1 }));
-                  }}
-                  className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                    selectedPrintPosition === "FRONT"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground"
-                  }`}
-                >
-                  Front
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedPrintPosition(selectedPrintPosition === "BACK" ? "" : "BACK");
-                    setPagination((prev) => ({ ...prev, page: 1 }));
-                  }}
-                  className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                    selectedPrintPosition === "BACK"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground"
-                  }`}
-                >
-                  Back
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedPrintPosition(selectedPrintPosition === "BOTH" ? "" : "BOTH");
-                    setPagination((prev) => ({ ...prev, page: 1 }));
-                  }}
-                  className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                    selectedPrintPosition === "BOTH"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground"
-                  }`}
-                >
-                  Both
-                </button>
-              </div>
-
-              {/* Color Quick Filter */}
-              {availableColors.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Color:</span>
-                  <div className="flex gap-1">
-                    {availableColors.slice(0, 5).map((color) => (
-                      <button
-                        key={color}
-                        onClick={() => {
-                          setSelectedColor(selectedColor === color ? "" : color);
-                          setPagination((prev) => ({ ...prev, page: 1 }));
-                        }}
-                        className={`w-6 h-6 rounded-full border-2 transition-transform hover:scale-110 ${
-                          selectedColor === color ? "border-primary scale-110" : "border-transparent"
-                        }`}
-                        style={{ backgroundColor: color.toLowerCase() }}
-                        title={color}
-                      />
-                    ))}
-                    {availableColors.length > 5 && (
-                      <span className="text-xs text-muted-foreground self-center">
-                        +{availableColors.length - 5}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Size Quick Filter */}
-              {availableSizes.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Size:</span>
-                  <div className="flex gap-1">
-                    {availableSizes.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => {
-                          setSelectedSize(selectedSize === size ? "" : size);
-                          setPagination((prev) => ({ ...prev, page: 1 }));
-                        }}
-                        className={`w-7 h-7 flex items-center justify-center text-xs font-medium rounded transition-colors ${
-                          selectedSize === size
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-secondary hover:bg-secondary/80"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {loading ? (
+            {/* Loading State */}
+            {loading && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-card rounded-lg border overflow-hidden animate-pulse">
-                    <div className="aspect-square bg-muted" />
-                    <div className="p-4 space-y-2">
-                      <div className="h-4 bg-muted rounded w-1/4" />
-                      <div className="h-5 bg-muted rounded w-3/4" />
-                      <div className="h-4 bg-muted rounded w-1/3" />
-                    </div>
-                  </div>
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="h-96 bg-white/5 rounded-2xl animate-pulse" />
                 ))}
               </div>
-            ) : error ? (
+            )}
+
+            {/* Error State */}
+            {error && (
               <div className="text-center py-12">
-                <p className="text-destructive">{error}</p>
-              </div>
-            ) : products.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No products found.</p>
+                <p className="text-red-400 mb-4">{error}</p>
                 <button
-                  onClick={clearFilters}
-                  className="mt-4 text-primary hover:underline"
+                  onClick={() => fetchProducts()}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
                 >
-                  Clear filters
+                  Retry
                 </button>
               </div>
-            ) : (
+            )}
+
+            {/* Products */}
+            {!loading && !error && (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
+
+                {/* No Results */}
+                {products.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">No products found matching your criteria.</p>
+                    <button
+                      onClick={clearFilters}
+                      className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md"
+                    >
+                      Clear Filters
+                    </button>
+                  </div>
+                )}
 
                 {/* Pagination */}
                 {pagination.totalPages > 1 && (
@@ -563,18 +517,84 @@ function ProductCard({ product }: { product: Product }) {
   const { addItem } = useContext(CartContext)!;
   const { data: session } = useSession();
 
-  // Get first variant's images
-  const firstVariant = product.variants[0];
-  const variantFrontImage = firstVariant?.frontImageURL || null;
-  const variantBackImage = firstVariant?.backImageURL || null;
-  const currentImage = variantFrontImage || variantBackImage;
+  // Get first color's images (supports both new and legacy formats)
+  const getFirstColor = () => {
+    if (product._useNewFormat && product.colors.length > 0) {
+      return product.colors[0];
+    }
+    return product.variants[0] || null;
+  };
+
+  const firstColor = getFirstColor();
+  const frontImage = firstColor?.frontImageURL || null;
+  const backImage = firstColor?.backImageURL || null;
+
+  // Determine primary and secondary images based on print position
+  const getImageDisplay = () => {
+    const printPos = product.printPosition;
+    
+    if (printPos === "FRONT") {
+      return {
+        primaryImage: frontImage,
+        secondaryImage: null,
+        hasHover: false,
+      };
+    } else if (printPos === "BACK") {
+      return {
+        primaryImage: backImage,
+        secondaryImage: null,
+        hasHover: false,
+      };
+    } else {
+      return {
+        primaryImage: frontImage,
+        secondaryImage: backImage,
+        hasHover: true,
+      };
+    }
+  };
+
+  const { primaryImage, secondaryImage, hasHover } = getImageDisplay();
+
+  // Get colors list (supports both formats)
+  const getColors = () => {
+    if (product._useNewFormat) {
+      return product.colors.map((c) => c.color);
+    }
+    return [...new Set(product.variants.map((v) => v.color))];
+  };
+
+  // Get sizes list (supports both formats)
+  const getSizes = () => {
+    if (product._useNewFormat) {
+      return product.sizeStocks.filter((s) => s.stockQty > 0).map((s) => s.size);
+    }
+    return [...new Set(product.variants.map((v) => v.size))];
+  };
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // Add first available variant to cart
-    if (product.variants.length > 0) {
+    // Add first available item to cart
+    if (product._useNewFormat && product.colors.length > 0 && product.sizeStocks.length > 0) {
+      const firstColor = product.colors[0];
+      const firstSize = product.sizeStocks.find((s) => s.stockQty > 0);
+      if (firstSize) {
+        addItem({
+          productId: product.id,
+          name: product.name,
+          slug: product.slug,
+          categorySlug: product.category.slug,
+          color: firstColor.color,
+          size: firstSize.size,
+          price: Number(product.basePrice),
+          quantity: 1,
+          image: frontImage,
+          printPosition: product.printPosition,
+        });
+      }
+    } else if (product.variants.length > 0) {
       const firstVariant = product.variants[0];
       addItem({
         productId: product.id,
@@ -585,7 +605,7 @@ function ProductCard({ product }: { product: Product }) {
         size: firstVariant.size,
         price: Number(firstVariant.price),
         quantity: 1,
-        image: firstVariant.frontImageURL || variantFrontImage,
+        image: firstVariant.frontImageURL || frontImage,
         printPosition: product.printPosition,
       });
     }
@@ -615,41 +635,24 @@ function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <Link
-      href={`/product/${product.category.slug}/${product.slug}`}
-      className="group block"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="bg-card rounded-lg border overflow-hidden transition-shadow hover:shadow-lg">
-        {/* Product Image with Flip Animation */}
-        <div className="relative aspect-square bg-muted overflow-hidden">
-          {currentImage ? (
-            <img
-              src={currentImage}
-              alt={product.name}
-              className={`w-full h-full object-cover transition-opacity duration-300 ${
-                product.printPosition === "BOTH" && variantBackImage
-                  ? isHovered ? "opacity-0" : "opacity-100"
-                  : "opacity-100"
-              }`}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-              No image
-            </div>
-          )}
-          
-          {/* Back Image (shown on hover for BOTH print) */}
-          {product.printPosition === "BOTH" && variantBackImage && (
-            <img
-              src={variantBackImage}
-              alt={`${product.name} - Back`}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-                isHovered ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          )}
+    <>
+      <Link
+        href={`/product/${product.category.slug}/${product.slug}`}
+        className="group block"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="bg-card rounded-lg border overflow-hidden transition-shadow hover:shadow-lg">
+          {/* Product Image */}
+          <ProductImage
+            frontImage={frontImage || '/placeholder.svg'}
+            backImage={backImage || undefined}
+            printType={product.printPosition.toLowerCase() as 'front' | 'back' | 'both'}
+            productName={product.name}
+            width={400}
+            height={400}
+            className="aspect-square"
+          />
 
           {/* Print position badge */}
           <div className="absolute top-2 left-2">
@@ -682,56 +685,46 @@ function ProductCard({ product }: { product: Product }) {
             <Heart className="w-4 h-4" />
           </button>
 
-          {/* Hover indicator */}
-          {product.printPosition === "BOTH" && variantBackImage && (
-            <div className={`absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs transition-opacity duration-300 ${
-              isHovered ? "opacity-100" : "opacity-0"
-            }`}>
-              Hover to see back
-            </div>
-          )}
+          {/* Product Info */}
+          <div className="p-4">
+            <p className="text-sm text-muted-foreground mb-1">{product.category.name}</p>
+            <h3 className="font-semibold group-hover:text-primary transition-colors line-clamp-1">
+              {product.name}
+            </h3>
+            <p className="text-lg font-bold mt-2">
+              ${Number(product.basePrice).toFixed(2)}
+            </p>
 
-          {/* Quick add to cart on hover */}
-          <div className={`absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent transition-opacity duration-300 ${
-            isHovered ? "opacity-100" : "opacity-0"
-          }`}>
-            <button 
-              onClick={handleQuickAdd}
-              className="w-full bg-white text-black py-2 rounded-md font-medium hover:bg-gray-100"
+            {/* Available variants preview */}
+            <div className="flex flex-wrap gap-1 mt-2">
+              {getColors().slice(0, 4).map((color) => (
+                <span
+                  key={color}
+                  className="inline-flex items-center px-2 py-0.5 bg-secondary rounded text-xs"
+                >
+                  {color}
+                </span>
+              ))}
+              {getColors().length > 4 && (
+                <span className="text-xs text-muted-foreground">
+                  +{getColors().length - 4}
+                </span>
+              )}
+            </div>
+
+            {/* CTA Button */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = `/product/${product.category.slug}/${product.slug}`;
+              }}
+              className="w-full mt-4 py-2 px-4 bg-primary text-primary-foreground rounded-md font-medium hover:bg-primary/90 transition-colors"
             >
-              Quick Add
+              View Details
             </button>
           </div>
         </div>
-
-        {/* Product Info */}
-        <div className="p-4">
-          <p className="text-sm text-muted-foreground mb-1">{product.category.name}</p>
-          <h3 className="font-semibold group-hover:text-primary transition-colors line-clamp-1">
-            {product.name}
-          </h3>
-          <p className="text-lg font-bold mt-2">
-            ${Number(product.basePrice).toFixed(2)}
-          </p>
-
-          {/* Available variants preview */}
-          <div className="flex flex-wrap gap-1 mt-2">
-            {[...new Set(product.variants.map((v) => v.color))].slice(0, 4).map((color) => (
-              <span
-                key={color}
-                className="inline-flex items-center px-2 py-0.5 bg-secondary rounded text-xs"
-              >
-                {color}
-              </span>
-            ))}
-            {product.variants.length > 4 && (
-              <span className="text-xs text-muted-foreground">
-                +{product.variants.length - 4}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
+      </Link>
 
       {/* Login Prompt Modal */}
       {showLoginPrompt && (
@@ -782,13 +775,13 @@ function ProductCard({ product }: { product: Product }) {
                 <Link href="/register" className="text-primary hover:underline">
                   Sign up
                 </Link>
-                {' '}and get exclusive drops!
+                {" "}and get exclusive drops!
               </p>
             </div>
           </div>
         </div>
       )}
-    </Link>
+    </>
   );
 }
 

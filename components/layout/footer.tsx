@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { Twitter, Instagram, Facebook, Youtube } from 'lucide-react'
 
 interface Category {
@@ -16,6 +17,7 @@ interface Category {
 export function Footer() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
+  const { data: session } = useSession()
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -148,10 +150,24 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#" className="transition-colors hover:text-primary">
+                <Link href="/privacy" className="transition-colors hover:text-primary">
                   Privacy Policy
                 </Link>
               </li>
+              {session?.user && (
+                <>
+                  <li>
+                    <Link href="/data-export" className="transition-colors hover:text-primary">
+                      Export My Data
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/data-deletion" className="transition-colors hover:text-primary">
+                      Delete My Account
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>
@@ -160,12 +176,17 @@ export function Footer() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-sm text-muted-foreground">
             <p>&copy; 2024 Hoodie Legends. All rights reserved.</p>
             <div className="flex gap-6">
-              <Link href="#" className="transition-colors hover:text-primary">
+              <Link href="/privacy" className="transition-colors hover:text-primary">
                 Privacy Policy
               </Link>
               <Link href="/terms" className="transition-colors hover:text-primary">
                 Terms of Service
               </Link>
+              {session?.user && (
+                <Link href="/data-export" className="transition-colors hover:text-primary">
+                  My Data
+                </Link>
+              )}
             </div>
           </div>
         </div>

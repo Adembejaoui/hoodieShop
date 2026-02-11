@@ -1,3 +1,8 @@
+"use client";
+
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+
 import { Badge } from "@/components/ui/badge";
 import { 
   Mail, 
@@ -8,6 +13,54 @@ import {
 } from "lucide-react";
 
 export default function ContactPage() {
+  const { data: session, status } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+    };
+
+    console.log("Submitting contact form:", data);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      console.log("Response status:", response.status);
+
+      if (response.ok) {
+        console.log("Form submitted successfully!");
+        setSuccess(true);
+        // Wait a bit before reloading to ensure data is saved
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        const errorData = await response.json();
+        console.error("Server error:", errorData);
+        alert("Failed to send message: " + (errorData.error || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -71,7 +124,22 @@ export default function ContactPage() {
                 Fill out the form below and we will get back to you as soon as possible.
               </p>
 
-              <form action="/api/contact" method="POST" className="space-y-4">
+              {status === "loading" ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                </div>
+              ) : success ? (
+                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center gap-2 text-green-700">
+                    <CheckCircle className="w-5 h-5" />
+                    <p className="font-medium">Message sent successfully!</p>
+                  </div>
+                  <p className="text-sm text-green-600 mt-2">
+                    Thank you for reaching out. We'll get back to you soon.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Your Name *</label>
@@ -125,11 +193,13 @@ export default function ContactPage() {
 
                 <button 
                   type="submit" 
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-md"
+                  disabled={isLoading || !session}
+                  className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white py-2 px-4 rounded-md"
                 >
-                  Send Message
+                  {isLoading ? "Sending..." : !session ? "Please sign in to send a message" : "Send Message"}
                 </button>
               </form>
+              )}
             </div>
 
             {/* FAQ Quick Answers */}

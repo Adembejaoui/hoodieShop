@@ -57,6 +57,16 @@ export default withAuth(
         if (pathname === "/terms") {
           return true;
         }
+        
+        // Allow access to privacy page (public)
+        if (pathname === "/privacy") {
+          return true;
+        }
+        
+        // GDPR data pages require authentication
+        if (pathname === "/data-export" || pathname === "/data-deletion") {
+          return !!token;
+        }
 
         // Allow access to home page
         if (pathname === "/") {
@@ -93,13 +103,14 @@ export default withAuth(
           return true;
         }
         
-        // Allow access to public API routes (products, categories, variants, coupons, orders)
+        // Allow access to public API routes (products, categories, variants, coupons, orders, gdpr)
         if (
           pathname.startsWith("/api/products") ||
           pathname.startsWith("/api/categories") ||
           pathname.startsWith("/api/variants") ||
           pathname.startsWith("/api/coupons") ||
-          pathname.startsWith("/api/orders")
+          pathname.startsWith("/api/orders") ||
+          pathname.startsWith("/api/gdpr")
         ) {
           return true;
         }
@@ -129,7 +140,7 @@ export const config = {
      * - login/register pages
      * - blocked page
      * - unauthorized page
-     * - terms page
+     * - privacy page
      * - home page
      * - about page
      * - contact page
@@ -142,6 +153,6 @@ export const config = {
      * - public folder
      * - api/auth routes
      */
-    "/((?!auth|login|register|blocked|unauthorized|terms|about|contact|cart|checkout|shop|_next/static|_next/image|favicon.ico|public/).*)",
+    "/((?!auth|login|register|blocked|unauthorized|terms|privacy|about|contact|cart|checkout|shop|_next/static|_next/image|favicon.ico|public/).*)",
   ],
 };

@@ -24,37 +24,63 @@ export function ProductImage({
 }: ProductImageProps) {
   const [isFlipped, setIsFlipped] = useState(false)
 
-  // Determine which image to show
+  // Determine which image to show based on print position
   const getDisplayImage = () => {
-    if (printType === 'front') return frontImage
-    if (printType === 'back') return backImage || frontImage
-    if (printType === 'both' && isFlipped) return backImage || frontImage
-    return frontImage
+    const canFlip = !!backImage
+    
+    if (!canFlip) {
+      // No back image, show front image
+      return { image: frontImage, canFlip: false }
+    }
+    
+    // Has back image - enable flip for all print positions
+    if (printType === 'front') {
+      // Front print: show front by default, flip to back on hover
+      return { image: isFlipped ? backImage : frontImage, canFlip: true }
+    }
+    if (printType === 'back') {
+      // Back print: show back by default, flip to front on hover
+      return { image: isFlipped ? frontImage : backImage, canFlip: true }
+    }
+    // BOTH print: show front by default, flip to back on hover
+    return { image: isFlipped ? backImage : frontImage, canFlip: true }
   }
 
-  // Determine if we should enable hover flip
-  const enableFlip = printType === 'both' && backImage
-
-  const displayImage = getDisplayImage()
+  const { image: displayImage, canFlip } = getDisplayImage()
 
   return (
     <div
-      className={`relative overflow-hidden rounded-lg ${enableFlip ? 'cursor-pointer' : ''} ${className}`}
-      onMouseEnter={() => enableFlip && setIsFlipped(true)}
-      onMouseLeave={() => enableFlip && setIsFlipped(false)}
+      className={`relative overflow-hidden rounded-lg ${canFlip ? 'cursor-pointer' : ''} ${className}`}
+      onMouseEnter={() => canFlip && setIsFlipped(true)}
+      onMouseLeave={() => canFlip && setIsFlipped(false)}
     >
-      <Image
-        src={displayImage || '/placeholder.svg'}
-        alt={`${productName} ${isFlipped ? 'back' : 'front'}`}
-        width={width}
-        height={height}
-        className="h-full w-full object-cover transition-transform duration-500 ease-out"
-        priority
-      />
-      {enableFlip && (
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-sm">
+      {displayImage?.startsWith('http') ? (
+        // Use regular img tag for external URLs to bypass Next.js optimization issues
+        <img
+          src={displayImage || '/placeholder.svg'}
+          alt={`${productName} ${isFlipped ? 'back' : 'front'}`}
+          className="h-full w-full object-cover transition-transform duration-500 ease-out"
+        />
+      ) : (
+        <Image
+          src={displayImage || '/placeholder.svg'}
+          alt={`${productName} ${isFlipped ? 'back' : 'front'}`}
+          width={width}
+          height={height}
+          className="h-full w-full object-cover transition-transform duration-500 ease-out"
+          priority
+        />
+      )}
+      {/* Flip indicator */}
+      {canFlip && (
+        <div className={`absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/20 ${
+          isFlipped ? 'opacity-100' : ''
+        }`}>
           <span className="text-sm font-medium text-white/80">
-            {isFlipped ? 'Flip back' : 'Flip to back'}
+            {isFlipped 
+              ? (printType === 'back' ? 'Flip to front' : 'Flip back')
+              : (printType === 'back' ? 'Flip to front' : 'Flip to back')
+            }
           </span>
         </div>
       )}

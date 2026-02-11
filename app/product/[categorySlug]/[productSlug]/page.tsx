@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import { useSession } from "next-auth/react";
 import { Heart, Lock, ChevronDown, ChevronUp, ShoppingBag } from "lucide-react";
@@ -108,9 +109,11 @@ export default function ProductPage({ params }: ProductPageProps) {
   const [activeImage, setActiveImage] = useState<"front" | "back">("front");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<string>("");
+  const [quantity, setQuantity] = useState<number>(1);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { addItem, toggleCart } = useCart();
   const { data: session } = useSession();
+  const router = useRouter();
 
   // Fetch product data
   useEffect(() => {
@@ -635,22 +638,75 @@ export default function ProductPage({ params }: ProductPageProps) {
               )}
             </div>
 
-            {/* Add to Cart */}
-            <div className="flex gap-3">
-              <button
-                onClick={handleAddToCart}
-                disabled={!isInStock}
-                className={`flex-1 py-4 px-6 rounded-xl font-semibold text-lg transition-all flex items-center justify-center gap-2 ${
-                  isInStock
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg hover:shadow-xl"
-                    : "bg-muted text-muted-foreground cursor-not-allowed"
-                }`}
-              >
-                <ShoppingBag className="w-5 h-5" />
-                {!isInStock
-                  ? "Out of Stock"
-                  : `Add to Cart - $${Number(product.basePrice).toFixed(2)}`}
-              </button>
+            {/* Add to Cart & Quantity */}
+            <div className="space-y-3">
+              {/* Quantity Selector */}
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-semibold">Quantity</label>
+                <div className="flex items-center gap-3 bg-secondary/50 rounded-lg p-1">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 rounded-md flex items-center justify-center hover:bg-background transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                    </svg>
+                  </button>
+                  <span className="w-12 text-center font-semibold text-lg">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-10 h-10 rounded-md flex items-center justify-center hover:bg-background transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              {/* Buttons - Vertical Stack */}
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => {
+                    if (!isInStock || !product) return;
+                    addItem({
+                      productId: product.id,
+                      name: product.name,
+                      slug: product.slug,
+                      categorySlug: product.category.slug,
+                      color: selectedColor,
+                      size: selectedSize,
+                      price: Number(product.basePrice),
+                      quantity,
+                      image: variantFrontImage,
+                      printPosition: product.printPosition,
+                    });
+                    router.push(`/checkout?quantity=${quantity}`);
+                  }}
+                  disabled={!isInStock}
+                  className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all flex items-center justify-center gap-2 ${
+                    isInStock
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg hover:shadow-xl"
+                      : "bg-muted text-muted-foreground cursor-not-allowed"
+                  }`}
+                >
+                  {!isInStock ? "Out of Stock" : "Get it Now"}
+                </button>
+                <button
+                  onClick={handleAddToCart}
+                  disabled={!isInStock}
+                  className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all flex items-center justify-center gap-2 ${
+                    isInStock
+                      ? "bg-secondary text-foreground hover:bg-secondary/80 border border-border"
+                      : "bg-muted text-muted-foreground cursor-not-allowed"
+                  }`}
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  {!isInStock
+                    ? "Out of Stock"
+                    : `Add to Cart - ${Number(product.basePrice).toFixed(2)}`}
+                </button>
+              </div>
             </div>
 
             {/* Features */}

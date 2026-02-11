@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AuthProvider } from "@/providers/auth-provider";
+import { CookieConsentBanner } from "@/components/privacy/cookie-consent-banner";
+import { getOrganizationSchema, getWebSiteSchema } from "@/lib/seo/structured-data";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,8 +19,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hoodies - Anime Merchandise",
-  description: "Premium anime hoodies and merchandise",
+  title: "Hoodie Legends - Anime Merchandise",
+  description: "Premium anime hoodies and merchandise. Wear the power of anime with exclusive hoodie designs.",
+  keywords: ["anime hoodies", "anime merchandise", "hoodies", "anime clothing", "anime apparel"],
+  openGraph: {
+    title: "Hoodie Legends - Anime Merchandise",
+    description: "Premium anime hoodies and merchandise. Wear the power of anime.",
+    type: "website",
+    siteName: "Hoodie Legends",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hoodie Legends - Anime Merchandise",
+    description: "Premium anime hoodies and merchandise.",
+  },
 };
 
 export default function RootLayout({
@@ -25,13 +40,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = getOrganizationSchema();
+  const webSiteSchema = getWebSiteSchema();
+
   return (
     <html lang="en" className="dark">
+      <head>
+        <Script
+          id="organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([organizationSchema, webSiteSchema]),
+          }}
+        />
+      </head>
       <body className="font-sans antialiased bg-background text-foreground">
         <AuthProvider>
           <Header />
           {children}
           <Footer />
+          <CookieConsentBanner />
         </AuthProvider>
       </body>
     </html>

@@ -200,9 +200,10 @@ export function HeroSection() {
                 
                 {/* Image */}
                 <Image
-                  src="https://pmsy56qp4f.ufs.sh/f/kX9qmKHfPtiXDPluQqLKuE9IBGivN0pWPRVxkqTh3dYoUO4F"
+                  src="https://bhxnlnpksfyqrvojlsfi.supabase.co/storage/v1/object/public/images/logo-one-piece.png"
                   alt="Featured Anime Hoodie"
                   fill
+                  unoptimized
                   className="object-cover"
                 />
                 

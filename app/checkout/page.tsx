@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useContext } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CartContext, CartItem } from "@/lib/cart-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +38,7 @@ interface UserAddress {
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useContext(CartContext)!;
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,6 +63,14 @@ export default function CheckoutPage() {
   const [savedAddresses, setSavedAddresses] = useState<UserAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
+  const urlQuantity = searchParams ? parseInt(searchParams.get("quantity") || "1", 10) : 1;
+
+  // Log URL quantity for debugging
+  useEffect(() => {
+    if (searchParams && searchParams.get("quantity")) {
+      console.log("Quantity from URL:", urlQuantity);
+    }
+  }, [searchParams, urlQuantity]);
 
   useEffect(() => {
     setMounted(true);

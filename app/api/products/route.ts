@@ -32,11 +32,18 @@ export async function GET(request: NextRequest) {
     }
 
     if (inStock === "true") {
-      where.variants = {
-        some: {
-          stockQty: { gt: 0 },
+      where.OR = [
+        {
+          variants: {
+            some: { stockQty: { gt: 0 } },
+          },
         },
-      };
+        {
+          sizeStocks: {
+            some: { stockQty: { gt: 0 } },
+          },
+        },
+      ];
     }
 
     if (printPosition) {
@@ -49,68 +56,41 @@ export async function GET(request: NextRequest) {
       if (maxPrice) where.basePrice.lte = parseFloat(maxPrice);
     }
 
-    // Filter by color and size in variants
-    if (color || size) {
-      where.variants = {
-        ...where.variants,
-        some: {
-          ...(where.variants?.some || {}),
-          ...(color ? { color } : {}),
-          ...(size ? { size } : {}),
+    // Filter by color (check both variants and colors tables for compatibility)
+    if (color) {
+      where.OR = [
+        ...(where.OR || []),
+        {
+          variants: {
+            some: { color },
+          },
         },
-      };
+        {
+          colors: {
+            some: { color },
+          },
+        },
+      ];
     }
 
-    // Get ALL products (without color/size filters) for filter options
-    const filterOptionsWhere: any = {};
-    if (categoryId) filterOptionsWhere.categoryId = categoryId;
-    if (search) filterOptionsWhere.OR = where.OR;
-    if (inStock === "true") {
-      filterOptionsWhere.variants = {
-        some: { stockQty: { gt: 0 } },
-      };
+    // Filter by size (check both variants and sizeStocks tables for compatibility)
+    if (size) {
+      where.OR = [
+        ...(where.OR || []),
+        {
+          variants: {
+            some: { size },
+          },
+        },
+        {
+          sizeStocks: {
+            some: { size },
+          },
+        },
+      ];
     }
-    if (printPosition) filterOptionsWhere.printPosition = printPosition;
-    if (minPrice || maxPrice) {
-      filterOptionsWhere.basePrice = {};
-      if (minPrice) filterOptionsWhere.basePrice.gte = parseFloat(minPrice);
-      if (maxPrice) filterOptionsWhere.basePrice.lte = parseFloat(maxPrice);
-    }
 
-    // Get all products for filter options (no color/size filters)
-    const allProducts = await prisma.product.findMany({
-      where: filterOptionsWhere,
-      include: {
-        category: true,
-        colors: true,
-        sizeStocks: true,
-        variants: true,
-      },
-    });
-
-    // Extract unique colors and sizes from all products
-    const allColors = new Set<string>();
-    const allSizes = new Set<string>();
-
-    allProducts.forEach((product) => {
-      // Get colors from new format
-      product.colors.forEach((c) => {
-        allColors.add(c.color);
-      });
-
-      // Get sizes from new format
-      product.sizeStocks.forEach((s) => {
-        allSizes.add(s.size);
-      });
-
-      // Also get from legacy format (variants)
-      product.variants.forEach((variant) => {
-        allColors.add(variant.color);
-        allSizes.add(variant.size);
-      });
-    });
-
-    // Get paginated products with filters
+    // Get paginated products with filters and count
     const [products, totalCount] = await Promise.all([
       prisma.product.findMany({
         where,
@@ -128,6 +108,28 @@ export async function GET(request: NextRequest) {
       }),
       prisma.product.count({ where }),
     ]);
+
+    // Extract unique colors and sizes from paginated products
+    const allColors = new Set<string>();
+    const allSizes = new Set<string>();
+
+    products.forEach((product) => {
+      // Get colors from new format
+      product.colors.forEach((c) => {
+        allColors.add(c.color);
+      });
+
+      // Get sizes from new format
+      product.sizeStocks.forEach((s) => {
+        allSizes.add(s.size);
+      });
+
+      // Also get from legacy format (variants)
+      product.variants.forEach((variant) => {
+        allColors.add(variant.color);
+        allSizes.add(variant.size);
+      });
+    });
 
     // Transform products
     const productsWithStock = products.map((product) => {
@@ -174,7 +176,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching products:", error);
     return NextResponse.json(
-      { error: "Failed to fetch products" },
+      { error: error instanceof Error ? error.message : "Failed to fetch products" },
       { status: 500 }
     );
   }
@@ -190,7 +192,7 @@ export async function POST(request: NextRequest) {
     const { name, description, basePrice, printPosition, categoryId } = productData;
     const colors = body.colors;
     const sizeStocks = body.sizeStocks;
-    const useNewFormat = body.useNewFormat;
+    const useNewFormat: boolean = body.useNewFormat;
 
     // Validate required fields
     if (!name || typeof name !== "string") {
@@ -248,10 +250,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Legacy format: create variants
-    const variants = body.variants || body.variants;
-    if (!useNewFormat && variants && variants.length > 0) {
+    const legacyVariants = body.variants;
+    if (!useNewFormat && legacyVariants && legacyVariants.length > 0) {
       createData.variants = {
-        create: variants.map((v: any) => ({
+        create: legacyVariants.map((v: any) => ({
           color: v.color,
           size: v.size,
           price: v.price ?? basePrice,

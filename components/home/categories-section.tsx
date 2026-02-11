@@ -114,7 +114,7 @@ export function CategoriesSection() {
         >
           {categories.slice(0, 4).map((category) => (
             <motion.div key={category.id} variants={item}>
-              <Link href={`/shop/${category.slug}`}>
+              <Link href={`/shop?category=${category.slug}`}>
                 <div className="group relative h-80 rounded-2xl overflow-hidden cursor-pointer">
                   {/* Manga panel border effect */}
                   <div className="absolute inset-0 rounded-2xl border-2 border-white/10 group-hover:border-purple-500/50 transition-all duration-300 z-10" />
@@ -130,6 +130,7 @@ export function CategoriesSection() {
                     src={category.imageURL || '/placeholder.svg'}
                     alt={category.name}
                     fill
+                    unoptimized
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   

@@ -5,8 +5,9 @@ import { useState, useEffect, useRef } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { CartIcon } from '@/components/cart/cart-icon'
-import { Menu, X, ShoppingCart, User, Sun, Moon, LogOut, Settings, LayoutDashboard } from 'lucide-react'
+import { Menu, X, ShoppingCart, User, Sun, Moon, LogOut, Settings, LayoutDashboard, Package } from 'lucide-react'
 import Image from 'next/image'
+import { AutocompleteInput } from '@/components/search/autocomplete-input'
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)

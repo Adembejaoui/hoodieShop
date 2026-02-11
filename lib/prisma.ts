@@ -11,14 +11,15 @@ const createPrismaClient = () => {
   })
   return new PrismaClient({
     adapter,
+    log: ['error'],
   })
 }
 
 const prisma = globalForPrisma.prisma ?? createPrismaClient()
 
-// Always create new client in development to pick up schema changes
+// In development, always reuse the same client to avoid connection pool exhaustion
 if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = createPrismaClient()
+  globalForPrisma.prisma = prisma
 }
 
 export default prisma
