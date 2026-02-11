@@ -3,6 +3,9 @@
 
 generator client {
   provider = "prisma-client-js"
+  
+  // Connection pool settings for better stability
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
