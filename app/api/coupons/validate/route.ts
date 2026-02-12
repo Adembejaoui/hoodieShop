@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -24,12 +24,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const coupon = await prisma.coupon.findFirst({
+    const coupon = await withRetry(() => prisma.coupon.findFirst({
       where: {
         code: code.toUpperCase(),
         active: true,
       },
-    });
+    })) as { code: string; type: string; value: any; description: string | null; expiresAt: Date | null; startsAt: Date | null; minOrderAmount: any; maxUses: number | null; usedCount: number } | null;
 
     if (!coupon) {
       return NextResponse.json(
@@ -100,14 +100,14 @@ export async function POST(request: NextRequest) {
 // GET - Get all active coupons
 export async function GET() {
   try {
-    const coupons = await prisma.coupon.findMany({
+    const coupons = await withRetry(() => prisma.coupon.findMany({
       where: {
         active: true,
       },
       orderBy: {
         createdAt: "desc",
       },
-    });
+    }));
 
     return NextResponse.json({ coupons });
   } catch (error) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -12,23 +12,23 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await withRetry(() => prisma.user.findUnique({
       where: { email: session.user.email },
-    });
+    })) as { id: string } | null;
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Get default address first, then all addresses
-    const defaultAddress = await prisma.address.findFirst({
+    const defaultAddress = await withRetry(() => prisma.address.findFirst({
       where: { userId: user.id, isDefault: true },
-    });
+    }));
 
-    const addresses = await prisma.address.findMany({
+    const addresses = await withRetry(() => prisma.address.findMany({
       where: { userId: user.id },
       orderBy: { isDefault: "desc" },
-    });
+    }));
 
     return NextResponse.json({
       defaultAddress,
@@ -52,9 +52,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await withRetry(() => prisma.user.findUnique({
       where: { email: session.user.email },
-    });
+    })) as { id: string } | null;
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -65,13 +65,13 @@ export async function POST(request: NextRequest) {
 
     // If this is set as default, unset other defaults
     if (isDefault) {
-      await prisma.address.updateMany({
+      await withRetry(() => prisma.address.updateMany({
         where: { userId: user.id },
         data: { isDefault: false },
-      });
+      }));
     }
 
-    const newAddress = await prisma.address.create({
+    const newAddress = await withRetry(() => prisma.address.create({
       data: {
         userId: user.id,
         name,
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         country,
         isDefault: isDefault || false,
       },
-    });
+    }));
 
     return NextResponse.json({ address: newAddress });
   } catch (error) {
@@ -104,9 +104,9 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await withRetry(() => prisma.user.findUnique({
       where: { email: session.user.email },
-    });
+    })) as { id: string } | null;
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -117,13 +117,13 @@ export async function PUT(request: NextRequest) {
 
     // If setting as default, unset other defaults first
     if (isDefault) {
-      await prisma.address.updateMany({
+      await withRetry(() => prisma.address.updateMany({
         where: { userId: user.id },
         data: { isDefault: false },
-      });
+      }));
     }
 
-    const updatedAddress = await prisma.address.update({
+    const updatedAddress = await withRetry(() => prisma.address.update({
       where: { id, userId: user.id },
       data: {
         name,
@@ -135,7 +135,7 @@ export async function PUT(request: NextRequest) {
         country,
         isDefault: isDefault || false,
       },
-    });
+    }));
 
     return NextResponse.json({ address: updatedAddress });
   } catch (error) {
@@ -156,9 +156,9 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await withRetry(() => prisma.user.findUnique({
       where: { email: session.user.email },
-    });
+    })) as { id: string } | null;
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -171,9 +171,9 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Address ID required" }, { status: 400 });
     }
 
-    await prisma.address.delete({
+    await withRetry(() => prisma.address.delete({
       where: { id, userId: user.id },
-    });
+    }));
 
     return NextResponse.json({ success: true });
   } catch (error) {

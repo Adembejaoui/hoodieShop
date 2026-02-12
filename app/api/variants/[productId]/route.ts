@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+
+export const dynamic = 'force-dynamic';
 
 // GET /api/variants/[productId] - Get all variants for a product
 export async function GET(
@@ -8,13 +11,13 @@ export async function GET(
 ) {
   try {
     const { productId } = await params;
-    const variants = await prisma.variant.findMany({
+    const variants = await withRetry(() => prisma.variant.findMany({
       where: { productId },
       orderBy: [
         { color: "asc" },
         { size: "asc" },
       ],
-    });
+    })) as Prisma.VariantGetPayload<{}>[];
 
     // Group variants by color
     const groupedByColor = variants.reduce((acc: any, variant: any) => {
@@ -46,13 +49,13 @@ export async function POST(
     const { color, size, price, stockQty, frontImageURL, backImageURL } = body;
 
     // Check if variant already exists
-    const existingVariant = await prisma.variant.findFirst({
+    const existingVariant = await withRetry(() => prisma.variant.findFirst({
       where: {
         productId,
         color,
         size,
       },
-    });
+    }));
 
     if (existingVariant) {
       return NextResponse.json(
@@ -61,7 +64,7 @@ export async function POST(
       );
     }
 
-    const variant = await prisma.variant.create({
+    const variant = await withRetry(() => prisma.variant.create({
       data: {
         productId,
         color,
@@ -71,7 +74,7 @@ export async function POST(
         frontImageURL: frontImageURL || null,
         backImageURL: backImageURL || null,
       },
-    });
+    }));
 
     return NextResponse.json({ variant });
   } catch (error) {
@@ -93,8 +96,8 @@ export async function PUT(
     const body = await request.json();
     const { variants } = body;
 
-    // Use transaction to update all variants
-    const updatedVariants = await prisma.$transaction(
+    // Use transaction to update all variants with retry
+    const updatedVariants = await withRetry(() => prisma.$transaction(
       variants.map((variant: any) =>
         prisma.variant.update({
           where: { id: variant.id },
@@ -106,7 +109,7 @@ export async function PUT(
           },
         })
       )
-    );
+    ));
 
     return NextResponse.json({ variants: updatedVariants });
   } catch (error) {
@@ -135,9 +138,9 @@ export async function DELETE(
       );
     }
 
-    await prisma.variant.delete({
+    await withRetry(() => prisma.variant.delete({
       where: { id: variantId },
-    });
+    }));
 
     return NextResponse.json({ success: true });
   } catch (error) {

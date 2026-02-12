@@ -82,23 +82,12 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
-      console.log("JWT callback:", {
-        hasUser: !!user,
-        hasAccount: !!account,
-        provider: account?.provider,
-        tokenId: token?.id,
-        tokenRole: token?.role,
-        userEmail: user?.email
-      });
-      
       // First login - fetch role from database
       if (user && account?.provider === "google") {
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email! },
           select: { id: true, isBlocked: true, role: true },
         });
-        
-        console.log("JWT callback - DB user:", dbUser);
         
         if (dbUser) {
           token.id = dbUser.id;
@@ -134,19 +123,10 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      console.log("Session callback - token:", {
-        id: token?.id,
-        role: token?.role,
-        isBlocked: token?.isBlocked,
-        hasSession: !!session,
-        hasSessionUser: !!session?.user
-      });
-      
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as UserRole | undefined;
-        (session.user as any).isBlocked = token.isBlocked as boolean;
-        console.log("Session callback - set user role:", session.user.role);
+        session.user.role = token.role;
+        session.user.isBlocked = token.isBlocked as boolean;
       }
       return session;
     },
@@ -240,10 +220,10 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     async createUser({ user }) {
-      console.log("New user created:", user.email);
+      // User creation logging (consider using a proper logging service in production)
     },
     async signIn({ user, isNewUser }) {
-      console.log("User signed in:", { user: user?.email, isNewUser });
+      // Sign in logging (consider using a proper logging service in production)
     },
   },
   debug: process.env.NODE_ENV === "development",

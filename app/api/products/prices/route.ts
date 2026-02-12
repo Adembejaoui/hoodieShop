@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,21 +9,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({}, { status: 200 });
     }
 
-    const products = await prisma.product.findMany({
+    const products = await withRetry(() => prisma.product.findMany({
       where: { id: { in: productIds } },
       select: {
         id: true,
-        price: true,
+        basePrice: true,
         name: true,
         slug: true,
       },
-    });
+    })) as { id: string; basePrice: any; name: string; slug: string }[];
 
     // Return as a map for easy lookup
     const priceMap: Record<string, { price: number; name: string; slug: string }> = {};
-    products.forEach((product: { id: string; price: any; name: string; slug: string }) => {
+    products.forEach((product: { id: string; basePrice: any; name: string; slug: string }) => {
       priceMap[product.id] = {
-        price: Number(product.price),
+        price: Number(product.basePrice),
         name: product.name,
         slug: product.slug,
       };

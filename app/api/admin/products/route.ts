@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Prisma } from "@prisma/client";
@@ -37,13 +37,13 @@ export async function GET() {
       },
     } as const;
 
-    const products = await prisma.product.findMany({
+    const products = await withRetry(() => prisma.product.findMany({
       ...includeOptions,
       orderBy: {
         createdAt: "desc",
       },
       take: 200,
-    });
+    })) as Prisma.ProductGetPayload<typeof includeOptions>[];
 
     // Transform products
     const productsWithFormat = products.map((product: Prisma.ProductGetPayload<typeof includeOptions>) => ({

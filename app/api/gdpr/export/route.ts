@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma, { withRetry } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
@@ -44,10 +44,10 @@ export async function POST(request: NextRequest) {
       },
     } as const;
 
-    const user = await prisma.user.findUnique({
+    const user = await withRetry(() => prisma.user.findUnique({
       where: { id: userId },
       ...userIncludeOptions,
-    });
+    })) as Prisma.UserGetPayload<typeof userIncludeOptions> | null;
 
     if (!user) {
       return NextResponse.json(
@@ -70,11 +70,11 @@ export async function POST(request: NextRequest) {
       },
     } as const;
 
-    const orders = await prisma.order.findMany({
+    const orders = await withRetry(() => prisma.order.findMany({
       where: { userId: user.id },
       ...orderIncludeOptions,
       orderBy: { placedAt: 'desc' },
-    });
+    })) as Prisma.OrderGetPayload<typeof orderIncludeOptions>[];
 
     // Build export data
     const exportData = {

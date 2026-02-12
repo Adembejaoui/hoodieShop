@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -25,21 +25,21 @@ export async function GET() {
       totalProducts,
       lowStockProducts,
     ] = await Promise.all([
-      prisma.order.count(),
-      prisma.order.aggregate({
+      withRetry(() => prisma.order.count()) as Promise<number>,
+      withRetry(() => prisma.order.aggregate({
         _sum: { totalPrice: true },
-      }),
-      prisma.order.count({
+      })) as Promise<{ _sum: { totalPrice: bigint | null } }>,
+      withRetry(() => prisma.order.count({
         where: { status: "PENDING" },
-      }),
-      prisma.user.count({
+      })) as Promise<number>,
+      withRetry(() => prisma.user.count({
         where: { role: "CUSTOMER" },
-      }),
-      prisma.product.count(),
-      prisma.variant.findMany({
+      })) as Promise<number>,
+      withRetry(() => prisma.product.count()) as Promise<number>,
+      withRetry(() => prisma.variant.findMany({
         where: { stockQty: { lt: 20 } },
         select: { id: true },
-      }),
+      })) as Promise<{ id: string }[]>,
     ]);
 
     return NextResponse.json({

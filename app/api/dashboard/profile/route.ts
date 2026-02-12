@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -15,7 +15,7 @@ export async function GET() {
       );
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await withRetry(() => prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
         id: true,
@@ -33,7 +33,7 @@ export async function GET() {
           },
         },
       },
-    });
+    })) as { id: string; name: string | null; email: string | null; image: string | null; phone: string | null; password: string | null; createdAt: Date; _count: { orders: number; addresses: number; wishlist: number } } | null;
 
     return NextResponse.json({ 
       user: user ? {
@@ -65,7 +65,7 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { name, phone, image } = body;
 
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await withRetry(() => prisma.user.update({
       where: { id: session.user.id },
       data: {
         name,
@@ -80,7 +80,7 @@ export async function PUT(request: NextRequest) {
         phone: true,
         createdAt: true,
       },
-    });
+    }));
 
     return NextResponse.json({ user: updatedUser });
   } catch (error) {

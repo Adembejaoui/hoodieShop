@@ -130,23 +130,6 @@ export function ProductCard({ product, showLoginPrompt, setShowLoginPrompt }: Pr
             className="aspect-square"
           />
 
-          {/* Print position badge */}
-          <div className="absolute top-2 left-2">
-            {product.printPosition === 'BOTH' ? (
-              <span className="bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
-                Front & Back
-              </span>
-            ) : product.printPosition === 'FRONT' ? (
-              <span className="bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
-                Front Print
-              </span>
-            ) : (
-              <span className="bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
-                Back Print
-              </span>
-            )}
-          </div>
-
           {/* Product Info */}
           <div className="p-4">
             <p className="text-sm text-muted-foreground mb-1">{product.category.name}</p>

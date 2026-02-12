@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     }
 
     const [orders, totalCount] = await Promise.all([
-      prisma.order.findMany({
+      withRetry(() => prisma.order.findMany({
         where,
         include: {
           items: true,
@@ -37,14 +37,49 @@ export async function GET(request: NextRequest) {
         },
         skip: (page - 1) * limit,
         take: limit,
-      }),
-      prisma.order.count({ where }),
+      })) as Promise<any[]>,
+      withRetry(() => prisma.order.count({ where })) as Promise<number>,
     ]);
 
     const totalPages = Math.ceil(totalCount / limit);
 
+    // Transform orders to include all necessary fields
+    const transformedOrders = orders.map(order => ({
+      id: order.id,
+      orderNumber: order.orderNumber,
+      totalPrice: order.totalPrice,
+      subtotal: order.subtotal,
+      shippingCost: order.shippingCost,
+      discountAmount: order.discountAmount,
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      paymentStatus: order.paymentStatus,
+      trackingNumber: order.trackingNumber,
+      placedAt: order.placedAt,
+      shippedAt: order.shippedAt,
+      deliveredAt: order.deliveredAt,
+      shippingName: order.shippingName,
+      shippingAddress: order.shippingAddress,
+      shippingCity: order.shippingCity,
+      shippingPostalCode: order.shippingPostalCode,
+      shippingCountry: order.shippingCountry,
+      email: order.email,
+      phone: order.phone,
+      couponCode: order.couponCode,
+      items: order.items.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        color: item.color,
+        size: item.size,
+        printPosition: item.printPosition,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        totalPrice: item.totalPrice,
+      })),
+    }));
+
     return NextResponse.json({
-      orders,
+      orders: transformedOrders,
       pagination: {
         page,
         limit,

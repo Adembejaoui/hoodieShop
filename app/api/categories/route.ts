@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 // GET /api/categories - List all categories
 export async function GET() {
   try {
-    const categories = await prisma.category.findMany({
+    const categories = await withRetry(() => prisma.category.findMany({
       include: {
         _count: {
           select: {
@@ -15,9 +18,13 @@ export async function GET() {
       orderBy: {
         name: "asc",
       },
-    });
+    }));
 
-    return NextResponse.json({ categories });
+    return NextResponse.json({ categories }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+      },
+    });
   } catch (error) {
     console.error("Error fetching categories:", error);
     return NextResponse.json(
@@ -40,20 +47,20 @@ export async function POST(request: NextRequest) {
       .replace(/(^-|-$)/g, "");
 
     // Check if slug exists
-    const existingCategory = await prisma.category.findUnique({
+    const existingCategory = await withRetry(() => prisma.category.findUnique({
       where: { slug },
-    });
+    }));
 
     const finalSlug = existingCategory ? `${slug}-${Date.now()}` : slug;
 
-    const category = await prisma.category.create({
+    const category = await withRetry(() => prisma.category.create({
       data: {
         name,
         description,
         imageURL,
         slug: finalSlug,
       },
-    });
+    }));
 
     return NextResponse.json({ category });
   } catch (error) {

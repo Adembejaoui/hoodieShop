@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
@@ -22,9 +22,9 @@ export async function POST(request: Request) {
     }
 
     // Find the reset token
-    const resetToken = await prisma.passwordResetToken.findUnique({
+    const resetToken = await withRetry(() => prisma.passwordResetToken.findUnique({
       where: { token },
-    });
+    })) as { email: string; expires: Date } | null;
 
     if (!resetToken) {
       return NextResponse.json(
@@ -36,9 +36,9 @@ export async function POST(request: Request) {
     // Check if token has expired
     if (resetToken.expires < new Date()) {
       // Delete expired token
-      await prisma.passwordResetToken.delete({
+      await withRetry(() => prisma.passwordResetToken.delete({
         where: { token },
-      });
+      }));
       return NextResponse.json(
         { error: "Reset token has expired" },
         { status: 400 }
@@ -46,9 +46,9 @@ export async function POST(request: Request) {
     }
 
     // Find the user with this email
-    const user = await prisma.user.findUnique({
+    const user = await withRetry(() => prisma.user.findUnique({
       where: { email: resetToken.email },
-    });
+    })) as { id: string } | null;
 
     if (!user) {
       return NextResponse.json(
@@ -61,15 +61,15 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Update the user's password
-    await prisma.user.update({
+    await withRetry(() => prisma.user.update({
       where: { id: user.id },
       data: { password: hashedPassword },
-    });
+    }));
 
     // Delete the reset token
-    await prisma.passwordResetToken.delete({
+    await withRetry(() => prisma.passwordResetToken.delete({
       where: { token },
-    });
+    }));
 
     return NextResponse.json(
       { message: "Password has been reset successfully" },

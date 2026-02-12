@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import crypto from "crypto";
 
 async function sendPasswordResetEmail(email: string, resetUrl: string, userName?: string | null) {
@@ -62,9 +62,9 @@ export async function POST(request: Request) {
     }
 
     // Check if user exists
-    const user = await prisma.user.findUnique({
+    const user = await withRetry(() => prisma.user.findUnique({
       where: { email },
-    });
+    })) as { id: string; name: string | null } | null;
 
     if (!user) {
       // Don't reveal if user exists or not for security
@@ -75,12 +75,12 @@ export async function POST(request: Request) {
     }
 
     // Check if user signed up with Google OAuth (no password)
-    const hasGoogleAccount = await prisma.account.findFirst({
+    const hasGoogleAccount = await withRetry(() => prisma.account.findFirst({
       where: {
         userId: user.id,
         provider: "google",
       },
-    });
+    }));
 
     if (hasGoogleAccount) {
       return NextResponse.json(
@@ -90,22 +90,22 @@ export async function POST(request: Request) {
     }
 
     // Delete any existing reset tokens
-    await prisma.passwordResetToken.deleteMany({
+    await withRetry(() => prisma.passwordResetToken.deleteMany({
       where: { email },
-    });
+    }));
 
     // Generate reset token
     const resetToken = crypto.randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
     // Save reset token
-    await prisma.passwordResetToken.create({
+    await withRetry(() => prisma.passwordResetToken.create({
       data: {
         email,
         token: resetToken,
         expires,
       },
-    });
+    }));
 
     // Build reset URL
     const baseUrl = process.env.NEXTAUTH_URL 

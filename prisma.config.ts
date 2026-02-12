@@ -8,6 +8,6 @@ export default defineConfig({
     seed: "npx tsx prisma/seed.ts",
   },
   datasource: {
-    url: env("DATABASE_URL") // Use DIRECT_URL for migrations
+    url: env("DIRECT_URL"), // Use DIRECT_URL for migrations (Supabase)
   },
 });

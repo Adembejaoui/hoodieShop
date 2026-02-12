@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CartContext } from "@/lib/cart-context";
 import { useSession } from "next-auth/react";
-import { Search, ShoppingCart, Heart, Lock } from "lucide-react";
+import { Search, ShoppingCart, Heart, Lock, Filter, X } from "lucide-react";
 import { ProductImage } from "@/components/product/product-image";
+import * as Dialog from "@/components/ui/dialog";
 
 interface Category {
   id: string;
@@ -90,6 +91,166 @@ function ShopContent() {
   const [selectedPrintPosition, setSelectedPrintPosition] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("createdAt");
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  // Filters Content Component (used in both desktop sidebar and mobile dialog)
+  function FiltersContent() {
+    return (
+      <div className="sticky top-4 space-y-6">
+        {/* Categories */}
+        <div>
+          <h3 className="font-semibold mb-3">Categories</h3>
+          <div className="space-y-2">
+            <button
+              onClick={() => {
+                setSelectedCategory("");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                !selectedCategory ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              All Categories
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => {
+                  setSelectedCategory(category.id);
+                  setPagination((prev) => ({ ...prev, page: 1 }));
+                }}
+                className={`w-full text-left px-3 py-2 rounded-md transition-colors flex items-center gap-2 ${
+                  selectedCategory === category.id
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-secondary"
+                }`}
+              >
+                {category.imageURL && (
+                  <img
+                    src={category.imageURL}
+                    alt={category.name}
+                    className="w-6 h-6 rounded object-cover"
+                  />
+                )}
+                {category.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Print Position */}
+        <div>
+          <h3 className="font-semibold mb-3">Print Position</h3>
+          <div className="space-y-2">
+            <button
+              onClick={() => {
+                setSelectedPrintPosition("");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                !selectedPrintPosition ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => {
+                setSelectedPrintPosition(selectedPrintPosition === "FRONT" ? "" : "FRONT");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                selectedPrintPosition === "FRONT" ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              Front
+            </button>
+            <button
+              onClick={() => {
+                setSelectedPrintPosition(selectedPrintPosition === "BACK" ? "" : "BACK");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                selectedPrintPosition === "BACK" ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              Back
+            </button>
+            <button
+              onClick={() => {
+                setSelectedPrintPosition(selectedPrintPosition === "BOTH" ? "" : "BOTH");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                selectedPrintPosition === "BOTH" ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              Both
+            </button>
+          </div>
+        </div>
+
+        {/* Colors */}
+        {availableColors.length > 0 && (
+          <div>
+            <h3 className="font-semibold mb-3">Colors</h3>
+            <div className="flex flex-wrap gap-2">
+              {availableColors.map((color) => (
+                <button
+                  key={color}
+                  onClick={() => {
+                    setSelectedColor(selectedColor === color ? "" : color);
+                    setPagination((prev) => ({ ...prev, page: 1 }));
+                  }}
+                  className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
+                    selectedColor === color
+                      ? "border-primary scale-110 ring-2 ring-primary/20"
+                      : "border-transparent"
+                  }`}
+                  style={{ backgroundColor: color.toLowerCase() }}
+                  title={color}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Sizes */}
+        {DEFAULT_SIZES.length > 0 && (
+          <div>
+            <h3 className="font-semibold mb-3">Sizes</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {DEFAULT_SIZES.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => {
+                    setSelectedSize(selectedSize === size ? "" : size);
+                    setPagination((prev) => ({ ...prev, page: 1 }));
+                  }}
+                  className={`px-2 py-1.5 text-sm font-medium rounded-md border transition-colors ${
+                    selectedSize === size
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "hover:bg-secondary"
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Clear Filters */}
+        {activeFiltersCount > 0 && (
+          <button
+            onClick={clearFilters}
+            className="w-full py-2 px-4 border border-destructive text-destructive rounded-md hover:bg-destructive hover:text-destructive-foreground transition-colors"
+          >
+            Clear Filters ({activeFiltersCount})
+          </button>
+        )}
+      </div>
+    );
+  }
 
   // Pagination state
   const [pagination, setPagination] = useState<PaginationData>({
@@ -269,165 +430,64 @@ function ShopContent() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex gap-8">
-          {/* Left Sidebar Filters */}
+          {/* Left Sidebar Filters - Desktop Only */}
           <div className="hidden lg:block w-64 shrink-0">
-            <div className="sticky top-4 space-y-6">
-              {/* Categories */}
-              <div>
-                <h3 className="font-semibold mb-3">Categories</h3>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      setSelectedCategory("");
-                      setPagination((prev) => ({ ...prev, page: 1 }));
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-                      !selectedCategory ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
-                    }`}
-                  >
-                    All Categories
-                  </button>
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => {
-                        setSelectedCategory(category.id);
-                        setPagination((prev) => ({ ...prev, page: 1 }));
-                      }}
-                      className={`w-full text-left px-3 py-2 rounded-md transition-colors flex items-center gap-2 ${
-                        selectedCategory === category.id
-                          ? "bg-primary text-primary-foreground"
-                          : "hover:bg-secondary"
-                      }`}
-                    >
-                      {category.imageURL && (
-                        <img
-                          src={category.imageURL}
-                          alt={category.name}
-                          className="w-6 h-6 rounded object-cover"
-                        />
-                      )}
-                      {category.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Print Position */}
-              <div>
-                <h3 className="font-semibold mb-3">Print Position</h3>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      setSelectedPrintPosition("");
-                      setPagination((prev) => ({ ...prev, page: 1 }));
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-                      !selectedPrintPosition ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
-                    }`}
-                  >
-                    All
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSelectedPrintPosition(selectedPrintPosition === "FRONT" ? "" : "FRONT");
-                      setPagination((prev) => ({ ...prev, page: 1 }));
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-                      selectedPrintPosition === "FRONT" ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
-                    }`}
-                  >
-                    Front
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSelectedPrintPosition(selectedPrintPosition === "BACK" ? "" : "BACK");
-                      setPagination((prev) => ({ ...prev, page: 1 }));
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-                      selectedPrintPosition === "BACK" ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
-                    }`}
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSelectedPrintPosition(selectedPrintPosition === "BOTH" ? "" : "BOTH");
-                      setPagination((prev) => ({ ...prev, page: 1 }));
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-                      selectedPrintPosition === "BOTH" ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
-                    }`}
-                  >
-                    Both
-                  </button>
-                </div>
-              </div>
-
-              {/* Colors - Always visible with all options */}
-              {availableColors.length > 0 && (
-                <div>
-                  <h3 className="font-semibold mb-3">Colors</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {availableColors.map((color) => (
-                      <button
-                        key={color}
-                        onClick={() => {
-                          setSelectedColor(selectedColor === color ? "" : color);
-                          setPagination((prev) => ({ ...prev, page: 1 }));
-                        }}
-                        className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
-                          selectedColor === color 
-                            ? "border-primary scale-110 ring-2 ring-primary/20" 
-                            : "border-transparent"
-                        }`}
-                        style={{ backgroundColor: color.toLowerCase() }}
-                        title={color}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Sizes - Always visible with all options */}
-              {DEFAULT_SIZES.length > 0 && (
-                <div>
-                  <h3 className="font-semibold mb-3">Sizes</h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    {DEFAULT_SIZES.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => {
-                          setSelectedSize(selectedSize === size ? "" : size);
-                          setPagination((prev) => ({ ...prev, page: 1 }));
-                        }}
-                        className={`px-2 py-1.5 text-sm font-medium rounded-md border transition-colors ${
-                          selectedSize === size
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "hover:bg-secondary"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Clear Filters */}
-              {activeFiltersCount > 0 && (
-                <button
-                  onClick={clearFilters}
-                  className="w-full py-2 px-4 border border-destructive text-destructive rounded-md hover:bg-destructive hover:text-destructive-foreground transition-colors"
-                >
-                  Clear Filters ({activeFiltersCount})
-                </button>
-              )}
-            </div>
+            <FiltersContent />
           </div>
 
           {/* Products Grid */}
           <div className="flex-1">
+            {/* Mobile Filter Button */}
+            <div className="lg:hidden mb-4">
+              <button
+                onClick={() => setShowMobileFilters(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-secondary rounded-md"
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+                {activeFiltersCount > 0 && (
+                  <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-xs">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            {/* Mobile Filter Dialog */}
+            <Dialog.Dialog open={showMobileFilters} onOpenChange={setShowMobileFilters}>
+              <Dialog.DialogContent className="sm:max-w-md">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold flex items-center gap-2">
+                    <Filter className="w-5 h-5" />
+                    Filters
+                    {activeFiltersCount > 0 && (
+                      <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-xs">
+                        {activeFiltersCount}
+                      </span>
+                    )}
+                  </h2>
+                  <button
+                    onClick={() => setShowMobileFilters(false)}
+                    className="p-2 hover:bg-secondary rounded-md"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Filter products by category, color, size, and print position
+                </p>
+                <div className="max-h-[60vh] overflow-y-auto pr-2">
+                  <FiltersContent />
+                </div>
+                <button
+                  onClick={() => setShowMobileFilters(false)}
+                  className="mt-4 w-full py-2 px-4 bg-primary text-primary-foreground rounded-md"
+                >
+                  Done
+                </button>
+              </Dialog.DialogContent>
+            </Dialog.Dialog>
+
             {/* Results count */}
             <div className="flex items-center justify-between mb-4">
               <p className="text-sm text-muted-foreground">

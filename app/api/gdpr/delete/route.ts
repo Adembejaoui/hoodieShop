@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma, { withRetry } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import nodemailer from 'nodemailer';
@@ -75,9 +75,9 @@ export async function POST(request: NextRequest) {
     const userId = session.user.id;
 
     // Find user by ID (from session)
-    const user = await prisma.user.findUnique({
+    const user = await withRetry(() => prisma.user.findUnique({
       where: { id: userId },
-    });
+    })) as { id: string; email: string | null; name: string | null } | null;
 
     if (!user) {
       return NextResponse.json(
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     // Anonymize user data (preserve account for legal compliance but remove personal data)
     const anonymizedName = `Deleted User ${user.id.slice(-6)}`;
     
-    await prisma.user.update({
+    await withRetry(() => prisma.user.update({
       where: { id: user.id },
       data: {
         name: anonymizedName,
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
         image: null,
         isBlocked: true,
       },
-    });
+    }));
 
     // Send confirmation email
     if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {

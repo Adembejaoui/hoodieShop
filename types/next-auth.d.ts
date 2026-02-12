@@ -1,28 +1,27 @@
-import "next-auth";
 import { DefaultSession } from "next-auth";
-import { JWT } from "next-auth/jwt";
+
+type UserRole = "CUSTOMER" | "ADMIN" | "GHOST";
 
 declare module "next-auth" {
-  interface User {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    role?: "CUSTOMER" | "ADMIN" | "GHOST";
-    image?: string | null;
-  }
-
   interface Session {
     user: {
       id: string;
-      name?: string | null;
-      email?: string | null;
-      role?: "CUSTOMER" | "ADMIN" | "GHOST";
-      image?: string | null;
+      role: UserRole | undefined;
+      isBlocked: boolean;
     } & DefaultSession["user"];
   }
 
+  interface User {
+    role?: UserRole;
+    isBlocked?: boolean;
+  }
+}
+
+declare module "next-auth/jwt" {
   interface JWT {
     id?: string;
-    role?: "CUSTOMER" | "ADMIN" | "GHOST";
+    role?: UserRole;
+    isBlocked?: boolean;
+    provider?: string;
   }
 }

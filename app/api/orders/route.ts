@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Prisma, OrderStatus } from "@prisma/client";
+
+export const dynamic = 'force-dynamic';
 
 // Types for the order request
 interface OrderItemInput {
@@ -52,10 +55,10 @@ export async function POST(request: NextRequest) {
 
     // Check if user is blocked (if logged in)
     if (userId) {
-      const user = await prisma.user.findUnique({
+      const user = await withRetry(() => prisma.user.findUnique({
         where: { id: userId },
         select: { isBlocked: true, email: true },
-      });
+      })) as { isBlocked: boolean; email: string | null } | null;
       
       if (user?.isBlocked) {
         return NextResponse.json(
@@ -113,12 +116,12 @@ export async function POST(request: NextRequest) {
     let finalDiscountAmount = discountAmount;
 
     if (body.couponCode) {
-      const coupon = await prisma.coupon.findFirst({
+      const coupon = await withRetry(() => prisma.coupon.findFirst({
         where: {
-          code: body.couponCode.toUpperCase(),
+          code: body.couponCode!.toUpperCase(),
           active: true,
         },
-      });
+      })) as { id: string; expiresAt: Date | null; minOrderAmount: any; maxUses: number | null; usedCount: number; type: string; value: any } | null;
 
       if (coupon) {
         // Check expiration
@@ -156,8 +159,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create order with transaction
-    const order = await prisma.$transaction(async (tx: any) => {
+    // Create order with transaction (with retry for connection issues)
+    const order = await withRetry(() => prisma.$transaction(async (tx: any) => {
       // Create order
       const createdOrder = await tx.order.create({
         data: {
@@ -227,7 +230,7 @@ export async function POST(request: NextRequest) {
       }
 
       return createdOrder;
-    });
+    })) as { id: string; orderNumber: string };
 
     // Return success response
     return NextResponse.json({
@@ -255,18 +258,19 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "20");
     const offset = parseInt(searchParams.get("offset") || "0");
 
-    const where: any = {};
+    const where: Prisma.OrderWhereInput = {};
 
     if (userId) {
       where.userId = userId;
     }
 
     if (status) {
-      where.status = status;
+      // Cast to the OrderStatus enum type
+      where.status = status as OrderStatus;
     }
 
     const [orders, total] = await Promise.all([
-      prisma.order.findMany({
+      withRetry(() => prisma.order.findMany({
         where,
         include: {
           items: true,
@@ -277,8 +281,8 @@ export async function GET(request: NextRequest) {
         },
         take: limit,
         skip: offset,
-      }),
-      prisma.order.count({ where }),
+      })) as Promise<any[]>,
+      withRetry(() => prisma.order.count({ where })) as Promise<number>,
     ]);
 
     return NextResponse.json({

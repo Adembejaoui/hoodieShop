@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 // GET /api/products - List all products with optional filters
 export async function GET(request: NextRequest) {
@@ -102,7 +105,7 @@ export async function GET(request: NextRequest) {
 
     // Get paginated products with filters and count
     const [products, totalCount] = await Promise.all([
-      prisma.product.findMany({
+      withRetry(() => prisma.product.findMany({
         where,
         ...includeOptions,
         orderBy: {
@@ -110,8 +113,8 @@ export async function GET(request: NextRequest) {
         },
         skip: (page - 1) * limit,
         take: limit,
-      }),
-      prisma.product.count({ where }),
+      })) as Promise<Prisma.ProductGetPayload<typeof includeOptions>[]>,
+      withRetry(() => prisma.product.count({ where })) as Promise<number>,
     ]);
 
     // Extract unique colors and sizes from paginated products
@@ -177,6 +180,10 @@ export async function GET(request: NextRequest) {
       },
       colors: Array.from(allColors).sort(),
       sizes: Array.from(allSizes).sort(),
+    }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+      },
     });
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -214,12 +221,12 @@ export async function POST(request: NextRequest) {
       .replace(/(^-|-$)/g, "");
 
     // Check if slug exists in the same category
-    const existingProduct = await prisma.product.findFirst({
+    const existingProduct = await withRetry(() => prisma.product.findFirst({
       where: {
         categoryId,
         slug,
       },
-    });
+    }));
 
     const finalSlug = existingProduct ? `${slug}-${Date.now()}` : slug;
 
@@ -269,7 +276,7 @@ export async function POST(request: NextRequest) {
       };
     }
 
-    const product = await prisma.product.create({
+    const product = await withRetry(() => prisma.product.create({
       data: createData,
       include: {
         category: true,
@@ -277,7 +284,7 @@ export async function POST(request: NextRequest) {
         sizeStocks: true,
         variants: true,
       },
-    });
+    })) as any;
 
     // Transform response
     const transformedProduct = {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 30;
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    const orders = await prisma.order.findMany({
+    const orders = await withRetry(() => prisma.order.findMany({
       where,
       include: {
         items: true,
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
         placedAt: "desc",
       },
       take: 100, // Limit results for performance
-    });
+    }));
 
     return NextResponse.json({ orders }, {
       headers: {

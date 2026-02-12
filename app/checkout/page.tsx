@@ -63,7 +63,18 @@ function CheckoutContent() {
   const [savedAddresses, setSavedAddresses] = useState<UserAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
+  const [hasLoadedAddresses, setHasLoadedAddresses] = useState(false);
   const urlQuantity = searchParams ? parseInt(searchParams.get("quantity") || "1", 10) : 1;
+
+  // Update email when session changes
+  useEffect(() => {
+    if (session?.user?.email && !shippingInfo.email) {
+      setShippingInfo((prev) => ({
+        ...prev,
+        email: session.user.email || "",
+      }));
+    }
+  }, [session?.user?.email, shippingInfo.email]);
 
   // Log URL quantity for debugging
   useEffect(() => {
@@ -74,12 +85,14 @@ function CheckoutContent() {
 
   useEffect(() => {
     setMounted(true);
-    
-    // Fetch user's saved addresses if logged in
-    if (session?.user?.email) {
+  }, []);
+
+  // Fetch saved addresses when session is available
+  useEffect(() => {
+    if (session?.user?.email && !hasLoadedAddresses) {
       fetchSavedAddresses();
     }
-  }, [session]);
+  }, [session?.user?.email, hasLoadedAddresses]);
 
   // Fetch saved addresses from API
   const fetchSavedAddresses = async () => {
@@ -88,11 +101,17 @@ function CheckoutContent() {
       const response = await fetch("/api/dashboard/addresses");
       if (response.ok) {
         const data = await response.json();
-        setSavedAddresses(data.addresses || []);
+        const addresses = data.addresses || [];
+        setSavedAddresses(addresses);
+        setHasLoadedAddresses(true);
         
         // Auto-fill with default address if available
-        if (data.defaultAddress) {
-          fillAddressFromSaved(data.defaultAddress);
+        const defaultAddress = data.defaultAddress || addresses.find((a: UserAddress) => a.isDefault);
+        if (defaultAddress) {
+          // Use setTimeout to ensure state updates properly
+          setTimeout(() => {
+            fillAddressFromSaved(defaultAddress);
+          }, 0);
         }
       }
     } catch (error) {
@@ -105,17 +124,19 @@ function CheckoutContent() {
   // Fill shipping info from saved address
   const fillAddressFromSaved = (address: UserAddress) => {
     const [firstName, ...lastNameParts] = address.recipientName.split(" ");
-    setShippingInfo((prev) => ({
-      ...prev,
-      firstName,
+    const userEmail = session?.user?.email || "";
+    
+    setShippingInfo({
+      firstName: firstName || "",
       lastName: lastNameParts.join(" ") || "",
-      email: session?.user?.email || prev.email,
-      phone: address.phone,
-      address: address.address,
-      city: address.city,
-      postalCode: address.postalCode,
-      country: address.country,
-    }));
+      email: userEmail,
+      phone: address.phone || "",
+      address: address.address || "",
+      city: address.city || "",
+      postalCode: address.postalCode || "",
+      country: address.country || "",
+      notes: "",
+    });
     setSelectedAddressId(address.id);
   };
 

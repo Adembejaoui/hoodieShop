@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { applyRateLimit } from "@/lib/security/rate-limit";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the contact message
-    await prisma.contactMessage.create({
+    await withRetry(() => prisma.contactMessage.create({
       data: {
         name,
         email,
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
         message,
         status: "NEW",
       },
-    });
+    }));
 
     // Return success JSON (client-side form expects this)
     return NextResponse.json({
@@ -104,13 +104,13 @@ export async function GET(request: NextRequest) {
     const where = status ? { status: status as any } : {};
 
     const [messages, total] = await Promise.all([
-      prisma.contactMessage.findMany({
+      withRetry(() => prisma.contactMessage.findMany({
         where,
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,
         take: limit,
-      }),
-      prisma.contactMessage.count({ where }),
+      })) as Promise<any[]>,
+      withRetry(() => prisma.contactMessage.count({ where })) as Promise<number>,
     ]);
 
     return NextResponse.json({

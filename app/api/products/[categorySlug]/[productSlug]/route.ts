@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 interface RouteParams {
   params: Promise<{
@@ -15,9 +18,9 @@ export async function GET(request: Request, { params }: RouteParams) {
     const { categorySlug, productSlug } = await params;
 
     // First find the category by slug
-    const category = await prisma.category.findUnique({
+    const category = await withRetry(() => prisma.category.findUnique({
       where: { slug: categorySlug },
-    });
+    })) as Prisma.CategoryGetPayload<null> | null;
 
     if (!category) {
       return NextResponse.json(
@@ -36,13 +39,13 @@ export async function GET(request: Request, { params }: RouteParams) {
     } as const;
 
     // Then find the product by category and slug
-    const product = await prisma.product.findFirst({
+    const product = await withRetry(() => prisma.product.findFirst({
       where: {
         slug: productSlug,
         categoryId: category.id,
       },
       ...includeOptions,
-    });
+    })) as Prisma.ProductGetPayload<typeof includeOptions> | null;
 
     if (!product) {
       return NextResponse.json(
@@ -71,7 +74,11 @@ export async function GET(request: Request, { params }: RouteParams) {
       _useNewFormat: useNewFormat,
     };
 
-    return NextResponse.json(transformedProduct);
+    return NextResponse.json(transformedProduct, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+      },
+    });
   } catch (error) {
     console.error("Error fetching product:", error);
     return NextResponse.json(

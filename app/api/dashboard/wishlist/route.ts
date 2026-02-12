@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Prisma } from "@prisma/client";
@@ -22,16 +22,18 @@ export async function GET() {
           include: {
             category: true,
             variants: true,
+            colors: true,
+            sizeStocks: true,
           },
         },
       },
     } as const;
 
-    const wishlist = await prisma.wishlistItem.findMany({
+    const wishlist = await withRetry(() => prisma.wishlistItem.findMany({
       where: { userId: session.user.id },
       ...includeOptions,
       orderBy: { createdAt: "desc" },
-    });
+    })) as Prisma.WishlistItemGetPayload<typeof includeOptions>[];
 
     // Transform data
     const wishlistWithDetails = wishlist.map((item: Prisma.WishlistItemGetPayload<typeof includeOptions>) => ({
@@ -43,6 +45,9 @@ export async function GET() {
           ...v,
           price: Number(v.price),
         })),
+        colors: item.product.colors,
+        sizeStocks: item.product.sizeStocks,
+        _useNewFormat: item.product.colors.length > 0 && item.product.sizeStocks.length > 0,
       },
       addedAt: item.createdAt,
     }));
@@ -73,14 +78,14 @@ export async function POST(request: NextRequest) {
     const { productId } = body;
 
     // Check if already in wishlist
-    const existingItem = await prisma.wishlistItem.findUnique({
+    const existingItem = await withRetry(() => prisma.wishlistItem.findUnique({
       where: {
         userId_productId: {
           userId: session.user.id,
           productId,
         },
       },
-    });
+    }));
 
     if (existingItem) {
       return NextResponse.json(
@@ -89,7 +94,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const wishlistItem = await prisma.wishlistItem.create({
+    const wishlistItem = await withRetry(() => prisma.wishlistItem.create({
       data: {
         userId: session.user.id,
         productId,
@@ -102,7 +107,7 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-    });
+    })) as any;
 
     return NextResponse.json({ 
       wishlistItem: {
@@ -146,18 +151,18 @@ export async function DELETE(request: NextRequest) {
     }
 
     if (wishlistItemId) {
-      await prisma.wishlistItem.delete({
+      await withRetry(() => prisma.wishlistItem.delete({
         where: { id: wishlistItemId },
-      });
+      }));
     } else {
-      await prisma.wishlistItem.delete({
+      await withRetry(() => prisma.wishlistItem.delete({
         where: {
           userId_productId: {
             userId: session.user.id,
             productId: productId!,
           },
         },
-      });
+      }));
     }
 
     return NextResponse.json({ success: true });

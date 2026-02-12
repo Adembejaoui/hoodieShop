@@ -48,8 +48,15 @@ interface CartContextType {
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// Generate unique ID
-const generateId = () => Math.random().toString(36).substr(2, 9);
+// Generate unique ID using crypto API for better uniqueness guarantees
+const generateId = () => {
+  // Use crypto.randomUUID if available, otherwise fallback to timestamp + random
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for environments without crypto.randomUUID
+  return `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 11)}`;
+};
 
 // Cart reducer
 function cartReducer(state: CartState, action: CartAction): CartState {

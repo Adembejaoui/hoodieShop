@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { withRetry } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,31 +21,31 @@ export async function GET(request: NextRequest) {
       },
     } as const;
 
-    // Search products
-    const products = await prisma.product.findMany({
-      where: {
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-          { description: { contains: query, mode: "insensitive" } },
-        ],
-      },
-      ...productIncludeOptions,
-      take: limit,
-    });
-
-    // Search categories
-    const categories = await prisma.category.findMany({
-      where: {
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-        ],
-      },
-      take: 5,
-    });
+    // Search products and categories in parallel with retry
+    const [products, categories] = await Promise.all([
+      withRetry(() => prisma.product.findMany({
+        where: {
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+            { description: { contains: query, mode: "insensitive" } },
+          ],
+        },
+        ...productIncludeOptions,
+        take: limit,
+      })) as Promise<Prisma.ProductGetPayload<typeof productIncludeOptions>[]>,
+      withRetry(() => prisma.category.findMany({
+        where: {
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+          ],
+        },
+        take: 5,
+      })) as Promise<Prisma.CategoryGetPayload<{}>[]>,
+    ]);
 
     return NextResponse.json({
       results: {
-        products: products.map((p: Prisma.ProductGetPayload<typeof productIncludeOptions>) => ({
+        products: products.map((p) => ({
           id: p.id,
           name: p.name,
           slug: p.slug,
@@ -52,7 +54,7 @@ export async function GET(request: NextRequest) {
           price: Number(p.basePrice),
           image: p.colors[0]?.frontImageURL,
         })),
-        categories: categories.map((c: Prisma.CategoryGetPayload<{}>) => ({
+        categories: categories.map((c) => ({
           id: c.id,
           name: c.name,
           slug: c.slug,
