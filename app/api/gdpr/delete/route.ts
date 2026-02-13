@@ -105,9 +105,8 @@ export async function POST(request: NextRequest) {
       try {
         const userEmail = user.email || '';
         await sendDeletionConfirmationEmail(userEmail, user.name || 'Customer');
-        console.log('Deletion confirmation email sent to:', userEmail);
       } catch (emailError) {
-        console.error('Failed to send deletion confirmation email:', emailError);
+        // Email failed silently - deletion still proceeds
       }
     }
 

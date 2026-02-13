@@ -125,18 +125,13 @@ export async function POST(request: Request) {
       },
     })) as { id: string; name: string | null; email: string | null; role: string };
 
-    console.log("New user created:", user.email);
-
     // Send welcome email asynchronously (don't fail registration if email fails)
     if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
       try {
         await sendWelcomeEmail(email, name);
-        console.log("Welcome email sent to:", email);
       } catch (emailError) {
-        console.error("Failed to send welcome email:", emailError);
+        // Email failed silently - don't fail registration
       }
-    } else {
-      console.log("SMTP not configured - skipping welcome email");
     }
 
     return NextResponse.json({

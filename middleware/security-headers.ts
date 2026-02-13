@@ -92,15 +92,13 @@ export function addSecurityHeadersToNextResponse(response: NextResponse): NextRe
 // Generate CSP report endpoint handler
 export function createCSPReportHandler() {
   return async function CSPReportHandler(request: Request) {
-    // Log CSP violations (in production, send to monitoring service)
+    // Log CSP violations in development only
+    // In production, send to monitoring service (Sentry, Datadog, etc.)
     try {
       const body = await request.json();
-      console.error('CSP Violation:', JSON.stringify(body, null, 2));
-      
-      // In production, send to services like:
-      // - Sentry
-      // - Datadog
-      // - Custom logging endpoint
+      if (process.env.NODE_ENV === 'development') {
+        console.error('CSP Violation:', JSON.stringify(body, null, 2));
+      }
       
       return new Response('ok', { status: 204 });
     } catch {

@@ -1,7 +1,9 @@
 import { MetadataRoute } from 'next';
 import prisma from '@/lib/prisma';
 
-export const dynamic = 'force-dynamic';
+// Revalidate every hour instead of force-dynamic
+// This works better with Accelerate by reducing database calls
+export const revalidate = 3600; // 1 hour
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hoodielegends.com';
 

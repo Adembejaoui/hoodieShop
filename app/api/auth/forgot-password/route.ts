@@ -121,14 +121,9 @@ export async function POST(request: Request) {
     ) {
       try {
         await sendPasswordResetEmail(email, resetUrl, user.name);
-        console.log("Password reset email sent to:", email);
       } catch (emailError) {
-        console.error("Failed to send email:", emailError);
-        // Still return success to prevent email enumeration
+        // Email failed silently - still return success to prevent email enumeration
       }
-    } else {
-      // Development mode - log the reset link
-      console.log("Password reset link (development):", resetUrl);
     }
 
     return NextResponse.json(

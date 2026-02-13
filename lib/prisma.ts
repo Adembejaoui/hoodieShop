@@ -1,24 +1,18 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from '@prisma/adapter-pg'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const globalForPrisma = global as any;
 
 const createPrismaClient = () => {
-  // Use the Accelerate URL with the Pg adapter
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const connectionString = process.env.DATABASE_URL!;
-  
-  const adapter = new PrismaPg({
-    connectionString,
-  })
-  
+  // Prisma 7: Use accelerateUrl for Prisma Accelerate connection
+  // The DATABASE_URL should be the Accelerate URL (prisma+postgres://...)
   return new PrismaClient({
-    adapter,
+    accelerateUrl: process.env.DATABASE_URL,
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-  })
+  });
 }
 
+// Use singleton pattern to prevent multiple instances
 const prisma = globalForPrisma.prisma ?? createPrismaClient()
 
 // In development, always reuse the same client to avoid connection pool exhaustion
@@ -50,16 +44,26 @@ export async function withRetry<T>(
       
       if (attempt < maxRetries) {
         // Check if error is connection-related
+        // Includes Prisma Accelerate specific error codes
         const isConnectionError = 
           lastError.message.includes('connection') ||
           lastError.message.includes('ECONNREFUSED') ||
           lastError.message.includes('MaxClients') ||
           lastError.message.includes('pool') ||
           lastError.message.includes('ENOENT') ||
-          lastError.message.includes('temporarily unavailable');
+          lastError.message.includes('temporarily unavailable') ||
+          lastError.message.includes('P1001') ||  // Can't reach database server
+          lastError.message.includes('P1002') ||  // Database server is busy
+          lastError.message.includes('P1003') ||  // Database unreachable
+          lastError.message.includes('P1008') ||  // Operations timed out
+          lastError.message.includes('P1017') ||  // Server has closed the connection
+          lastError.message.includes('P2024');    // Timed out fetching a connection from pool
         
         if (isConnectionError) {
-          console.warn(`Database connection attempt ${attempt}/${maxRetries} failed (${lastError.message}), retrying in ${delayMs}ms...`);
+          // Only log in development
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`Database connection attempt ${attempt}/${maxRetries} failed, retrying in ${delayMs}ms...`);
+          }
           await new Promise(resolve => setTimeout(resolve, delayMs));
         } else {
           // Non-connection errors should not be retried
