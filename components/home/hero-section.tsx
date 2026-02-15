@@ -6,13 +6,13 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, Star, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 
-// Speed line background effect
+// Speed line background effect - optimized with will-change for GPU acceleration
 const SpeedLines = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+  <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
     {[...Array(8)].map((_, i) => (
       <motion.div
         key={i}
-        className="absolute bg-gradient-to-b from-purple-500/10 via-pink-500/5 to-transparent"
+        className="absolute bg-gradient-to-b from-purple-500/10 via-pink-500/5 to-transparent will-change-transform"
         style={{
           width: '2px',
           height: '100%',
@@ -37,15 +37,15 @@ const SpeedLines = () => (
 export function HeroSection() {
   return (
     <section className="relative w-full min-h-[calc(100vh-5rem)] overflow-hidden flex items-center">
-      {/* Anime Background */}
-      <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=80')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-        }}
+      {/* Anime Background - Using Next.js Image for optimization */}
+      <Image
+        src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=80"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover z-0"
+        unoptimized
       />
       
       {/* Animated overlay */}
@@ -142,7 +142,7 @@ export function HeroSection() {
             </div>
 
             {/* Social Proof */}
-            <div className="flex items-center gap-8 pt-6 border-t border-white/10">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-8 pt-6 border-t border-white/10">
               <motion.div 
                 className="flex items-center gap-3"
                 initial={{ opacity: 0 }}

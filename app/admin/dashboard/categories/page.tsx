@@ -53,7 +53,8 @@ export default function CategoriesPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("/api/admin/categories");
+      // Use cache: 'no-store' to always get fresh data (important for Vercel deployments)
+      const response = await fetch("/api/admin/categories", { cache: 'no-store' });
       if (response.ok) {
         const data = await response.json();
         setCategories(data.categories || []);
@@ -196,8 +197,8 @@ export default function CategoriesPage() {
           <p className="text-muted-foreground">No categories found</p>
         </div>
       ) : (
-        <div className="bg-card rounded-lg border overflow-hidden">
-          <table className="w-full">
+        <div className="bg-card rounded-lg border overflow-x-auto">
+          <table className="w-full min-w-[500px]">
             <thead>
               <tr className="border-b bg-muted/50">
                 <th className="text-left py-3 px-4">Image</th>

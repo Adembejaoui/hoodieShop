@@ -12,7 +12,7 @@ interface SEOProps {
 }
 
 export function SEO({
-  title = 'Hoodie Legends - Anime Merchandise',
+  title = 'Hoodiz - Anime Merchandise',
   description = 'Premium anime hoodies and merchandise. Wear the power of anime with exclusive hoodie designs.',
   keywords = ['anime hoodies', 'anime merchandise', 'hoodies', 'anime clothing', 'anime apparel'],
   image = '/images/og-image.jpg',
@@ -20,16 +20,16 @@ export function SEO({
   type = 'website',
   schema = [],
 }: SEOProps) {
-  const fullUrl = url || process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodielegends.com';
+  const fullUrl = url || process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodiz.com';
   const fullImage = image.startsWith('http') ? image : `${fullUrl}${image}`;
 
   const metadata: Metadata = {
     title,
     description,
     keywords: keywords.join(', '),
-    authors: [{ name: 'Hoodie Legends' }],
-    creator: 'Hoodie Legends',
-    publisher: 'Hoodie Legends',
+    authors: [{ name: 'Hoodiz' }],
+    creator: 'Hoodiz',
+    publisher: 'Hoodiz',
     robots: {
       index: true,
       follow: true,
@@ -47,7 +47,7 @@ export function SEO({
       url: fullUrl,
       title,
       description,
-      siteName: 'Hoodie Legends',
+      siteName: 'Hoodiz',
       images: [
         {
           url: fullImage,
@@ -62,7 +62,7 @@ export function SEO({
       title,
       description,
       images: [fullImage],
-      creator: '@hoodielegends',
+      creator: '@hoodiz',
     },
     alternates: {
       canonical: fullUrl,

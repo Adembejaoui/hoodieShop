@@ -19,18 +19,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hoodie Legends - Anime Merchandise",
+  title: "Hoodiz - Anime Merchandise",
   description: "Premium anime hoodies and merchandise. Wear the power of anime with exclusive hoodie designs.",
   keywords: ["anime hoodies", "anime merchandise", "hoodies", "anime clothing", "anime apparel"],
   openGraph: {
-    title: "Hoodie Legends - Anime Merchandise",
+    title: "Hoodiz - Anime Merchandise",
     description: "Premium anime hoodies and merchandise. Wear the power of anime.",
     type: "website",
-    siteName: "Hoodie Legends",
+    siteName: "Hoodiz",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hoodie Legends - Anime Merchandise",
+    title: "Hoodiz - Anime Merchandise",
     description: "Premium anime hoodies and merchandise.",
   },
 };

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma, { withRetry } from "@/lib/prisma";
 
+// Admin routes should never be cached - always return fresh data
 export const dynamic = 'force-dynamic';
-export const revalidate = 60;
 
 // GET /api/admin/categories - List all categories
 export async function GET() {
@@ -20,11 +20,8 @@ export async function GET() {
       },
     }));
 
-    return NextResponse.json({ categories }, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
-      },
-    });
+    // No caching for admin routes - always return fresh data
+    return NextResponse.json({ categories });
   } catch (error) {
     console.error("Error fetching categories:", error);
     return NextResponse.json(

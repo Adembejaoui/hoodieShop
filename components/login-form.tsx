@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signIn, getSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -32,13 +32,11 @@ export function LoginForm({ className, darkMode = false }: LoginFormProps) {
     const password = formData.get("password") as string;
 
     try {
-      console.log("Step 1: Calling signIn...");
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
-      console.log("Step 2: signIn result:", result);
 
       if (result?.error) {
         setError("Invalid email or password");
@@ -46,26 +44,11 @@ export function LoginForm({ className, darkMode = false }: LoginFormProps) {
         return;
       }
 
-      console.log("Step 3: Fetching session...");
-      // Fetch session to check user role
-      let session = await getSession();
-      console.log("Step 4: Session:", session);
-      
-      // If session is not immediately available, retry after a short delay
-      if (!session) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        session = await getSession();
-        console.log("Step 5: Retry Session:", session);
-      }
-      
-      // Redirect admins to admin dashboard, others to home
-      console.log("Step 6: Checking role and redirecting... role =", session?.user?.role);
-      if (session?.user?.role === "ADMIN") {
-        router.push("/admin/dashboard/overview");
-      } else {
-        router.push("/");
-      }
+      // Successful login - refresh and redirect immediately
       router.refresh();
+      
+      // Use window.location for immediate redirect to avoid session delay
+      window.location.href = "/shop";
     } catch (err) {
       console.error("Login error:", err);
       setError("An error occurred. Please try again.");
@@ -75,8 +58,14 @@ export function LoginForm({ className, darkMode = false }: LoginFormProps) {
 
   async function handleGoogleSignIn() {
     setIsLoading(true);
-    // Don't specify callbackUrl here - let the signIn callback in lib/auth.ts handle redirects
-    await signIn("google");
+    setError(null);
+    try {
+      await signIn("google", { callbackUrl: "/shop" });
+    } catch (err) {
+      console.error("Google sign in error:", err);
+      setError("Failed to sign in with Google. Please try again.");
+      setIsLoading(false);
+    }
   }
 
   const inputClass = darkMode

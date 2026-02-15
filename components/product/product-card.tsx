@@ -173,8 +173,8 @@ export function ProductCard({ product, showLoginPrompt, setShowLoginPrompt }: Pr
 
       {/* Login Prompt Modal */}
       {showLoginPrompt && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-background rounded-xl p-6 max-w-md w-full shadow-xl">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-background rounded-xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl my-4">
             <div className="text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Lock className="w-8 h-8 text-primary" />

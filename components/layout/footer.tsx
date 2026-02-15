@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { Twitter, Instagram, Facebook, Youtube } from 'lucide-react'
+import { HoodizLogo } from '@/components/ui/hoodiz-logo'
 
 interface Category {
   id: string
@@ -44,8 +45,7 @@ export function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600" />
-              <span className="font-bold">HOODIE LEGENDS</span>
+              <HoodizLogo variant="full" size="sm" />
             </div>
             <p className="text-sm text-muted-foreground">Premium anime hoodies and streetwear for the culture.</p>
             
@@ -174,7 +174,7 @@ export function Footer() {
 
         <div className="mt-8 border-t border-border/50 pt-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-sm text-muted-foreground">
-            <p>&copy; 2024 Hoodie Legends. All rights reserved.</p>
+            <p>&copy; 2024 Hoodiz. All rights reserved.</p>
             <div className="flex gap-6">
               <Link href="/privacy" className="transition-colors hover:text-primary">
                 Privacy Policy

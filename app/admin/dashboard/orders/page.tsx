@@ -152,8 +152,8 @@ export default function OrdersPage() {
           <p className="text-muted-foreground">No orders found</p>
         </div>
       ) : (
-        <div className="bg-card rounded-lg border overflow-hidden">
-          <table className="w-full">
+        <div className="bg-card rounded-lg border overflow-x-auto">
+          <table className="w-full min-w-[700px]">
             <thead>
               <tr className="border-b bg-muted/50">
                 <th className="text-left py-3 px-4">Order</th>

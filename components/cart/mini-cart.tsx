@@ -126,9 +126,9 @@ function CartItemRow({
   onUpdateQuantity: (quantity: number) => void;
 }) {
   return (
-    <div className="flex gap-4 p-3 bg-card rounded-lg border">
+    <div className="flex gap-3 p-3 bg-card rounded-lg border">
       {/* Image */}
-      <div className="w-20 h-20 rounded-lg overflow-hidden bg-secondary shrink-0">
+      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-secondary shrink-0">
         {item.image ? (
           <img
             src={item.image}

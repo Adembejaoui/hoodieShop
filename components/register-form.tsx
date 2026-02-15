@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
@@ -39,7 +40,7 @@ export function RegisterForm({ className, darkMode = false }: RegisterFormProps)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsLoading(false);
+    setIsLoading(true);
     setErrors({});
     setGeneralError(null);
 
@@ -84,14 +85,27 @@ export function RegisterForm({ className, darkMode = false }: RegisterFormProps)
 
       if (!response.ok) {
         setGeneralError(responseData.error || "Registration failed. Please try again.");
+        setIsLoading(false);
         return;
       }
 
-      // Registration successful
-      router.push("/auth?registered=true");
+      // Registration successful - now sign in the user automatically
+      const signInResult = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        // If auto-signin fails, redirect to login page
+        router.push("/auth?registered=true");
+      } else {
+        // Successful registration and signin - redirect to shop
+        router.refresh();
+        window.location.href = "/shop";
+      }
     } catch (error) {
       setGeneralError("An error occurred. Please try again.");
-    } finally {
       setIsLoading(false);
     }
   }

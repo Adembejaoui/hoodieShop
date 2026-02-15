@@ -189,9 +189,9 @@ export default function DashboardPage() {
           <p className="text-muted-foreground">Welcome back, {user?.name || "Customer"}</p>
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 order-2 lg:order-1">
             <DashboardSidebar
               user={user}
               activeTab={activeTab}
@@ -203,7 +203,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 order-1 lg:order-2">
             {activeTab === "orders" && (
               <div className="space-y-6">
                 <h2 className="text-xl font-bold">My Orders</h2>

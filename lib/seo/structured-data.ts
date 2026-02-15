@@ -1,17 +1,18 @@
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodielegends.com';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodiz.com';
+const logoUrl = 'https://bhxnlnpksfyqrvojlsfi.supabase.co/storage/v1/object/public/images/logoHoodiz.jpeg';
 
 // Organization Schema
 export function getOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Store',
-    name: 'Hoodie Legends',
+    name: 'Hoodiz',
     description: 'Premium anime hoodies and merchandise. Wear the power of anime.',
     url: baseUrl,
-    logo: `${baseUrl}/favicon.ico`,
+    logo: logoUrl,
     image: `${baseUrl}/images/og-image.jpg`,
     telephone: '+1-555-123-4567',
-    email: 'support@hoodielegends.com',
+    email: 'support@hoodiz.com',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '123 Anime Street',
@@ -34,9 +35,9 @@ export function getOrganizationSchema() {
       name: 'Worldwide',
     },
     sameAs: [
-      'https://facebook.com/hoodielegends',
-      'https://twitter.com/hoodielegends',
-      'https://instagram.com/hoodielegends',
+      'https://facebook.com/hoodiz',
+      'https://twitter.com/hoodiz',
+      'https://instagram.com/hoodiz',
     ],
   };
 }
@@ -46,7 +47,7 @@ export function getWebSiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Hoodie Legends',
+    name: 'Hoodiz',
     url: baseUrl,
     potentialAction: {
       '@type': 'SearchAction',
@@ -86,12 +87,12 @@ export function getProductSchema(product: {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
-    description: product.description || `Premium ${product.name} hoodie from Hoodie Legends.`,
+    description: product.description || `Premium ${product.name} hoodie from Hoodiz.`,
     url: `${baseUrl}/shop/${product.categorySlug}/${product.slug}`,
     image: image,
     brand: {
       '@type': 'Brand',
-      name: 'Hoodie Legends',
+      name: 'Hoodiz',
     },
     sku: `${product.categorySlug}-${product.slug}`.toUpperCase(),
     offers: {
@@ -104,7 +105,7 @@ export function getProductSchema(product: {
       itemCondition: 'https://schema.org/NewCondition',
       seller: {
         '@type': 'Store',
-        name: 'Hoodie Legends',
+        name: 'Hoodiz',
         url: baseUrl,
       },
     },
@@ -163,14 +164,14 @@ export function getArticleSchema(article: {
     datePublished: article.publishedAt,
     author: {
       '@type': 'Person',
-      name: article.author || 'Hoodie Legends Team',
+      name: article.author || 'Hoodiz Team',
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Hoodie Legends',
+      name: 'Hoodiz',
       logo: {
         '@type': 'ImageObject',
-        url: `${baseUrl}/favicon.ico`,
+        url: logoUrl,
       },
     },
     mainEntityOfPage: {

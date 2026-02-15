@@ -56,13 +56,14 @@ export default function DashboardLayout({
       {/* Header */}
       <header className="border-b bg-card">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
               <Link href="/shop" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="w-4 h-4" />
-                Back to Shop
+                <span className="hidden sm:inline">Back to Shop</span>
+                <span className="sm:hidden">Back</span>
               </Link>
-              <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+              <h1 className="text-xl sm:text-2xl font-bold">Admin Dashboard</h1>
             </div>
           </div>
         </div>
@@ -70,7 +71,7 @@ export default function DashboardLayout({
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Navigation Tabs */}
-        <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+        <div className="flex gap-2 mb-8 overflow-x-auto pb-2 scrollbar-thin">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href}>
               <Button

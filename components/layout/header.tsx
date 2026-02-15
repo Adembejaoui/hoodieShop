@@ -6,8 +6,8 @@ import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { CartIcon } from '@/components/cart/cart-icon'
 import { Menu, X, ShoppingCart, User, Sun, Moon, LogOut, Settings, LayoutDashboard, Package } from 'lucide-react'
-import Image from 'next/image'
 import { AutocompleteInput } from '@/components/search/autocomplete-input'
+import { HoodizLogo } from '@/components/ui/hoodiz-logo'
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -36,13 +36,7 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-purple-600 via-pink-500 to-blue-500 flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent" />
-              <span className="text-white font-bold text-sm relative z-10">HL</span>
-            </div>
-            <span className="hidden text-xl font-bold tracking-wider sm:inline-block bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-              HOODIE LEGENDS
-            </span>
+            <HoodizLogo variant="full" size="md" />
           </Link>
 
           {/* Desktop Navigation */}

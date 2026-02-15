@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma';
 // This works better with Accelerate by reducing database calls
 export const revalidate = 3600; // 1 hour
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hoodielegends.com';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hoodiz.net';
 
 interface CategoryResult {
   slug: string;

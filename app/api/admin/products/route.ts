@@ -4,8 +4,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Prisma } from "@prisma/client";
 
+// Admin routes should never be cached - always return fresh data
 export const dynamic = 'force-dynamic';
-export const revalidate = 60;
 
 export async function GET() {
   // Verify admin from session (middleware already validates)
@@ -52,14 +52,8 @@ export async function GET() {
       _useNewFormat: product.colors.length > 0 && product.sizeStocks.length > 0,
     }));
 
-    return NextResponse.json(
-      { products: productsWithFormat },
-      {
-        headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
-        },
-      }
-    );
+    // No caching for admin routes - always return fresh data
+    return NextResponse.json({ products: productsWithFormat });
   } catch (error) {
     console.error("Error fetching products:", error);
     return NextResponse.json(

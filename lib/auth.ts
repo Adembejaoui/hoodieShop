@@ -8,6 +8,9 @@ import { Adapter } from "next-auth/adapters";
 
 type UserRole = "CUSTOMER" | "ADMIN" | "GHOST";
 
+// Detect if we're in production
+const isProduction = process.env.NODE_ENV === "production";
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
@@ -17,9 +20,8 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope: "openid email profile",
-          prompt: "consent",
+          prompt: "select_account",
           access_type: "offline",
-          response_type: "code",
         },
       },
     }),
@@ -79,6 +81,37 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth",
     error: "/auth",
+  },
+  // Configure cookies for production (HTTPS)
+  cookies: {
+    sessionToken: {
+      name: `${isProduction ? "__Secure-" : ""}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: isProduction,
+        domain: isProduction ? undefined : undefined,
+      },
+    },
+    callbackUrl: {
+      name: `${isProduction ? "__Secure-" : ""}next-auth.callback-url`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: isProduction,
+      },
+    },
+    csrfToken: {
+      name: `${isProduction ? "__Host-" : ""}next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: isProduction,
+      },
+    },
   },
   callbacks: {
     async jwt({ token, user, account }) {
@@ -176,12 +209,14 @@ export const authOptions: NextAuthOptions = {
           });
           
           if (!freshUser) {
-            return false;
+            // User doesn't exist anymore, allow sign in to proceed (will create new user)
+            return true;
           }
           
           // Check if user is blocked using fresh data
           if (freshUser.isBlocked) {
-            return false;
+            // Redirect to blocked page instead of returning false
+            return "/blocked";
           }
           
           userRole = freshUser.role || existingUser.role;
@@ -209,10 +244,9 @@ export const authOptions: NextAuthOptions = {
         userRole = user.role;
       }
       
-      // Only redirect OAuth users to admin dashboard
-      // For Credentials provider, redirect is handled client-side
-      if (userRole === "ADMIN" && account?.provider !== "credentials") {
-        return "/admin/dashboard/overview";
+      // Redirect all successful OAuth sign-ins to shop
+      if (account?.provider !== "credentials") {
+        return "/shop";
       }
       
       return true;

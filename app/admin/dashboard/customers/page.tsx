@@ -184,19 +184,20 @@ export default function CustomersPage() {
           No customers in this category
         </div>
       ) : (
-        <table className="w-full">
-          <thead>
-            <tr className="border-b bg-muted/25">
-              <th className="text-left py-3 px-4">Customer</th>
-              <th className="text-left py-3 px-4">Role</th>
-              <th className="text-left py-3 px-4">Orders</th>
-              <th className="text-left py-3 px-4">Total Spent</th>
-              <th className="text-left py-3 px-4">Joined</th>
-              <th className="text-left py-3 px-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((customer) => {
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[600px]">
+            <thead>
+              <tr className="border-b bg-muted/25">
+                <th className="text-left py-3 px-4">Customer</th>
+                <th className="text-left py-3 px-4">Role</th>
+                <th className="text-left py-3 px-4">Orders</th>
+                <th className="text-left py-3 px-4">Total Spent</th>
+                <th className="text-left py-3 px-4">Joined</th>
+                <th className="text-left py-3 px-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((customer) => {
               const totalSpent = customer.orders.reduce(
                 (sum, o) => sum + Number(o.totalPrice),
                 0
@@ -276,8 +277,9 @@ export default function CustomersPage() {
                 </tr>
               );
             })}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

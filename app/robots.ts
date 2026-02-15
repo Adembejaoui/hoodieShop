@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hoodielegends.com';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hoodiz.net';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -22,6 +22,5 @@ export default function robots(): MetadataRoute.Robots {
       ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl.replace('https://', ''),
   };
 }

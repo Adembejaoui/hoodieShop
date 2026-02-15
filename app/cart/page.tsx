@@ -179,11 +179,11 @@ function CartItemRow({
   onRemove: () => void;
 }) {
   return (
-    <div className="flex gap-4 p-4 bg-card rounded-xl border">
+    <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-xl border">
       {/* Image */}
       <Link
         href={`/product/${item.categorySlug}/${item.slug}`}
-        className="w-24 h-24 rounded-lg overflow-hidden bg-secondary shrink-0 hover:opacity-80 transition-opacity"
+        className="w-full sm:w-24 h-32 sm:h-24 rounded-lg overflow-hidden bg-secondary shrink-0 hover:opacity-80 transition-opacity"
       >
         {item.image ? (
           <img
@@ -217,7 +217,7 @@ function CartItemRow({
         <p className="font-semibold mt-2">${item.price.toFixed(2)}</p>
 
         {/* Quantity & Remove */}
-        <div className="flex items-center gap-4 mt-3">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-3">
           <div className="flex items-center border rounded-lg">
             <button
               onClick={() => onUpdateQuantity(item.quantity - 1)}
@@ -255,7 +255,7 @@ function CartItemRow({
             Remove
           </button>
 
-          <span className="ml-auto font-semibold">
+          <span className="sm:ml-auto font-semibold">
             ${(item.price * item.quantity).toFixed(2)}
           </span>
         </div>
