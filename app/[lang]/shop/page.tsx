@@ -1,0 +1,866 @@
+"use client";
+
+import { useState, useEffect, useCallback, useContext, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { CartContext } from "@/lib/cart-context";
+import { useSession } from "next-auth/react";
+import { Search, Heart, Lock, Filter, X } from "lucide-react";
+import { ProductImage } from "@/components/product/product-image";
+import { Link } from "@/i18n/routing";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { WelcomePopup, useWelcomePopup } from "@/components/welcome-popup";
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  imageURL: string | null;
+}
+
+interface Variant {
+  id: string;
+  color: string;
+  size: string;
+  price: number;
+  stockQty: number;
+  frontImageURL: string | null;
+  backImageURL: string | null;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  basePrice: number;
+  printPosition: "BACK" | "FRONT" | "BOTH";
+  categoryId: string;
+  category: Category;
+  colors: Array<{
+    id: string;
+    color: string;
+    frontImageURL: string | null;
+    backImageURL: string | null;
+  }>;
+  sizeStocks: Array<{
+    id: string;
+    size: string;
+    stockQty: number;
+  }>;
+  variants: Variant[];
+  _useNewFormat?: boolean;
+}
+
+interface PaginationData {
+  page: number;
+  limit: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+interface ProductsResponse {
+  products: Product[];
+  pagination: PaginationData;
+  colors?: string[];
+  sizes?: string[];
+}
+
+interface ErrorResponse {
+  error: string;
+}
+
+const DEFAULT_COLORS = ["Black", "White", "Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Gray", "Navy", "Brown"];
+const DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
+
+function ShopContent() {
+  const t = useTranslations("shop");
+  const tProduct = useTranslations("product");
+  const searchParams = useSearchParams();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [availableColors, setAvailableColors] = useState<string[]>([]);
+  const [availableSizes, setAvailableSizes] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
+  const [selectedPrintPosition, setSelectedPrintPosition] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("createdAt");
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  // Welcome popup for new users
+  const { showPopup, closePopup } = useWelcomePopup();
+
+  const [pagination, setPagination] = useState<PaginationData>({
+    page: 1,
+    limit: 12,
+    totalCount: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
+  });
+
+  const activeFiltersCount = [
+    selectedCategory,
+    selectedSize,
+    selectedColor,
+    selectedPrintPosition,
+  ].filter(Boolean).length;
+
+  function FiltersContent() {
+    return (
+      <div className="sticky top-4 space-y-6">
+        <div>
+          <h3 className="font-semibold mb-3">{t("categories")}</h3>
+          <div className="space-y-2">
+            <button
+              onClick={() => {
+                setSelectedCategory("");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                !selectedCategory ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              {t("allProducts")}
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => {
+                  setSelectedCategory(category.id);
+                  setPagination((prev) => ({ ...prev, page: 1 }));
+                }}
+                className={`w-full text-left px-3 py-2 rounded-md transition-colors flex items-center gap-2 ${
+                  selectedCategory === category.id
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-secondary"
+                }`}
+              >
+                {category.imageURL && (
+                  <img
+                    src={category.imageURL}
+                    alt={category.name}
+                    className="w-6 h-6 rounded object-cover"
+                  />
+                )}
+                {category.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="font-semibold mb-3">{tProduct("printPosition")}</h3>
+          <div className="space-y-2">
+            <button
+              onClick={() => {
+                setSelectedPrintPosition("");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                !selectedPrintPosition ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              {t("allProducts")}
+            </button>
+            <button
+              onClick={() => {
+                setSelectedPrintPosition(selectedPrintPosition === "FRONT" ? "" : "FRONT");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                selectedPrintPosition === "FRONT" ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              {tProduct("front")}
+            </button>
+            <button
+              onClick={() => {
+                setSelectedPrintPosition(selectedPrintPosition === "BACK" ? "" : "BACK");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                selectedPrintPosition === "BACK" ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              {tProduct("back")}
+            </button>
+            <button
+              onClick={() => {
+                setSelectedPrintPosition(selectedPrintPosition === "BOTH" ? "" : "BOTH");
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                selectedPrintPosition === "BOTH" ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+              }`}
+            >
+              {tProduct("both")}
+            </button>
+          </div>
+        </div>
+
+        {availableColors.length > 0 && (
+          <div>
+            <h3 className="font-semibold mb-3">{t("colors")}</h3>
+            <div className="flex flex-wrap gap-2">
+              {availableColors.map((color) => (
+                <button
+                  key={color}
+                  onClick={() => {
+                    const newColor = selectedColor === color ? "" : color;
+                    setSelectedColor(newColor);
+                    setPagination((prev) => ({ ...prev, page: 1 }));
+                  }}
+                  className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
+                    selectedColor === color
+                      ? "border-primary scale-110 ring-2 ring-primary/20"
+                      : "border-transparent"
+                  }`}
+                  style={{ backgroundColor: color.toLowerCase() }}
+                  title={color}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {DEFAULT_SIZES.length > 0 && (
+          <div>
+            <h3 className="font-semibold mb-3">{t("sizes")}</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {DEFAULT_SIZES.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => {
+                    setSelectedSize(selectedSize === size ? "" : size);
+                    setPagination((prev) => ({ ...prev, page: 1 }));
+                  }}
+                  className={`px-2 py-1.5 text-sm font-medium rounded-md border transition-colors ${
+                    selectedSize === size
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "hover:bg-secondary"
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeFiltersCount > 0 && (
+          <button
+            onClick={clearFilters}
+            className="w-full py-2 px-4 border border-destructive text-destructive rounded-md hover:bg-destructive hover:text-destructive-foreground transition-colors"
+          >
+            {t("clearFilters")} ({activeFiltersCount})
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        const data = await res.json();
+        if (data.categories && Array.isArray(data.categories)) {
+          setCategories(data.categories);
+          
+          const categorySlug = searchParams.get("category");
+          if (categorySlug) {
+            const matchingCategory = data.categories.find((c: Category) => c.slug === categorySlug);
+            if (matchingCategory) {
+              setSelectedCategory(matchingCategory.id);
+            }
+          }
+          setCategoriesLoaded(true);
+        }
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+        setCategoriesLoaded(true);
+      }
+    };
+    fetchCategories();
+  }, [searchParams]);
+
+  const fetchFilterOptions = useCallback(async () => {
+    try {
+      const res = await fetch("/api/products?limit=100");
+      const data = await res.json();
+      if (data.colors && data.colors.length > 0) {
+        setAvailableColors(data.colors);
+      } else {
+        setAvailableColors(DEFAULT_COLORS);
+      }
+      if (data.sizes && data.sizes.length > 0) {
+        setAvailableSizes(data.sizes);
+      } else {
+        setAvailableSizes(DEFAULT_SIZES);
+      }
+    } catch (err) {
+      console.error("Error fetching filter options:", err);
+      setAvailableColors(DEFAULT_COLORS);
+      setAvailableSizes(DEFAULT_SIZES);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchFilterOptions();
+  }, [fetchFilterOptions]);
+
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const params = new URLSearchParams();
+      if (selectedCategory) params.set("categoryId", selectedCategory);
+      if (selectedPrintPosition) params.set("printPosition", selectedPrintPosition);
+      if (searchQuery) params.set("search", searchQuery);
+      if (selectedSize) params.set("size", selectedSize);
+      if (selectedColor) params.set("color", selectedColor);
+      params.set("page", pagination.page.toString());
+      params.set("sortBy", sortBy);
+
+      const res = await fetch(`/api/products?${params.toString()}`);
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        setError(`Failed to fetch products (${res.status})`);
+        setLoading(false);
+        return;
+      }
+      
+      const data = await res.json();
+
+      setProducts(data.products);
+      setPagination(data.pagination);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setError("An error occurred while loading products");
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedCategory, selectedPrintPosition, searchQuery, selectedSize, selectedColor, pagination.page]);
+
+  const previousPageRef = useRef<number | null>(null);
+  const previousFiltersRef = useRef<string>('');
+
+  const filterSignature = `${selectedCategory}-${selectedPrintPosition}-${searchQuery}-${selectedSize}-${selectedColor}-${sortBy}`;
+
+  useEffect(() => {
+    const isInitialLoad = previousPageRef.current === null;
+    const filtersChanged = filterSignature !== previousFiltersRef.current;
+    const pageChanged = pagination.page !== previousPageRef.current;
+    
+    if (!categoriesLoaded) return;
+    
+    if (isInitialLoad || filtersChanged || pageChanged) {
+      fetchProducts();
+      previousPageRef.current = pagination.page;
+      previousFiltersRef.current = filterSignature;
+    }
+  }, [selectedCategory, selectedPrintPosition, searchQuery, selectedSize, selectedColor, sortBy, pagination.page, fetchProducts, filterSignature, categoriesLoaded]);
+
+  const clearFilters = () => {
+    setSelectedCategory("");
+    setSelectedSize("");
+    setSelectedColor("");
+    setSelectedPrintPosition("");
+    setSearchQuery("");
+    setPagination((prev) => ({ ...prev, page: 1 }));
+  };
+
+  const goToPage = (page: number) => {
+    setPagination((prev) => ({ ...prev, page }));
+  };
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="border-b">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <h1 className="text-3xl font-bold">{t("title")}</h1>
+            <div className="relative w-full md:w-96">
+              <input
+                type="text"
+                placeholder={`${t("search")}...`}
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setPagination((prev) => ({ ...prev, page: 1 }));
+                }}
+                className="w-full px-4 py-2 pl-10 border rounded-lg bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex gap-8">
+          <div className="hidden lg:block w-64 shrink-0">
+            <FiltersContent />
+          </div>
+
+          <div className="flex-1">
+            <div className="lg:hidden mb-4">
+              <button
+                onClick={() => setShowMobileFilters(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-secondary rounded-md"
+              >
+                <Filter className="w-4 h-4" />
+                {t("filters")}
+                {activeFiltersCount > 0 && (
+                  <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-xs">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            <Dialog open={showMobileFilters} onOpenChange={setShowMobileFilters}>
+              <DialogContent className="sm:max-w-md">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold flex items-center gap-2">
+                    <Filter className="w-5 h-5" />
+                    {t("filters")}
+                    {activeFiltersCount > 0 && (
+                      <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-xs">
+                        {activeFiltersCount}
+                      </span>
+                    )}
+                  </h2>
+                  <button
+                    onClick={() => setShowMobileFilters(false)}
+                    className="p-2 hover:bg-secondary rounded-md"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Filter products by category, color, size, and print position
+                </p>
+                <div className="max-h-[60vh] overflow-y-auto pr-2">
+                  <FiltersContent />
+                </div>
+                <button
+                  onClick={() => setShowMobileFilters(false)}
+                  className="mt-4 w-full py-2 px-4 bg-primary text-primary-foreground rounded-md"
+                >
+                  Done
+                </button>
+              </DialogContent>
+            </Dialog>
+
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-sm text-muted-foreground">
+                {t("showingResults", { count: pagination.totalCount }).replace("{count}", String(pagination.totalCount))}
+              </p>
+
+              <select
+                value={sortBy}
+                onChange={(e) => {
+                  setSortBy(e.target.value);
+                  setPagination((prev) => ({ ...prev, page: 1 }));
+                }}
+                className="px-3 py-1.5 border rounded-md bg-background text-foreground text-sm"
+              >
+                <option value="createdAt">Newest</option>
+                <option value="basePrice">Price: Low to High</option>
+                <option value="basePrice">Price: High to Low</option>
+                <option value="name">Name: A-Z</option>
+              </select>
+            </div>
+
+            {loading && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="h-96 bg-white/5 rounded-2xl animate-pulse" />
+                ))}
+              </div>
+            )}
+
+            {error && (
+              <div className="text-center py-12">
+                <p className="text-red-400 mb-4">{error}</p>
+                <button
+                  onClick={() => fetchProducts()}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {!loading && !error && (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {products.map((product) => (
+                    <ProductCard key={product.id} product={product} selectedColor={selectedColor} />
+                  ))}
+                </div>
+
+                {products.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">{t("noProducts")}</p>
+                    <button
+                      onClick={clearFilters}
+                      className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md"
+                    >
+                      {t("clearFilters")}
+                    </button>
+                  </div>
+                )}
+
+                {pagination.totalPages > 1 && (
+                  <Pagination
+                    pagination={pagination}
+                    onPageChange={goToPage}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Welcome Popup for new users */}
+      <WelcomePopup isOpen={showPopup} onClose={closePopup} />
+    </div>
+  );
+}
+
+function ProductCard({ product, selectedColor }: { product: Product; selectedColor?: string }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const cartContext = useContext(CartContext);
+  const { data: session } = useSession();
+  const tProduct = useTranslations("product");
+
+  // Get the color to display - prioritize the selected filter color
+  const getDisplayColor = () => {
+    if (product._useNewFormat && product.colors.length > 0) {
+      // If a color filter is active, find the matching color
+      if (selectedColor) {
+        const matchingColor = product.colors.find(
+          (c) => c.color.toLowerCase() === selectedColor.toLowerCase()
+        );
+        if (matchingColor) return matchingColor;
+      }
+      // Otherwise return the first color
+      return product.colors[0];
+    }
+    // Legacy format - check variants
+    if (selectedColor) {
+      const matchingVariant = product.variants.find(
+        (v) => v.color.toLowerCase() === selectedColor.toLowerCase()
+      );
+      if (matchingVariant) return matchingVariant;
+    }
+    return product.variants[0] || null;
+  };
+
+  const displayColor = getDisplayColor();
+  const frontImage = displayColor?.frontImageURL || null;
+  const backImage = displayColor?.backImageURL || null;
+
+  const getImageDisplay = () => {
+    const printPos = product.printPosition;
+    
+    if (printPos === "FRONT") {
+      return {
+        primaryImage: frontImage,
+        secondaryImage: null,
+        hasHover: false,
+      };
+    } else if (printPos === "BACK") {
+      return {
+        primaryImage: backImage,
+        secondaryImage: null,
+        hasHover: false,
+      };
+    } else {
+      return {
+        primaryImage: frontImage,
+        secondaryImage: backImage,
+        hasHover: true,
+      };
+    }
+  };
+
+  const { primaryImage, secondaryImage, hasHover } = getImageDisplay();
+
+  const getColors = () => {
+    // If a color filter is active, show only that color
+    if (selectedColor) {
+      if (product._useNewFormat) {
+        const matchingColor = product.colors.find(
+          (c) => c.color.toLowerCase() === selectedColor.toLowerCase()
+        );
+        return matchingColor ? [matchingColor.color] : [];
+      }
+      const matchingVariant = product.variants.find(
+        (v) => v.color.toLowerCase() === selectedColor.toLowerCase()
+      );
+      return matchingVariant ? [matchingVariant.color] : [];
+    }
+    // Otherwise show all colors
+    if (product._useNewFormat) {
+      return product.colors.map((c) => c.color);
+    }
+    return [...new Set(product.variants.map((v) => v.color))];
+  };
+
+  const toggleWishlist = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!session?.user) {
+      setShowLoginPrompt(true);
+      return;
+    }
+    
+    try {
+      const res = await fetch("/api/dashboard/wishlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: product.id }),
+      });
+      if (res.ok) {
+        // Wishlist toggled successfully
+      }
+    } catch (err) {
+      console.error("Error toggling wishlist:", err);
+    }
+  };
+
+  return (
+    <>
+      <Link
+        href={`/product/${product.category.slug}/${product.slug}`}
+        className="group block"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="bg-card rounded-lg border overflow-hidden transition-shadow hover:shadow-lg">
+          <ProductImage
+            frontImage={frontImage || '/placeholder.svg'}
+            backImage={backImage || undefined}
+            printType={product.printPosition.toLowerCase() as 'front' | 'back' | 'both'}
+            productName={product.name}
+            width={400}
+            height={400}
+            className="aspect-square"
+          />
+
+          <div className="absolute top-2 left-2">
+            {product.printPosition === "BOTH" ? (
+              <span className="bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
+                {tProduct("both")}
+              </span>
+            ) : product.printPosition === "FRONT" ? (
+              <span className="bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
+                {tProduct("front")}
+              </span>
+            ) : (
+              <span className="bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
+                {tProduct("back")}
+              </span>
+            )}
+          </div>
+
+          <button
+            onClick={toggleWishlist}
+            className={`absolute top-2 right-2 p-2 rounded-full transition-all ${
+              !session?.user
+                ? "bg-white/50 text-muted-foreground/50 cursor-not-allowed opacity-100"
+                : "bg-white/80 text-muted-foreground hover:bg-white hover:text-red-500 opacity-0 group-hover:opacity-100"
+            }`}
+            title={!session?.user ? "Log in to add to wishlist" : "Add to wishlist"}
+            disabled={!session?.user}
+          >
+            <Heart className="w-4 h-4" />
+          </button>
+
+          <div className="p-4">
+            <p className="text-sm text-muted-foreground mb-1">{product.category.name}</p>
+            <h3 className="font-semibold group-hover:text-primary transition-colors line-clamp-1">
+              {product.name}
+            </h3>
+            <p className="text-lg font-bold mt-2">
+              {Number(product.basePrice).toFixed(2)} DT
+            </p>
+
+            <div className="flex flex-wrap gap-1 mt-2">
+              {getColors().slice(0, 4).map((color) => (
+                <span
+                  key={color}
+                  className="inline-flex items-center px-2 py-0.5 bg-secondary rounded text-xs"
+                >
+                  {color}
+                </span>
+              ))}
+              {getColors().length > 4 && (
+                <span className="text-xs text-muted-foreground">
+                  +{getColors().length - 4}
+                </span>
+              )}
+            </div>
+
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = `/product/${product.category.slug}/${product.slug}`;
+              }}
+              className="w-full mt-4 py-2 px-4 bg-primary text-primary-foreground rounded-md font-medium hover:bg-primary/90 transition-colors"
+            >
+              View Details
+            </button>
+          </div>
+        </div>
+      </Link>
+
+      {showLoginPrompt && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-background rounded-xl p-6 max-w-md w-full shadow-xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Lock className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Log in to unlock exclusive benefits!</h3>
+              <p className="text-muted-foreground mb-6">
+                Create an account or log in to enjoy:
+              </p>
+              <ul className="text-sm text-left space-y-2 mb-6 bg-secondary/50 rounded-lg p-4">
+                <li className="flex items-center gap-2">
+                  <span className="text-primary">{"\u2713"}</span>
+                  Apply coupon codes for discounts
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-primary">{"\u2713"}</span>
+                  Save your favorite hoodies
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-primary">{"\u2713"}</span>
+                  Track your order history
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-primary">{"\u2713"}</span>
+                  Faster checkout experience
+                </li>
+              </ul>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowLoginPrompt(false)}
+                  className="flex-1 py-2.5 px-4 border rounded-lg hover:bg-secondary transition-colors"
+                >
+                  Continue Shopping
+                </button>
+                <Link
+                  href="/auth"
+                  className="flex-1 py-2.5 px-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-center font-medium"
+                >
+                  Log In
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function Pagination({
+  pagination,
+  onPageChange,
+}: {
+  pagination: PaginationData;
+  onPageChange: (page: number) => void;
+}) {
+  const { page, totalPages, hasNextPage, hasPrevPage } = pagination;
+
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisible = 5;
+    
+    if (totalPages <= maxVisible + 2) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      
+      if (page > 3) pages.push("...");
+      
+      const start = Math.max(2, page - 1);
+      const end = Math.min(totalPages - 1, page + 1);
+      
+      for (let i = start; i <= end; i++) pages.push(i);
+      
+      if (page < totalPages - 2) pages.push("...");
+      
+      pages.push(totalPages);
+    }
+    
+    return pages;
+  };
+
+  return (
+    <div className="flex items-center justify-center gap-2 mt-8">
+      <button
+        onClick={() => onPageChange(page - 1)}
+        disabled={!hasPrevPage}
+        className="px-3 py-2 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-secondary"
+      >
+        Previous
+      </button>
+      
+      {getPageNumbers().map((num, idx) =>
+        typeof num === "string" ? (
+          <span key={idx} className="px-2">
+            {num}
+          </span>
+        ) : (
+          <button
+            key={idx}
+            onClick={() => onPageChange(num)}
+            className={`w-10 h-10 rounded-md ${
+              num === page
+                ? "bg-primary text-primary-foreground"
+                : "hover:bg-secondary"
+            }`}
+          >
+            {num}
+          </button>
+        )
+      )}
+      
+      <button
+        onClick={() => onPageChange(page + 1)}
+        disabled={!hasNextPage}
+        className="px-3 py-2 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-secondary"
+      >
+        Next
+      </button>
+    </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background py-12 flex items-center justify-center"><p>Loading shop...</p></div>}>
+      <ShopContent />
+    </Suspense>
+  );
+}

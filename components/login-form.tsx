@@ -44,6 +44,9 @@ export function LoginForm({ className, darkMode = false }: LoginFormProps) {
         return;
       }
 
+      // Set flag for welcome popup
+      sessionStorage.setItem('justSignedIn', 'true');
+
       // Successful login - refresh and redirect immediately
       router.refresh();
       
@@ -60,6 +63,8 @@ export function LoginForm({ className, darkMode = false }: LoginFormProps) {
     setIsLoading(true);
     setError(null);
     try {
+      // Set flag for welcome popup before redirect
+      sessionStorage.setItem('justSignedIn', 'true');
       await signIn("google", { callbackUrl: "/shop" });
     } catch (err) {
       console.error("Google sign in error:", err);

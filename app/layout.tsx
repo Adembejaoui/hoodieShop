@@ -1,37 +1,24 @@
 import type { Metadata } from "next";
-import Script from "next/script";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { AuthProvider } from "@/providers/auth-provider";
-import { CookieConsentBanner } from "@/components/privacy/cookie-consent-banner";
-import { getOrganizationSchema, getWebSiteSchema } from "@/lib/seo/structured-data";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
-  title: "Hoodiz - Anime Merchandise",
-  description: "Premium anime hoodies and merchandise. Wear the power of anime with exclusive hoodie designs.",
-  keywords: ["anime hoodies", "anime merchandise", "hoodies", "anime clothing", "anime apparel"],
+  title: "Hoodiz Tunisia - Premium Hoodies & Streetwear",
+  description: "Premium hoodies and streetwear from Tunisia. Discover unique designs across anime, gaming, and urban styles. Quality clothing delivered across Tunisia.",
+  keywords: ["hoodies tunisia", "streetwear tunisia", "anime hoodies", "gaming merch", "urban fashion", "clothing tunisia", "hoodies en ligne"],
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/logo.png',
+  },
   openGraph: {
-    title: "Hoodiz - Anime Merchandise",
-    description: "Premium anime hoodies and merchandise. Wear the power of anime.",
+    title: "Hoodiz Tunisia - Premium Hoodies & Streetwear",
+    description: "Premium hoodies and streetwear from Tunisia. Discover unique designs across anime, gaming, and urban styles.",
     type: "website",
-    siteName: "Hoodiz",
+    siteName: "Hoodiz Tunisia",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hoodiz - Anime Merchandise",
-    description: "Premium anime hoodies and merchandise.",
+    title: "Hoodiz Tunisia - Premium Hoodies & Streetwear",
+    description: "Premium hoodies and streetwear from Tunisia. Discover unique designs across anime, gaming, and urban styles.",
   },
 };
 
@@ -40,28 +27,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const organizationSchema = getOrganizationSchema();
-  const webSiteSchema = getWebSiteSchema();
-
-  return (
-    <html lang="en" className="dark">
-      <head>
-        <Script
-          id="organization-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify([organizationSchema, webSiteSchema]),
-          }}
-        />
-      </head>
-      <body className="font-sans antialiased bg-background text-foreground">
-        <AuthProvider>
-          <Header />
-          {children}
-          <Footer />
-          <CookieConsentBanner />
-        </AuthProvider>
-      </body>
-    </html>
-  );
+  return children;
 }

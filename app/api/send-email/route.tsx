@@ -60,7 +60,7 @@ export async function POST(request: Request) {
 
     switch (body.type) {
       case "welcome":
-        subject = "Welcome to Hoodie Legends! 🎉";
+        subject = "Welcome to Hoodiz Tunisia! \uD83C\uDDF9\uD83C\uDDF3";
         emailHtml = `
           <!DOCTYPE html>
           <html>
@@ -69,26 +69,26 @@ export async function POST(request: Request) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
           </head>
           <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-              <h1 style="color: white; margin: 0; font-size: 24px;">Hoodie Legends 🎉</h1>
+            <div style="background: linear-gradient(135deg, #9333ea 0%, #ec4899 50%, #3b82f6 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+              <img src="https://bhxnlnpksfyqrvojlsfi.supabase.co/storage/v1/object/public/images/logoDark.png" alt="Hoodiz Tunisia" style="height: 60px; margin-bottom: 10px;" />
             </div>
             <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px;">
-              <h2 style="color: #1f2937; margin-top: 0;">Welcome to Hoodie Legends!</h2>
-              <p style="color: #4b5563;">Hi ${body.data?.userName || "Anime Fan"},</p>
-              <p style="color: #4b5563;">Thank you for joining the Hoodie Legends community! We're thrilled to have you on board.</p>
-              <p style="color: #4b5563;">Get ready to wear the power of anime with our exclusive hoodies and apparel.</p>
+              <h2 style="color: #1f2937; margin-top: 0;">Welcome to Hoodiz Tunisia!</h2>
+              <p style="color: #4b5563;">Hi ${body.data?.userName || "there"},</p>
+              <p style="color: #4b5563;">Thank you for joining the Hoodiz Tunisia community! We're thrilled to have you on board.</p>
+              <p style="color: #4b5563;">Discover unique designs across anime, gaming, and urban styles - quality clothing delivered across Tunisia.</p>
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${baseUrl}/login" style="background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">Start Shopping</a>
+                <a href="${baseUrl}/shop" style="background: linear-gradient(135deg, #9333ea 0%, #ec4899 50%, #3b82f6 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">Start Shopping</a>
               </div>
               <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-              <p style="color: #9ca3af; font-size: 12px; text-align: center;">Hoodie Legends - Wear the Power of Anime</p>
+              <p style="color: #9ca3af; font-size: 12px; text-align: center;">Hoodiz Tunisia - Premium Hoodies & Streetwear</p>
             </div>
           </body>
           </html>
         `;
         break;
       case "test":
-        subject = "Test Email from Hoodie Legends";
+        subject = "Test Email from Hoodiz Tunisia";
         emailHtml = `
           <!DOCTYPE html>
           <html>
@@ -97,15 +97,15 @@ export async function POST(request: Request) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
           </head>
           <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-              <h1 style="color: white; margin: 0; font-size: 24px;">Hoodie Legends</h1>
+            <div style="background: linear-gradient(135deg, #9333ea 0%, #ec4899 50%, #3b82f6 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+              <img src="https://bhxnlnpksfyqrvojlsfi.supabase.co/storage/v1/object/public/images/logoDark.png" alt="Hoodiz Tunisia" style="height: 60px; margin-bottom: 10px;" />
             </div>
             <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px;">
               <h2 style="color: #1f2937; margin-top: 0;">Test Email</h2>
-              <p style="color: #4b5563;">This is a test email from Hoodie Legends!</p>
+              <p style="color: #4b5563;">This is a test email from Hoodiz Tunisia!</p>
               <p style="color: #4b5563;">If you received this, your email system is working correctly.</p>
               <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-              <p style="color: #9ca3af; font-size: 12px; text-align: center;">Hoodie Legends - Wear the Power of Anime</p>
+              <p style="color: #9ca3af; font-size: 12px; text-align: center;">Hoodiz Tunisia - Premium Hoodies & Streetwear</p>
             </div>
           </body>
           </html>
@@ -121,8 +121,8 @@ export async function POST(request: Request) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
           </head>
           <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-              <h1 style="color: white; margin: 0; font-size: 24px;">Hoodie Legends</h1>
+            <div style="background: linear-gradient(135deg, #9333ea 0%, #ec4899 50%, #3b82f6 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+              <img src="https://bhxnlnpksfyqrvojlsfi.supabase.co/storage/v1/object/public/images/logoDark.png" alt="Hoodiz Tunisia" style="height: 60px; margin-bottom: 10px;" />
             </div>
             <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px;">
               <h2 style="color: #1f2937; margin-top: 0;">Reply to Your Message</h2>
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
               </div>
               <p style="color: #4b5563;">If you have any further questions, feel free to reply to this email.</p>
               <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-              <p style="color: #9ca3af; font-size: 12px; text-align: center;">Hoodie Legends - Wear the Power of Anime</p>
+              <p style="color: #9ca3af; font-size: 12px; text-align: center;">Hoodiz Tunisia - Premium Hoodies & Streetwear</p>
             </div>
           </body>
           </html>
@@ -148,7 +148,7 @@ export async function POST(request: Request) {
 
     // Send email
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM || "Hoodie Legends <noreply@yourdomain.com>",
+      from: process.env.EMAIL_FROM || "Hoodiz Tunisia <noreply@hoodiz.tn>",
       to: body.to,
       subject,
       html: emailHtml,
@@ -210,7 +210,7 @@ export async function GET() {
       SMTP_PORT: "587",
       SMTP_USER: "your-email@gmail.com",
       SMTP_PASS: "your-app-password",
-      EMAIL_FROM: "Hoodie Legends <noreply@yourdomain.com>"
+      EMAIL_FROM: "Hoodiz Tunisia <noreply@hoodiz.tn>"
     }
   });
 }

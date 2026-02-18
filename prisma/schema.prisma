@@ -18,7 +18,7 @@ model User {
   name          String?
   email         String?   @unique
   image         String?
-  role          Role?     @default(GHOST)
+  role          Role?     @default(CUSTOMER)
   password      String?
   phone         String?
   isBlocked     Boolean   @default(false)

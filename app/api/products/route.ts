@@ -22,77 +22,100 @@ export async function GET(request: NextRequest) {
     const minPrice = searchParams.get("minPrice");
     const maxPrice = searchParams.get("maxPrice");
 
-    const where: any = {};
+    // Build where clause with proper AND structure
+    const andConditions: any[] = [];
 
     if (categoryId) {
-      where.categoryId = categoryId;
-    }
-
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-      ];
-    }
-
-    if (inStock === "true") {
-      where.OR = [
-        {
-          variants: {
-            some: { stockQty: { gt: 0 } },
-          },
-        },
-        {
-          sizeStocks: {
-            some: { stockQty: { gt: 0 } },
-          },
-        },
-      ];
+      andConditions.push({ categoryId });
     }
 
     if (printPosition) {
-      where.printPosition = printPosition;
+      andConditions.push({ printPosition });
     }
 
     if (minPrice || maxPrice) {
-      where.basePrice = {};
-      if (minPrice) where.basePrice.gte = parseFloat(minPrice);
-      if (maxPrice) where.basePrice.lte = parseFloat(maxPrice);
+      const priceCondition: any = {};
+      if (minPrice) priceCondition.gte = parseFloat(minPrice);
+      if (maxPrice) priceCondition.lte = parseFloat(maxPrice);
+      andConditions.push({ basePrice: priceCondition });
+    }
+
+    // Search filter
+    if (search) {
+      andConditions.push({
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+        ],
+      });
+    }
+
+    // In stock filter
+    if (inStock === "true") {
+      andConditions.push({
+        OR: [
+          {
+            variants: {
+              some: { stockQty: { gt: 0 } },
+            },
+          },
+          {
+            sizeStocks: {
+              some: { stockQty: { gt: 0 } },
+            },
+          },
+        ],
+      });
     }
 
     // Filter by color (check both variants and colors tables for compatibility)
+    // Use case-insensitive matching for color
     if (color) {
-      where.OR = [
-        ...(where.OR || []),
-        {
-          variants: {
-            some: { color },
+      andConditions.push({
+        OR: [
+          {
+            variants: {
+              some: { 
+                color: { contains: color, mode: "insensitive" } 
+              },
+            },
           },
-        },
-        {
-          colors: {
-            some: { color },
+          {
+            colors: {
+              some: { 
+                color: { contains: color, mode: "insensitive" } 
+              },
+            },
           },
-        },
-      ];
+        ],
+      });
     }
 
     // Filter by size (check both variants and sizeStocks tables for compatibility)
+    // Use case-insensitive matching for size
     if (size) {
-      where.OR = [
-        ...(where.OR || []),
-        {
-          variants: {
-            some: { size },
+      andConditions.push({
+        OR: [
+          {
+            variants: {
+              some: { 
+                size: { contains: size, mode: "insensitive" } 
+              },
+            },
           },
-        },
-        {
-          sizeStocks: {
-            some: { size },
+          {
+            sizeStocks: {
+              some: { 
+                size: { contains: size, mode: "insensitive" } 
+              },
+            },
           },
-        },
-      ];
+        ],
+      });
     }
+
+    // Build final where clause
+    const where: any = andConditions.length > 0 ? { AND: andConditions } : {};
 
     const includeOptions = {
       include: {

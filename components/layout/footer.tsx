@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { Twitter, Instagram, Facebook, Youtube } from 'lucide-react'
 import { HoodizLogo } from '@/components/ui/hoodiz-logo'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/routing'
 
 interface Category {
   id: string
@@ -19,6 +20,7 @@ export function Footer() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const { data: session } = useSession()
+  const t = useTranslations('footer')
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -45,34 +47,30 @@ export function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <HoodizLogo variant="full" size="sm" />
+              <HoodizLogo variant="full" size="md" />
             </div>
-            <p className="text-sm text-muted-foreground">Premium anime hoodies and streetwear for the culture.</p>
+            <p className="text-sm text-muted-foreground">{t('brandDescription')}</p>
             
             {/* Socials */}
             <div className="flex gap-4 mt-4">
-              <Link href="#" className="transition-colors hover:text-primary">
-                <Twitter className="h-5 w-5" />
-              </Link>
+          
               <Link href="#" className="transition-colors hover:text-primary">
                 <Instagram className="h-5 w-5" />
               </Link>
               <Link href="#" className="transition-colors hover:text-primary">
                 <Facebook className="h-5 w-5" />
               </Link>
-              <Link href="#" className="transition-colors hover:text-primary">
-                <Youtube className="h-5 w-5" />
-              </Link>
+             
             </div>
           </div>
 
           {/* Shop - Dynamic Categories */}
           <div>
-            <h3 className="font-semibold mb-4">Shop</h3>
+            <h3 className="font-semibold mb-4">{t('shop')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/shop" className="transition-colors hover:text-primary">
-                  All Products
+                  {t('allProducts')}
                 </Link>
               </li>
               {!loading && categories.length > 0 ? (
@@ -110,26 +108,26 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="font-semibold mb-4">Support</h3>
+            <h3 className="font-semibold mb-4">{t('support')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/contact" className="transition-colors hover:text-primary">
-                  Contact Us
+                  {t('contactUs')}
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-primary">
-                  Shipping Info
+                  {t('shippingInfo')}
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-primary">
-                  Returns
+                  {t('returns')}
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-primary">
-                  FAQ
+                  {t('faq')}
                 </Link>
               </li>
             </ul>
@@ -137,33 +135,23 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold mb-4">Quick Links</h3>
+            <h3 className="font-semibold mb-4">{t('quickLinks')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/about" className="transition-colors hover:text-primary">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="transition-colors hover:text-primary">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="transition-colors hover:text-primary">
-                  Privacy Policy
+                  {t('aboutUs')}
                 </Link>
               </li>
               {session?.user && (
                 <>
                   <li>
                     <Link href="/data-export" className="transition-colors hover:text-primary">
-                      Export My Data
+                      {t('exportMyData')}
                     </Link>
                   </li>
                   <li>
                     <Link href="/data-deletion" className="transition-colors hover:text-primary">
-                      Delete My Account
+                      {t('deleteMyAccount')}
                     </Link>
                   </li>
                 </>
@@ -174,17 +162,17 @@ export function Footer() {
 
         <div className="mt-8 border-t border-border/50 pt-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-sm text-muted-foreground">
-            <p>&copy; 2024 Hoodiz. All rights reserved.</p>
+            <p>{t('copyright')}</p>
             <div className="flex gap-6">
               <Link href="/privacy" className="transition-colors hover:text-primary">
-                Privacy Policy
+                {t('privacyPolicy')}
               </Link>
               <Link href="/terms" className="transition-colors hover:text-primary">
-                Terms of Service
+                {t('termsOfService')}
               </Link>
               {session?.user && (
                 <Link href="/data-export" className="transition-colors hover:text-primary">
-                  My Data
+                  {t('myData')}
                 </Link>
               )}
             </div>

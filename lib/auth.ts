@@ -1,10 +1,8 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { Adapter } from "next-auth/adapters";
 
 type UserRole = "CUSTOMER" | "ADMIN" | "GHOST";
 
@@ -12,7 +10,7 @@ type UserRole = "CUSTOMER" | "ADMIN" | "GHOST";
 const isProduction = process.env.NODE_ENV === "production";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as Adapter,
+  // No adapter when using JWT strategy with OAuth - we handle user creation manually
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -114,41 +112,91 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
-    async jwt({ token, user, account }) {
-      // First login - fetch role from database
+    async jwt({ token, user, account, trigger, session }) {
+      // First login with Google OAuth
       if (user && account?.provider === "google") {
-        const dbUser = await prisma.user.findUnique({
-          where: { email: user.email! },
-          select: { id: true, isBlocked: true, role: true },
-        });
-        
-        if (dbUser) {
-          token.id = dbUser.id;
-          token.role = dbUser.role;
-          token.isBlocked = dbUser.isBlocked;
-        } else {
-          token.id = user.id;
-          token.role = "CUSTOMER";
-          token.isBlocked = false;
+        console.log("[JWT Callback] Google OAuth login for:", user.email);
+        try {
+          // Create or get user from database
+          let dbUser = await prisma.user.findUnique({
+            where: { email: user.email! },
+            select: { id: true, isBlocked: true, role: true },
+          });
+          
+          console.log("[JWT Callback] Found existing user:", !!dbUser);
+          
+          if (!dbUser) {
+            // Create new user for Google OAuth
+            dbUser = await prisma.user.create({
+              data: {
+                email: user.email!,
+                name: user.name,
+                image: user.image,
+                role: "CUSTOMER",
+              },
+              select: { id: true, isBlocked: true, role: true },
+            });
+            console.log("[JWT Callback] Created new user:", dbUser.id);
+          }
+          
+          // Ensure account is linked (create if doesn't exist)
+          const existingAccount = await prisma.account.findFirst({
+            where: {
+              userId: dbUser.id,
+              provider: account.provider,
+            },
+          });
+          
+          if (!existingAccount) {
+            await prisma.account.create({
+              data: {
+                userId: dbUser.id,
+                type: account.type,
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+                access_token: account.access_token as string | null | undefined,
+                refresh_token: account.refresh_token as string | null | undefined,
+                expires_at: account.expires_at,
+                token_type: account.token_type,
+                scope: account.scope,
+                id_token: account.id_token as string | null | undefined,
+              },
+            });
+            console.log("[JWT Callback] Created account link");
+          }
+          
+          if (dbUser) {
+            token.id = dbUser.id;
+            token.role = dbUser.role;
+            token.isBlocked = dbUser.isBlocked;
+            console.log("[JWT Callback] Token set with user ID:", token.id);
+          }
+          token.provider = account.provider;
+        } catch (error) {
+          console.error("[JWT Callback] Error:", error);
         }
-        token.provider = account.provider;
       } else if (user) {
         // Credentials provider - user object already has the role
         token.id = user.id;
         token.role = user.role;
         token.provider = "credentials";
-      } else {
-        // Token refresh - fetch fresh user data from database
-        if (token.id) {
-          const dbUser = await prisma.user.findUnique({
-            where: { id: token.id as string },
-            select: { isBlocked: true, role: true },
-          });
-          if (dbUser) {
-            token.isBlocked = dbUser.isBlocked;
-            if (dbUser.role) {
-              token.role = dbUser.role;
-            }
+      }
+      
+      // Handle session update
+      if (trigger === "update" && session) {
+        token = { ...token, ...session };
+      }
+      
+      // On subsequent calls, refresh user data from database
+      if (!user && token.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { isBlocked: true, role: true },
+        });
+        if (dbUser) {
+          token.isBlocked = dbUser.isBlocked;
+          if (dbUser.role) {
+            token.role = dbUser.role;
           }
         }
       }
@@ -156,100 +204,44 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      console.log("[Session Callback] Token ID:", token.id);
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role;
         session.user.isBlocked = token.isBlocked as boolean;
+        console.log("[Session Callback] Session user ID:", session.user.id);
       }
       return session;
     },
     async signIn({ user, account, profile }) {
-      let userRole: string | undefined | null;
-      
+      console.log("[SignIn Callback] Provider:", account?.provider, "Email:", user.email);
+      // For Google OAuth, check if user is blocked
       if (account?.provider === "google") {
-        // Check if user already exists with this email
         const existingUser = await prisma.user.findUnique({
           where: { email: user.email! },
-          include: {
-            accounts: {
-              where: { provider: "google" }
-            }
-          }
+          select: { isBlocked: true },
         });
         
-        if (!existingUser) {
-          // Create new user from Google OAuth
-          await prisma.user.create({
-            data: {
-              name: user.name,
-              email: user.email,
-              image: user.image,
-              role: "CUSTOMER",
-              accounts: {
-                create: {
-                  type: account.type,
-                  provider: account.provider,
-                  providerAccountId: account.providerAccountId,
-                  access_token: account.access_token,
-                  refresh_token: account.refresh_token,
-                  expires_at: account.expires_at,
-                  token_type: account.token_type,
-                  scope: account.scope,
-                  id_token: account.id_token,
-                }
-              }
-            },
-          });
-          userRole = "CUSTOMER";
-        } else {
-          // Fetch fresh user data from database to get updated role and isBlocked status
-          const freshUser = await prisma.user.findUnique({
-            where: { id: existingUser.id },
-            select: { isBlocked: true, role: true },
-          });
-          
-          if (!freshUser) {
-            // User doesn't exist anymore, allow sign in to proceed (will create new user)
-            return true;
-          }
-          
-          // Check if user is blocked using fresh data
-          if (freshUser.isBlocked) {
-            // Redirect to blocked page instead of returning false
-            return "/blocked";
-          }
-          
-          userRole = freshUser.role || existingUser.role;
-          
-          if (existingUser.accounts.length === 0) {
-            // User exists but no Google account linked - link it
-            await prisma.account.create({
-              data: {
-                userId: existingUser.id,
-                type: account.type,
-                provider: account.provider,
-                providerAccountId: account.providerAccountId,
-                access_token: account.access_token,
-                refresh_token: account.refresh_token,
-                expires_at: account.expires_at,
-                token_type: account.token_type,
-                scope: account.scope,
-                id_token: account.id_token,
-              }
-            });
-          }
+        // If user exists and is blocked, deny access
+        if (existingUser?.isBlocked) {
+          console.log("[SignIn Callback] User is blocked");
+          return "/blocked";
         }
-      } else {
-        // For credentials provider, user role is set in authorize callback
-        userRole = user.role;
+        
+        console.log("[SignIn Callback] Allowing sign-in");
+        // Allow sign-in - user creation happens in jwt callback
+        return true;
       }
       
-      // Redirect all successful OAuth sign-ins to shop
-      if (account?.provider !== "credentials") {
-        return "/shop";
-      }
-      
+      // For credentials provider, the authorize callback already handled validation
       return true;
+    },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
   events: {

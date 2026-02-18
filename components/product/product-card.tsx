@@ -137,7 +137,7 @@ export function ProductCard({ product, showLoginPrompt, setShowLoginPrompt }: Pr
               {product.name}
             </h3>
             <p className="text-lg font-bold mt-2">
-              ${Number(product.basePrice).toFixed(2)}
+              {Number(product.basePrice).toFixed(2)} DT
             </p>
 
             {/* Available variants preview */}

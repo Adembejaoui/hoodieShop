@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next';
-
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://hoodiz.net';
+import { baseUrl } from '@/lib/config';
 
 export default function robots(): MetadataRoute.Robots {
   return {

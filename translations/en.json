@@ -1,0 +1,973 @@
+{
+  "metadata": {
+    "title": "Hoodiz Tunisia - Premium Hoodies & Streetwear",
+    "description": "Premium hoodies and streetwear from Tunisia. Discover unique designs across anime, gaming, and urban styles. Quality clothing delivered across Tunisia.",
+    "keywords": ["hoodies tunisia", "streetwear tunisia", "anime hoodies", "gaming merch", "urban fashion", "clothing tunisia", "hoodies en ligne"],
+    "openGraph": {
+      "title": "Hoodiz Tunisia - Premium Hoodies & Streetwear",
+      "description": "Premium hoodies and streetwear from Tunisia. Discover unique designs across anime, gaming, and urban styles.",
+      "type": "website",
+      "siteName": "Hoodiz Tunisia"
+    },
+    "twitter": {
+      "card": "summary_large_image",
+      "title": "Hoodiz Tunisia - Premium Hoodies & Streetwear",
+      "description": "Premium hoodies and streetwear from Tunisia. Discover unique designs across anime, gaming, and urban styles."
+    }
+  },
+
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred. Please try again.",
+    "success": "Success!",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "search": "Search",
+    "submit": "Submit",
+    "continue": "Continue",
+    "back": "Back",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "default": "Default"
+  },
+
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "about": "About",
+    "contact": "Contact",
+    "dashboard": "Dashboard",
+    "adminDashboard": "Admin Dashboard",
+    "logout": "Logout",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "language": "Language"
+  },
+
+  "header": {
+    "toggleMenu": "Toggle menu",
+    "profile": "Profile",
+    "orders": "Orders",
+    "signOut": "Sign out"
+  },
+
+  "footer": {
+    "brandDescription": "Premium styled hoodies and streetwear for the culture.",
+    "shop": "Shop",
+    "allProducts": "All Products",
+    "support": "Support",
+    "contactUs": "Contact Us",
+    "shippingInfo": "Shipping Info",
+    "returns": "Returns",
+    "faq": "FAQ",
+    "quickLinks": "Quick Links",
+    "aboutUs": "About Us",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "exportMyData": "Export My Data",
+    "deleteMyAccount": "Delete My Account",
+    "myData": "My Data",
+    "copyright": "© 2024 Hoodiz. All rights reserved."
+  },
+
+  "hero": {
+    "badge": "New Collection Drop",
+    "titleLine1": "Wear the",
+    "titleLine2": "Power of Street",
+    "description": "Unleash your inner hero with exclusive anime hoodies. Premium quality, vibrant prints, and limited editions that define your style.",
+    "shopCollection": "Shop Collection",
+    "exploreMore": "Explore More",
+    "qualityTitle": "Premium Quality",
+    "qualityDesc": "Handcrafted with care",
+    "shippingTitle": "Tunisia Shipping",
+    "shippingDesc": "Delivery across Tunisia",
+    "limitedEdition": "Limited Edition",
+    "unitsLeft": "Only 100 units left!",
+    "featuredAlt": "Featured Anime Hoodie"
+  },
+
+  "benefits": {
+    "badge": "Why Choose Us",
+    "title": "Power Up Your Style",
+    "subtitle": "Premium quality with exceptional service and support",
+    "fastShipping": {
+      "title": "Fast Shipping",
+      "description": "Free shipping , delivered in 3-5 days"
+    },
+    "limitedDrops": {
+        "title": "Limited Drops",
+        "description": "Exclusive collections available for a short time" 
+    },
+    "premiumQuality": {
+      "title": "Premium Quality",
+      "description": "Hand-stitched details and premium embroidery"
+    },
+    "exclusiveDesigns": {
+      "title": "Exclusive Designs",
+      "description": "Best style-inspired designs you won't find anywhere else"
+    }
+  },
+
+  "categories": {
+    "badge": "Explore Worlds",
+    "title": "Featured Collections",
+    "subtitle": "Journey through iconic anime universes with our exclusive designs",
+    "productsCount": "{count} products",
+    "viewAll": "View All Categories",
+    "noCategories": "No categories available at the moment."
+  },
+
+  "featured": {
+    "badge": "Hot Drops",
+    "title": "Featured Collection",
+    "subtitle": "Handpicked premium hoodies from our latest drops",
+    "viewAll": "View All Products",
+    "noProducts": "No products available at the moment.",
+    "errorLoading": "Failed to load products"
+  },
+
+  "auth": {
+    "loginTitle": "Sign In",
+    "loginSubtitle": "Welcome back to Hoodiz",
+    "registerTitle": "Create Account",
+    "registerSubtitle": "Join the Hoodiz community",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signingIn": "Signing in...",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset Password",
+    "createAccount": "Create Account",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "orContinueWith": "Or continue with",
+    "invalidCredentials": "Invalid email or password",
+    "googleSignInError": "Failed to sign in with Google. Please try again.",
+    "name": "Name",
+    "phoneNumber": "Phone Number",
+    "accountCreated": "Account created successfully! Please sign in.",
+    "forgotPasswordSubtitle": "Enter your email to receive a password reset link",
+    "sending": "Sending...",
+    "sendResetLink": "Send Reset Link",
+    "rememberPassword": "Remember your password?",
+    "invalidToken": "Invalid reset token",
+    "backToSignIn": "Back to Sign In",
+    "success": "Success!",
+    "passwordChanged": "Your password has been changed",
+    "enterNewPassword": "Enter your new password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordResetSuccess": "Your password has been reset successfully",
+    "resetting": "Resetting...",
+    "error": "An error occurred. Please try again."
+  },
+
+  "cart": {
+    "title": "Shopping Cart",
+    "clearCart": "Clear Cart",
+    "emptyCart": "Your cart is empty",
+    "emptyCartDescription": "Looks like you haven't added anything to your cart yet.",
+    "continueShopping": "Continue Shopping",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal ({count} items)",
+    "shipping": "Shipping",
+    "free": "FREE",
+    "freeShippingThreshold": "Add ${amount} more for free shipping!",
+    "total": "Total",
+    "proceedToCheckout": "Proceed to Checkout",
+    "freeShippingFeature": "Free shipping",
+    "easyReturnsFeature": "30-day easy returns",
+    "noImage": "No image"
+  },
+
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "Complete your order - Pay on Delivery",
+    "backToCart": "Back to Cart",
+    "loading": "Loading checkout...",
+    "placeOrder": "Place Order",
+    "placingOrder": "Placing Order...",
+    "emptyCart": {
+      "title": "Your cart is empty",
+      "description": "Add some items to your cart before checking out.",
+      "continueShopping": "Continue Shopping"
+    },
+    "success": {
+      "title": "Order Placed Successfully!",
+      "description": "Thank you for your order. You will receive a confirmation email shortly. Your order will be delivered to the address you provided.",
+      "continueShopping": "Continue Shopping"
+    },
+    "contactInfo": {
+      "title": "Contact Information",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "John",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Doe",
+      "email": "Email",
+      "emailPlaceholder": "john@example.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 123-4567"
+    },
+    "shippingAddress": {
+      "title": "Shipping Address",
+      "savedAddresses": "Saved Addresses",
+      "loadingAddresses": "Loading addresses...",
+      "default": "Default",
+      "orFillNew": "Or fill in a new address below",
+      "streetAddress": "Street Address",
+      "streetPlaceholder": "123 Main Street",
+      "city": "City",
+      "cityPlaceholder": "New York",
+      "postalCode": "Postal Code",
+      "postalCodePlaceholder": "10001",
+      "country": "Country",
+      "countryPlaceholder": "United States",
+      "orderNotes": "Order Notes (Optional)",
+      "orderNotesPlaceholder": "Special delivery instructions..."
+    },
+    "payment": {
+      "title": "Payment Method: Pay on Delivery",
+      "description": "You will pay for your order when it is delivered to your address. No payment information is required at this time."
+    },
+    "orderSummary": {
+      "title": "Order Summary",
+      "quantity": "Qty",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "free": "Free",
+      "total": "Total"
+    },
+    "coupon": {
+      "title": "Coupon Code",
+      "placeholder": "Enter coupon code",
+      "apply": "Apply",
+      "applied": "applied",
+      "remove": "Remove",
+      "discount": "discount",
+      "login": "Log in",
+      "toApply": "to apply coupon codes",
+      "loginRequired": "Please log in to apply coupon codes",
+      "invalid": "Invalid coupon code",
+      "validationFailed": "Failed to validate coupon"
+    },
+    "deliveryInfo": {
+      "title": "Delivery Information",
+      "days": "Delivery within 5-7 business days",
+      "payOnDelivery": "Pay cash or card upon delivery",
+      "smsNotifications": "You will receive SMS notifications"
+    },
+    "validation": {
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email format",
+      "phoneRequired": "Phone number is required",
+      "addressRequired": "Address is required",
+      "cityRequired": "City is required",
+      "postalCodeRequired": "Postal code is required",
+      "countryRequired": "Country is required"
+    },
+    "errors": {
+      "orderFailed": "Failed to place order. Please try again."
+    }
+  },
+
+  "validation": {
+    "required": "{field} is required",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email format",
+    "phoneRequired": "Phone number is required",
+    "addressRequired": "Address is required",
+    "cityRequired": "City is required",
+    "postalCodeRequired": "Postal code is required",
+    "countryRequired": "Country is required"
+  },
+
+  "coupon": {
+    "loginRequired": "Please log in to apply coupon codes",
+    "invalid": "Invalid coupon code",
+    "validationFailed": "Failed to validate coupon"
+  },
+
+  "product": {
+    "addToCart": "Add to Cart",
+    "addingToCart": "Adding...",
+    "addedToCart": "Added to Cart!",
+    "buyNow": "Buy Now",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "selectSize": "Select Size",
+    "selectColor": "Select Color",
+    "selectOptions": "Please select size and color",
+    "notFound": "Product not found",
+    "quantity": "Quantity",
+    "color": "Color",
+    "size": "Size",
+    "description": "Description",
+    "details": "Details",
+    "reviews": "Reviews",
+    "relatedProducts": "You May Also Like",
+    "printPosition": "Print Position",
+    "front": "Front",
+    "back": "Back",
+    "both": "Both",
+    "freeShipping": "Free shipping on orders over $75",
+    "securePayment": "Secure payment with SSL encryption",
+    "easyReturns": "30-day easy returns policy",
+    "shop": "Shop",
+    "faq": {
+      "shipping": {
+        "question": "What is your shipping policy?",
+        "answer": "We offer free shipping . Standard shipping takes 3-5 business days."
+      },
+      "returns": {
+        "question": "What is your return policy?",
+        "answer": "We accept returns within 30 days of purchase. Items must be unworn, unwashed, and in their original packaging. Custom orders are final sale."
+      },
+ 
+      "care": {
+        "question": "How should I care for my hoodie?",
+        "answer": "Machine wash cold with similar colors. Tumble dry on low heat or hang to dry. Do not bleach or iron directly on the print. For best results, wash inside out."
+      },
+      "durability": {
+        "question": "Are the prints durable?",
+        "answer": "Yes! Our high-quality vinyl prints are designed to last through many washes without cracking or fading. We use premium materials and heat-transfer techniques for long-lasting results."
+      }
+    },
+    "quality": {
+      "badge": "Premium Quality",
+      "title": "Crafted for Excellence",
+      "subtitle": "Every hoodie is made with meticulous attention to detail",
+      "fabric": {
+        "title": "Premium Fabric",
+        "description": "320gsm heavy-weight cotton blend for ultimate comfort and durability"
+      },
+      "print": {
+        "title": "HD Print Technology",
+        "description": "Vibrant, long-lasting prints that won't crack, peel, or fade"
+      },
+      "stitching": {
+        "title": "Reinforced Stitching",
+        "description": "Double-stitched seams for extra durability and a premium finish"
+      },
+      "fit": {
+        "title": "Perfect Fit",
+        "description": "Pre-shrunk fabric with a comfortable, true-to-size fit"
+      }
+    }
+  },
+
+  "shop": {
+    "title": "Shop",
+    "allProducts": "All Products",
+    "filters": "Filters",
+    "clearFilters": "Clear Filters",
+    "sortBy": "Sort By",
+    "priceRange": "Price Range",
+    "categories": "Categories",
+    "colors": "Colors",
+    "sizes": "Sizes",
+    "search": "Search products",
+    "noProducts": "No products found",
+    "noProductsDescription": "Try adjusting your filters or search terms.",
+    "showingResults": "Showing {count} products",
+    "loadMore": "Load More",
+    "loading": "Loading products..."
+  },
+
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "welcomeBack": "Welcome back, {name}!",
+    "overview": "Overview",
+    "orders": "Orders",
+    "viewOrders": "View your order history",
+    "addresses": "Addresses",
+    "manageAddresses": "Manage your shipping addresses",
+    "wishlist": "Wishlist",
+    "viewWishlist": "View your saved items",
+    "profile": "Profile",
+    "editProfile": "Edit your profile settings",
+    "settings": "Settings",
+    "recentOrders": "Recent Orders",
+    "viewAllOrders": "View All Orders",
+    "noOrders": "No orders yet",
+    "noOrdersDescription": "Start shopping to see your orders here.",
+    "defaultAddress": "Default Address",
+    "noAddress": "No address saved",
+    "addAddress": "Add Address",
+    "editAddress": "Edit Address",
+    "deleteAddress": "Delete Address",
+    "wishlistEmpty": "Your wishlist is empty",
+    "wishlistEmptyDescription": "Save items you love by clicking the heart icon on products.",
+    "customer": "Customer",
+    "signOut": "Sign Out",
+    "signingOut": "Signing Out...",
+    "quickStats": "Quick Stats",
+    "totalOrders": "Total Orders",
+    "savedAddresses": "Saved Addresses",
+    "wishlistItems": "Wishlist Items",
+    "addNewAddress": "Add New Address",
+    "addressLabel": "Address Label",
+    "addressLabelPlaceholder": "Home, Work, etc.",
+    "recipientName": "Recipient Name",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "setDefaultAddress": "Set as default address",
+    "cancel": "Cancel",
+    "update": "Update",
+    "add": "Add",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "order": "Order",
+    "status": "Status",
+    "itemsOrdered": "Items Ordered",
+    "size": "Size",
+    "print": "Print",
+    "quantity": "Quantity",
+    "each": "each",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "free": "Free",
+    "discount": "Discount",
+    "total": "Total",
+    "shippingAddress": "Shipping Address",
+    "orderTimeline": "Order Timeline",
+    "orderPlaced": "Order Placed",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "startShopping": "Start shopping to see your orders here",
+    "browseProducts": "Browse Products",
+    "more": "more",
+    "clickToView": "Click to view details",
+    "items": "items",
+    "noAddresses": "No addresses saved",
+    "addAddressForCheckout": "Add an address for faster checkout",
+    "myAddresses": "My Addresses",
+    "default": "Default",
+    "saveItemsToWishlist": "Save items you love to your wishlist",
+    "removeFromWishlist": "Remove from wishlist",
+    "user": "User",
+    "name": "Name",
+    "saveChanges": "Save Changes",
+    "accountInformation": "Account Information",
+    "email": "Email",
+    "memberSince": "Member since",
+    "passwordSet": "Password set",
+    "yes": "Yes",
+    "no": "No",
+    "na": "N/A",
+    "retry": "Retry",
+    "confirmDeleteAddress": "Are you sure you want to delete this address?",
+    "confirmRemoveWishlist": "Remove this item from your wishlist?"
+  },
+
+  "admin": {
+    "dashboard": "Dashboard",
+    "overview": "Overview",
+    "products": "Products",
+    "orders": "Orders",
+    "customers": "Customers",
+    "categories": "Categories",
+    "coupons": "Coupons",
+    "messages": "Messages",
+    "addProduct": "Add Product",
+    "editProduct": "Edit Product",
+    "addCategory": "Add Category",
+    "editCategory": "Edit Category",
+    "addCoupon": "Add Coupon",
+    "createNewCoupon": "Create New Coupon",
+    "createProduct": "Create Product",
+    "updateProduct": "Update Product",
+    "createCategory": "Create Category",
+    "updateCategory": "Update Category",
+    "createCoupon": "Create Coupon",
+    "productCreated": "Product created successfully!",
+    "productUpdated": "Product updated successfully!",
+    "productDeleted": "Product deleted successfully",
+    "categoryCreated": "Category created successfully!",
+    "categoryUpdated": "Category updated successfully!",
+    "categoryDeleted": "Category deleted successfully",
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "confirmDeleteProduct": "Are you sure you want to delete this product?",
+    "confirmDeleteMessage": "Are you sure you want to delete this message?",
+    "confirmDeleteUser": "Are you sure you want to delete this user? This action cannot be undone.",
+    "confirmBlock": "Are you sure you want to block this user?",
+    "confirmUnblock": "Are you sure you want to unblock this user?",
+    "createFailed": "Failed to create",
+    "updateFailed": "Failed to update",
+    "deleteFailed": "Failed to delete",
+    "errorOccurred": "An error occurred",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "viewDetails": "View Details",
+    "name": "Name",
+    "slug": "Slug",
+    "description": "Description",
+    "price": "Price",
+    "stock": "Stock",
+    "status": "Status",
+    "actions": "Actions",
+    "image": "Image",
+    "noImage": "No img",
+    "noProducts": "No products found",
+    "noCategories": "No categories found",
+    "noCoupons": "No coupons found",
+    "noCustomers": "No customers found",
+    "noOrders": "No orders found",
+    "noMessages": "No messages yet",
+    "noCustomersInCategory": "No customers in this category",
+    "product": "Product",
+    "category": "Category",
+    "colors": "Colors",
+    "customer": "Customer",
+    "role": "Role",
+    "totalSpent": "Total Spent",
+    "joined": "Joined",
+    "guest": "Guest",
+    "active": "Active",
+    "inactive": "Inactive",
+    "blocked": "Blocked",
+    "blockUser": "Block User",
+    "unblockUser": "Unblock User",
+    "activeCustomers": "Active Customers",
+    "blockedUsers": "Blocked Users",
+    "editCustomer": "Edit Customer",
+    "editCustomerDescription": "Update customer information below.",
+    "customerDetails": "Customer Details",
+    "customerNamePlaceholder": "Customer name",
+    "customerRole": "Customer",
+    "adminRole": "Admin",
+    "ghostRole": "Ghost",
+    "saveChanges": "Save Changes",
+    "notProvided": "Not provided",
+    "noOrdersYet": "No orders yet",
+    "phone": "Phone",
+    "email": "Email",
+    "order": "Order",
+    "items": "items",
+    "total": "Total",
+    "date": "Date",
+    "searchOrders": "Search orders...",
+    "filterByStatus": "Filter by status",
+    "allStatus": "All Status",
+    "pending": "Pending",
+    "processing": "Processing",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "customerInformation": "Customer Information",
+    "shippingAddress": "Shipping Address",
+    "orderItems": "Order Items",
+    "subtotal": "Subtotal",
+    "updateStatus": "Update Status",
+    "placedAt": "Placed At",
+    "na": "N/A",
+    "contactMessages": "Contact Messages",
+    "messagesCount": "{count, plural, =1 {message} other {messages}}",
+    "subject": "Subject",
+    "message": "Message",
+    "received": "Received",
+    "lastUpdated": "Last updated",
+    "markAsRead": "Mark as Read",
+    "markAsReplied": "Mark as Replied",
+    "close": "Close",
+    "reply": "Reply",
+    "sendReply": "Send Reply",
+    "typeYourReply": "Type your reply...",
+    "yourReply": "Your Reply",
+    "couponCode": "Coupon Code",
+    "couponCodePlaceholder": "e.g., SAVE20",
+    "couponDescriptionPlaceholder": "e.g., 20% off your order",
+    "discountType": "Discount Type",
+    "discountValue": "Discount Value",
+    "percentage": "Percentage",
+    "fixedAmount": "Fixed Amount",
+    "minOrderAmount": "Minimum Order Amount",
+    "maxUses": "Maximum Uses",
+    "expirationDate": "Expiration Date",
+    "code": "Code",
+    "discount": "Discount",
+    "usage": "Usage",
+    "expires": "Expires",
+    "never": "Never",
+    "enable": "Enable",
+    "disable": "Disable",
+    "basicInformation": "Basic Information",
+    "productNamePlaceholder": "e.g., Monkey D. Luffy Hoodie",
+    "productSlugPlaceholder": "e.g., monkey-d-luffy-hoodie",
+    "descriptionPlaceholder": "Optional description",
+    "basePrice": "Base Price",
+    "selectCategory": "Select category",
+    "noCategoriesAvailable": "No categories available",
+    "printPosition": "Print Position",
+    "bothFrontBack": "Both (Front & Back)",
+    "frontOnly": "Front Only",
+    "backOnly": "Back Only",
+    "colorsWithImages": "Colors (with Images)",
+    "addColor": "Add Color",
+    "required": "Required",
+    "colorImageRequirement": "Each color must have both a front image and a back image. These images will be displayed on the product page with a flip toggle.",
+    "color": "Color",
+    "colorName": "Color Name",
+    "colorNamePlaceholder": "Black, White, Navy...",
+    "frontImage": "Front Image",
+    "backImage": "Back Image",
+    "uploadRequiredImages": "Please upload all required images",
+    "selectAtLeastOneSize": "Please select at least one available size",
+    "availableSizes": "Available Sizes",
+    "selectAvailableSizes": "Select which sizes are available for this product.",
+    "selected": "Selected",
+    "sizes": "sizes",
+    "namePlaceholder": "e.g., One Piece",
+    "slugPlaceholder": "e.g., one-piece",
+    "categoryImage": "Category Image",
+    "stats": {
+      "totalOrders": "Total Orders",
+      "totalRevenue": "Total Revenue",
+      "pendingOrders": "Pending Orders",
+      "totalCustomers": "Total Customers",
+      "totalProducts": "Total Products",
+      "lowStock": "Low Stock Items"
+    }
+  },
+
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with us",
+    "badge": "Get in Touch",
+    "heroTitle": "We would love to hear from you",
+    "heroDescription": "Have questions about our products, need help with an order, or just want to say hello? Our team is here to help!",
+    "info": {
+      "email": {
+        "title": "Email Us",
+        "value": "support@hoodiz.net",
+        "note": "We reply within 24 hours"
+      },
+      "phone": {
+        "title": "Call Us",
+        "value": "+216 58 886 673",
+        "note": "Mon-Fri 9AM-6PM EST"
+      },
+      "hours": {
+        "title": "Business Hours",
+        "value": "Mon - Fri: 9AM - 6PM",
+        "note": "Sat: 10AM - 4PM"
+      }
+    },
+    "form": {
+      "title": "Send us a Message",
+      "description": "Fill out the form below and we will get back to you as soon as possible.",
+      "yourName": "Your Name",
+      "emailAddress": "Email Address",
+      "selectSubject": "Select a subject",
+      "subjects": {
+        "order": "Order Inquiry",
+        "product": "Product Question",
+        "shipping": "Shipping & Delivery",
+        "returns": "Returns & Exchanges",
+        "wholesale": "Wholesale Inquiry",
+        "other": "Other"
+      },
+      "messageLabel": "Message",
+      "messagePlaceholder": "Tell us how we can help you...",
+      "sending": "Sending...",
+      "signInRequired": "Please sign in to send a message",
+      "success": "Message sent successfully!",
+      "successDescription": "Thank you for reaching out. We'll get back to you soon."
+    },
+    "faq": {
+      "title": "Quick Answers",
+      "shipping": {
+        "question": "How long does shipping take?",
+        "answer": "Standard shipping takes 5-7 business days. Express shipping (2-3 days) is available at checkout."
+      },
+      "returns": {
+        "question": "What is your return policy?",
+        "answer": "We offer a 30-day return policy for unworn, unwashed items with tags attached. Returns are free!"
+      },
+      "tracking": {
+        "question": "How do I track my order?",
+        "answer": "Once your order ships, you will receive an email  ."
+      },
+      "changeOrder": {
+        "question": "Can I change my order after placing it?",
+        "answer": "Contact us within 1 hour of placing your order to make changes."
+      }
+    },
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "sendMessage": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Failed to send message. Please try again."
+  },
+
+  "about": {
+  "title": "About Us",
+  "subtitle": "Our Story",
+  "badge": "Our Story",
+  "titleLine1": "Born in Tunisia,",
+  "titleLine2": "Designed for Everyday Style",
+  "description": "We create premium hoodies made for comfort, durability, and style — inspired by street culture, creativity, and the lifestyle of a new Tunisian generation.",
+  "exploreCollection": "Explore Collection",
+  "getInTouch": "Get in Touch",
+
+  "mission": {
+    "badge": "Our Mission",
+    "title": "Expressing Identity Through Fashion",
+    "paragraph1": "Our mission is to design high-quality hoodies that fit every style and every moment. From minimal designs to bold statements, our pieces are made for people who want to express who they are through what they wear.",
+    "paragraph2": "Each hoodie is crafted using premium materials, attention to detail, and modern design standards — adapted to local tastes, daily wear, and long-lasting comfort."
+  },
+
+  "stats": {
+    "happyCustomers": "Happy Customers",
+    "uniqueDesigns": "Unique Designs",
+    "hoodieStyles": "Hoodie Styles",
+    "satisfaction": "Satisfaction Rate"
+  },
+
+  "floatingBadges": {
+    "premiumQuality": "Premium Quality",
+    "fastShipping": "Fast Delivery in Tunisia"
+  },
+
+  "values": {
+    "badge": "Our Values",
+    "title": "What We Believe In",
+    "authenticDesigns": {
+      "title": "Authentic Design",
+      "description": "Every hoodie is designed with intention — combining creativity, simplicity, and originality."
+    },
+    "premiumQuality": {
+      "title": "Premium Quality",
+      "description": "We use high-quality fabrics to ensure softness, durability, and a perfect fit for everyday wear."
+    },
+    "communityFirst": {
+      "title": "Community First",
+      "description": "We proudly support the Tunisian creative and streetwear community, building something local with global standards."
+    },
+    "fastDelivery": {
+      "title": "Fast & Reliable Delivery",
+      "description": "Efficient delivery across Tunisia, with responsive support and careful packaging."
+    }
+  },
+
+    "cta": {
+      "title": "Ready to Join HOODIZ ?",
+      "description": "Discover our collection of premium anime hoodies and find the perfect piece to express your fandom.",
+      "shopNow": "Shop Now",
+      "contactUs": "Contact Us"
+    }
+  },
+
+  "privacy": {
+    "title": "Privacy Policy",
+    "description": "How we collect, use, and protect your personal information.",
+    "lastUpdated": "Last updated",
+    "tableOfContents": "Table of Contents",
+    "sections": {
+      "1": {
+        "title": "Introduction",
+        "content": "Hoodie Legends ('we', 'us', or 'our') is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and make purchases from us. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site. This policy complies with the General Data Protection Regulation (GDPR) and other applicable data protection laws."
+      },
+      "2": {
+        "title": "Data We Collect",
+        "content": "We collect information that you provide directly to us, including: name, email address, shipping address, billing address, phone number, and payment information. We also automatically collect certain information when you visit our site, including: IP address, browser type, device information, and browsing behavior."
+      },
+      "3": {
+        "title": "How We Use Your Data",
+        "content": "We use the information we collect to: process and fulfill your orders, communicate with you about your orders, send promotional emails (with your consent), improve our website and services, prevent fraud and enhance security, and comply with legal obligations."
+      },
+      "4": {
+        "title": "Cookies & Tracking",
+        "content": "We use cookies and similar tracking technologies to track activity on our website and store certain information. Cookies are files with small amounts of data which may include an anonymous unique identifier. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent."
+      },
+      "5": {
+        "title": "Data Sharing",
+        "content": "We may share your information with: service providers who assist us in operating our website, payment processors, shipping carriers, and legal authorities when required by law. We do not sell your personal information to third parties."
+      },
+      "6": {
+        "title": "Your Rights",
+        "content": "Under GDPR, you have the right to: access your personal data, rectify inaccurate data, erase your data, restrict processing, data portability, and object to processing. To exercise these rights, please contact us using the information provided below."
+      },
+      "7": {
+        "title": "Data Security",
+        "content": "We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet is 100% secure."
+      },
+      "8": {
+        "title": "Children's Privacy",
+        "content": "Our website is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If we become aware that we have collected personal information from a child under 13, we will take steps to delete such information."
+      },
+      "9": {
+        "title": "Policy Changes",
+        "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the 'Last updated' date. You are advised to review this Privacy Policy periodically for any changes."
+      },
+      "10": {
+        "title": "Contact Us",
+        "content": "If you have any questions about this Privacy Policy, please contact us using the information below."
+      }
+    },
+    "contact": {
+      "title": "Contact Information",
+      "description": "If you have any questions about this Privacy Policy, please contact us."
+    }
+  },
+
+  "terms": {
+    "title": "Terms and Conditions",
+    "lastUpdated": "Last updated",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of Terms",
+        "content": "By accessing and using this website, you accept and agree to be bound by the terms and provisions of this agreement."
+      },
+      "useOfServices": {
+        "title": "2. Use of Services",
+        "content": "You agree to use our services only for lawful purposes and in accordance with these Terms and Conditions."
+      },
+      "userAccounts": {
+        "title": "3. User Accounts",
+        "content": "When you create an account with us, you must provide accurate and complete information. You are responsible for safeguarding your password and for all activities that occur under your account."
+      },
+      "privacyPolicy": {
+        "title": "4. Privacy Policy",
+        "content": "Your use of our services is also governed by our Privacy Policy. By using our services, you consent to the collection and use of your information as described in our Privacy Policy."
+      },
+      "intellectualProperty": {
+        "title": "5. Intellectual Property",
+        "content": "All content, features, and functionality of this website are owned by us and are protected by international copyright, trademark, and other intellectual property laws."
+      },
+      "limitationOfLiability": {
+        "title": "6. Limitation of Liability",
+        "content": "We shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the services."
+      },
+      "changesToTerms": {
+        "title": "7. Changes to Terms",
+        "content": "We reserve the right to modify or replace these Terms at any time. If a revision is material, we will provide notice prior to any new terms taking effect."
+      },
+      "contactInformation": {
+        "title": "8. Contact Information",
+        "content": "If you have any questions about these Terms, please contact us."
+      }
+    },
+    "backToRegistration": "Back to Registration"
+  },
+
+  "gdpr": {
+    "exportData": "Export My Data",
+    "exportDescription": "Download a copy of your personal data.",
+    "deleteAccount": "Delete My Account",
+    "deleteDescription": "Permanently delete your account and all associated data.",
+    "confirmDelete": "Are you sure? This action cannot be undone.",
+    "export": {
+      "title": "Export Your Data",
+      "description": "Request a copy of all your personal data stored on our website.",
+      "whatData": "What data will be exported?",
+      "dataTypes": {
+        "account": "Account information (name, email, phone)",
+        "orders": "Order history and details",
+        "addresses": "Shipping addresses",
+        "wishlist": "Wishlist items",
+        "preferences": "Preferences and settings"
+      },
+      "exportButton": "Export My Data",
+      "exporting": "Exporting...",
+      "success": "Your data has been exported and downloaded successfully.",
+      "error": "Failed to export data. Please try again.",
+      "genericError": "An error occurred. Please try again later.",
+      "footer": "This request is processed automatically. For manual assistance, {link}.",
+      "contactLink": "contact our support team"
+    },
+    "delete": {
+      "title": "Delete Your Account",
+      "description": "Request permanent deletion of your personal data.",
+      "warningTitle": "Before you proceed:",
+      "warningItems": {
+        "permanent": "This action is permanent and cannot be undone",
+        "orders": "All your order history will be deleted",
+        "wishlist": "Your wishlist items will be removed",
+        "access": "You will lose access to your account immediately",
+        "pending": "If you have pending orders, please contact support first"
+      },
+      "confirmLabel": "Type",
+      "confirmPlaceholder": "delete my account",
+      "confirmCode": "delete my account",
+      "confirmError": "Please type \"delete my account\" to confirm.",
+      "deleteButton": "Permanently Delete My Account",
+      "processing": "Processing...",
+      "success": "Your account deletion request has been received. You will receive a confirmation email shortly.",
+      "error": "Failed to process deletion request. Please try again.",
+      "genericError": "An error occurred. Please try again later.",
+      "gdprNotice": "This request is processed in accordance with {link} (Right to Erasure). We will confirm your deletion request via email within 24 hours.",
+      "gdprLink": "Article 17 of the GDPR",
+      "questions": "Have questions? {link} for assistance.",
+      "contactLink": "Contact our support team"
+    }
+  },
+
+  "errors": {
+    "notFound": "Page not found",
+    "serverError": "Server error",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "somethingWentWrong": "Something went wrong. Please try again later."
+  },
+
+  "unauthorized": {
+    "title": "Access Denied",
+    "description": "You do not have permission to access this page. This area is restricted to administrators only.",
+    "goHome": "Go to Homepage",
+    "browseProducts": "Browse Products",
+    "contactSupport": "If you believe this is an error, please contact our support team."
+  },
+
+  "blocked": {
+    "title": "Account Blocked",
+    "description": "Your account has been restricted. You cannot access this site.",
+    "contactMistake": "If you believe this is a mistake, please contact our support team.",
+    "contactSupport": "Contact Support",
+    "signOut": "Sign Out",
+    "footer": "Hoodies Anime Store - Customer Support"
+  },
+
+  "cookieConsent": {
+    "title": "We use cookies",
+    "description": "We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic.",
+    "accept": "Accept All",
+    "decline": "Decline",
+    "customize": "Customize",
+    "savePreferences": "Save Preferences",
+    "necessary": "Necessary",
+    "necessaryDescription": "These cookies are required for the website to function properly.",
+    "analytics": "Analytics",
+    "analyticsDescription": "These cookies help us understand how visitors interact with our website.",
+    "marketing": "Marketing",
+    "marketingDescription": "These cookies are used to track visitors across websites for advertising purposes."
+  }
+}

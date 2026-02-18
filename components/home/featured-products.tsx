@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { ProductCard } from '@/components/product/product-card'
 import { Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/routing'
 
 interface Product {
   id: string
@@ -50,6 +51,7 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+  const t = useTranslations('featured')
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -59,18 +61,18 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
           const data = await res.json()
           setProducts(data.products || [])
         } else {
-          setError('Failed to load products')
+          setError(t('errorLoading'))
         }
       } catch (err) {
         console.error('Error fetching products:', err)
-        setError('Failed to load products')
+        setError(t('errorLoading'))
       } finally {
         setLoading(false)
       }
     }
 
     fetchProducts()
-  }, [limit])
+  }, [limit, t])
 
   const container = {
     hidden: { opacity: 0 },
@@ -121,7 +123,7 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
       <section className="relative py-20 lg:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/60">No products available at the moment.</p>
+          <p className="text-white/60">{t('noProducts')}</p>
         </div>
       </section>
     )
@@ -148,13 +150,13 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 mb-6">
             <Zap className="w-4 h-4 text-blue-400" />
-            <span className="text-blue-300 text-sm font-medium">Hot Drops</span>
+            <span className="text-blue-300 text-sm font-medium">{t('badge')}</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
-            Featured Collection
+            {t('title')}
           </h2>
           <p className="text-white/60 max-w-2xl text-lg">
-            Handpicked premium hoodies from our latest drops
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -188,7 +190,7 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
             href="/shop"
             className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-xl transition-all"
           >
-            View All Products
+            {t('viewAll')}
           </Link>
         </motion.div>
       </div>

@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/routing'
 
 interface Category {
   id: string
@@ -19,6 +20,7 @@ interface Category {
 export function CategoriesSection() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
+  const t = useTranslations('categories')
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -94,13 +96,13 @@ export function CategoriesSection() {
           viewport={{ once: true }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 mb-6">
-            <span className="text-purple-300 text-sm font-medium">Explore Worlds</span>
+            <span className="text-purple-300 text-sm font-medium">{t('badge')}</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-            Featured Collections
+            {t('title')}
           </h2>
           <p className="text-white/60 max-w-2xl text-lg">
-            Journey through iconic anime universes with our exclusive designs
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -147,7 +149,7 @@ export function CategoriesSection() {
                       {category.name}
                     </motion.h3>
                     <p className="text-sm text-purple-300 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
-                      {category._count?.products || 0} products →
+                      {t('productsCount', { count: category._count?.products || 0 })}
                     </p>
                   </div>
 
@@ -171,7 +173,7 @@ export function CategoriesSection() {
             href="/shop"
             className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold overflow-hidden transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25"
           >
-            <span className="relative z-10">View All Categories</span>
+            <span className="relative z-10">{t('viewAll')}</span>
             <svg 
               className="w-5 h-5 transition-transform group-hover:translate-x-1"
               fill="none" 
@@ -187,7 +189,7 @@ export function CategoriesSection() {
         {/* Show placeholder if no categories */}
         {categories.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-white/60">No categories available at the moment.</p>
+            <p className="text-white/60">{t('noCategories')}</p>
           </div>
         )}
       </div>

@@ -100,7 +100,8 @@ export function RegisterForm({ className, darkMode = false }: RegisterFormProps)
         // If auto-signin fails, redirect to login page
         router.push("/auth?registered=true");
       } else {
-        // Successful registration and signin - redirect to shop
+        // Successful registration and signin - set flag for welcome popup
+        sessionStorage.setItem('justRegistered', 'true');
         router.refresh();
         window.location.href = "/shop";
       }

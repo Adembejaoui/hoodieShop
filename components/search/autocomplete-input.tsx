@@ -146,7 +146,7 @@ export function AutocompleteInput() {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-white truncate">{product.name}</p>
                     <p className="text-sm text-purple-400">
-                      ${product.price.toFixed(2)}
+                      {product.price.toFixed(2)} DT
                     </p>
                   </div>
                 </Link>

@@ -1,0 +1,983 @@
+{
+  "metadata": {
+    "title": "Hoodiz Tunisie - Sweats à Capuche Premium & Streetwear",
+    "description": "Sweats à capuche premium et streetwear de Tunisie. Découvrez des designs uniques anime, gaming et styles urbains. Vêtements de qualité livrés dans toute la Tunisie.",
+    "keywords": ["sweats tunisie", "streetwear tunisie", "sweats anime", "merch gaming", "mode urbaine", "vêtements tunisie", "sweats en ligne"],
+    "openGraph": {
+      "title": "Hoodiz Tunisie - Sweats à Capuche Premium & Streetwear",
+      "description": "Sweats à capuche premium et streetwear de Tunisie. Découvrez des designs uniques anime, gaming et styles urbains.",
+      "type": "website",
+      "siteName": "Hoodiz Tunisie"
+    },
+    "twitter": {
+      "card": "summary_large_image",
+      "title": "Hoodiz Tunisie - Sweats à Capuche Premium & Streetwear",
+      "description": "Sweats à capuche premium et streetwear de Tunisie. Découvrez des designs uniques anime, gaming et styles urbains."
+    }
+  },
+
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite. Veuillez réessayer.",
+    "success": "Succès !",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "search": "Rechercher",
+    "submit": "Soumettre",
+    "continue": "Continuer",
+    "back": "Retour",
+    "close": "Fermer",
+    "yes": "Oui",
+    "no": "Non",
+    "all": "Tous",
+    "none": "Aucun",
+    "default": "Par défaut"
+  },
+
+  "nav": {
+    "home": "Accueil",
+    "shop": "Boutique",
+    "about": "À propos",
+    "contact": "Contact",
+    "dashboard": "Tableau de bord",
+    "adminDashboard": "Tableau de bord Admin",
+    "logout": "Déconnexion",
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "language": "Langue"
+  },
+
+  "header": {
+    "toggleMenu": "Ouvrir le menu",
+    "profile": "Profil",
+    "orders": "Commandes",
+    "signOut": "Se déconnecter"
+  },
+
+  "footer": {
+    "brandDescription": "Sweats à capuche de style  premium et streetwear pour la culture.",
+    "shop": "Boutique",
+    "allProducts": "Tous les produits",
+    "support": "Support",
+    "contactUs": "Nous contacter",
+    "shippingInfo": "Informations de livraison",
+    "returns": "Retours",
+    "faq": "FAQ",
+    "quickLinks": "Liens rapides",
+    "aboutUs": "À propos de nous",
+    "termsOfService": "Conditions d'utilisation",
+    "privacyPolicy": "Politique de confidentialité",
+    "exportMyData": "Exporter mes données",
+    "deleteMyAccount": "Supprimer mon compte",
+    "myData": "Mes données",
+    "copyright": "© 2024 Hoodiz. Tous droits réservés."
+  },
+
+  "hero": {
+    "badge": "Nouvelle Collection",
+    "titleLine1": "Portez le",
+    "titleLine2": "Le Pouvoir de la Rue",
+    "description": "Libérez votre héros intérieur avec des sweats à capuche anime exclusifs. Qualité premium, impressions vibrantes et éditions limitées qui définissent votre style.",
+    "shopCollection": "Voir la collection",
+    "exploreMore": "Explorer plus",
+    "qualityTitle": "Qualité Premium",
+    "qualityDesc": "Fabriqué avec soin",
+    "shippingTitle": "Livraison Tunisie",
+    "shippingDesc": "Livraison dans toute la Tunisie",
+    "limitedEdition": "Édition Limitée",
+    "unitsLeft": "Plus que 100 exemplaires !",
+    "featuredAlt": "Sweat à capuche anime en vedette"
+  },
+
+  "benefits": {
+    "badge": "Pourquoi nous choisir",
+    "title": "Boostez votre style",
+    "subtitle": "Qualité premium avec un service et un support exceptionnels",
+    "fastShipping": {
+      "title": "Livraison rapide",
+      "description": "Livraison gratuite , livré en 3-5 jours"
+    },
+  "limitedDrops": {
+      "title": "Éditions Limitées",
+      "description": "Des collections exclusives disponibles pour une durée limitée"
+    },
+    "premiumQuality": {
+      "title": "Qualité premium",
+      "description": "Détails cousus main et broderies premium"
+    },
+    "exclusiveDesigns": {
+      "title": "Designs exclusifs",
+      "description": "Designs uniques inspirés  que vous ne trouverez nulle part ailleurs"
+    }
+  },
+
+  "categories": {
+    "badge": "Explorez les mondes",
+    "title": "Collections en vedette",
+    "subtitle": "Voyagez à travers des univers anime emblématiques avec nos designs exclusifs",
+    "productsCount": "{count} produits",
+    "viewAll": "Voir toutes les catégories",
+    "noCategories": "Aucune catégorie disponible pour le moment."
+  },
+
+  "featured": {
+    "badge": "Nouveautés",
+    "title": "Collection en vedette",
+    "subtitle": "Sweats à capuche premium sélectionnés parmi nos dernières sorties",
+    "viewAll": "Voir tous les produits",
+    "noProducts": "Aucun produit disponible pour le moment.",
+    "errorLoading": "Échec du chargement des produits"
+  },
+
+  "auth": {
+    "loginTitle": "Se connecter",
+    "loginSubtitle": "Bienvenue sur Hoodiz",
+    "registerTitle": "Créer un compte",
+    "registerSubtitle": "Rejoignez la communauté Hoodiz",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "signingIn": "Connexion en cours...",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "createAccount": "Créer un compte",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "hasAccount": "Vous avez déjà un compte ?",
+    "orContinueWith": "Ou continuer avec",
+    "invalidCredentials": "Email ou mot de passe invalide",
+    "googleSignInError": "Échec de la connexion avec Google. Veuillez réessayer.",
+    "name": "Nom",
+    "phoneNumber": "Numéro de téléphone",
+    "accountCreated": "Compte créé avec succès ! Veuillez vous connecter.",
+    "forgotPasswordSubtitle": "Entrez votre email pour recevoir un lien de réinitialisation",
+    "sending": "Envoi en cours...",
+    "sendResetLink": "Envoyer le lien de réinitialisation",
+    "rememberPassword": "Vous vous souvenez de votre mot de passe ?",
+    "invalidToken": "Jeton de réinitialisation invalide",
+    "backToSignIn": "Retour à la connexion",
+    "success": "Succès !",
+    "passwordChanged": "Votre mot de passe a été modifié",
+    "enterNewPassword": "Entrez votre nouveau mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "confirmNewPassword": "Confirmer le nouveau mot de passe",
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+    "passwordResetSuccess": "Votre mot de passe a été réinitialisé avec succès",
+    "resetting": "Réinitialisation...",
+    "error": "Une erreur s'est produite. Veuillez réessayer."
+  },
+
+  "cart": {
+    "title": "Panier",
+    "clearCart": "Vider le panier",
+    "emptyCart": "Votre panier est vide",
+    "emptyCartDescription": "Il semble que vous n'avez rien ajouté à votre panier pour le moment.",
+    "continueShopping": "Continuer vos achats",
+    "orderSummary": "Résumé de la commande",
+    "subtotal": "Sous-total ({count} articles)",
+    "shipping": "Livraison",
+    "free": "GRATUIT",
+    "freeShippingThreshold": "Ajoutez {amount} de plus pour la livraison gratuite !",
+    "total": "Total",
+    "proceedToCheckout": "Passer à la caisse",
+    "freeShippingFeature": "Livraison gratuite",
+    "easyReturnsFeature": "Retours faciles sous 30 jours",
+    "noImage": "Pas d'image"
+  },
+
+  "checkout": {
+    "title": "Paiement",
+    "subtitle": "Finalisez votre commande - Paiement à la livraison",
+    "backToCart": "Retour au panier",
+    "loading": "Chargement du paiement...",
+    "placeOrder": "Passer la commande",
+    "placingOrder": "Commande en cours...",
+    "emptyCart": {
+      "title": "Votre panier est vide",
+      "description": "Ajoutez des articles à votre panier avant de passer commande.",
+      "continueShopping": "Continuer vos achats"
+    },
+    "success": {
+      "title": "Commande passée avec succès !",
+      "description": "Merci pour votre commande. Vous recevrez un email de confirmation sous peu. Votre commande sera livrée à l'adresse indiquée.",
+      "continueShopping": "Continuer vos achats"
+    },
+    "contactInfo": {
+      "title": "Informations de contact",
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Jean",
+      "lastName": "Nom",
+      "lastNamePlaceholder": "Dupont",
+      "email": "Email",
+      "emailPlaceholder": "jean@exemple.com",
+      "phone": "Téléphone",
+      "phonePlaceholder": "+33 6 12 34 56 78"
+    },
+    "shippingAddress": {
+      "title": "Adresse de livraison",
+      "savedAddresses": "Adresses enregistrées",
+      "loadingAddresses": "Chargement des adresses...",
+      "default": "Par défaut",
+      "orFillNew": "Ou remplissez une nouvelle adresse ci-dessous",
+      "streetAddress": "Adresse",
+      "streetPlaceholder": "123 Rue Principale",
+      "city": "Ville",
+      "cityPlaceholder": "Paris",
+      "postalCode": "Code postal",
+      "postalCodePlaceholder": "75001",
+      "country": "Pays",
+      "countryPlaceholder": "France",
+      "orderNotes": "Notes de commande (Optionnel)",
+      "orderNotesPlaceholder": "Instructions de livraison spéciales..."
+    },
+    "payment": {
+      "title": "Mode de paiement : Paiement à la livraison",
+      "description": "Vous paierez votre commande lors de sa livraison à votre adresse. Aucune information de paiement n'est requise pour le moment."
+    },
+    "orderSummary": {
+      "title": "Résumé de la commande",
+      "quantity": "Qté",
+      "subtotal": "Sous-total",
+      "discount": "Réduction",
+      "shipping": "Livraison",
+      "free": "Gratuite",
+      "total": "Total"
+    },
+    "coupon": {
+      "title": "Code promo",
+      "placeholder": "Entrez le code promo",
+      "apply": "Appliquer",
+      "applied": "appliqué",
+      "remove": "Supprimer",
+      "discount": "réduction",
+      "login": "Connectez-vous",
+      "toApply": "pour appliquer des codes promo",
+      "loginRequired": "Veuillez vous connecter pour appliquer des codes promo",
+      "invalid": "Code promo invalide",
+      "validationFailed": "Échec de la validation du code promo"
+    },
+    "deliveryInfo": {
+      "title": "Informations de livraison",
+      "days": "Livraison sous 5-7 jours ouvrables",
+      "payOnDelivery": "Paiement en espèces ou par carte à la livraison",
+      "smsNotifications": "Vous recevrez des notifications par SMS"
+    },
+    "validation": {
+      "firstNameRequired": "Le prénom est requis",
+      "lastNameRequired": "Le nom est requis",
+      "emailRequired": "L'email est requis",
+      "emailInvalid": "Format d'email invalide",
+      "phoneRequired": "Le numéro de téléphone est requis",
+      "addressRequired": "L'adresse est requise",
+      "cityRequired": "La ville est requise",
+      "postalCodeRequired": "Le code postal est requis",
+      "countryRequired": "Le pays est requis"
+    },
+    "errors": {
+      "orderFailed": "Échec de la commande. Veuillez réessayer."
+    }
+  },
+
+  "validation": {
+    "required": "{field} est requis",
+    "firstNameRequired": "Le prénom est requis",
+    "lastNameRequired": "Le nom est requis",
+    "emailRequired": "L'email est requis",
+    "emailInvalid": "Format d'email invalide",
+    "phoneRequired": "Le numéro de téléphone est requis",
+    "addressRequired": "L'adresse est requise",
+    "cityRequired": "La ville est requise",
+    "postalCodeRequired": "Le code postal est requis",
+    "countryRequired": "Le pays est requis"
+  },
+
+  "coupon": {
+    "loginRequired": "Veuillez vous connecter pour appliquer des codes promo",
+    "invalid": "Code promo invalide",
+    "validationFailed": "Échec de la validation du coupon"
+  },
+
+  "product": {
+    "addToCart": "Ajouter au panier",
+    "addingToCart": "Ajout en cours...",
+    "addedToCart": "Ajouté au panier !",
+    "buyNow": "Acheter maintenant",
+    "outOfStock": "Rupture de stock",
+    "inStock": "En stock",
+    "selectSize": "Sélectionner la taille",
+    "selectColor": "Sélectionner la couleur",
+    "selectOptions": "Veuillez sélectionner la taille et la couleur",
+    "notFound": "Produit non trouvé",
+    "quantity": "Quantité",
+    "color": "Couleur",
+    "size": "Taille",
+    "description": "Description",
+    "details": "Détails",
+    "reviews": "Avis",
+    "relatedProducts": "Vous aimerez aussi",
+    "printPosition": "Position d'impression",
+    "front": "Devant",
+    "back": "Derrière",
+    "both": "Les deux",
+    "freeShipping": "Livraison gratuite pour les commandes de plus de 75€",
+    "securePayment": "Paiement sécurisé avec cryptage SSL",
+    "easyReturns": "Politique de retours faciles sous 30 jours",
+    "shop": "Boutique",
+    "faq": {
+      "shipping": {
+        "question": "Quelle est votre politique de livraison ?",
+        "answer": "Nous offrons la livraison gratuite pour toutes les commandes de plus de 75€. La livraison standard prend 5-7 jours ouvrables, tandis que la livraison express prend 2-3 jours ouvrables. La livraison internationale est disponible dans la plupart des pays."
+      },
+      "returns": {
+        "question": "Quelle est votre politique de retour ?",
+        "answer": "Nous acceptons les retours dans les 30 jours suivant l'achat. Les articles doivent être non portés, non lavés et dans leur emballage d'origine. Les commandes personnalisées sont définitives."
+      },
+      "sizing": {
+        "question": "Comment trouver ma taille ?",
+        "answer": "Nous vous recommandons de mesurer votre poitrine et de la comparer à notre guide des tailles. Nos sweats à capuche taillent normalement. Si vous êtes entre deux tailles, nous vous recommandons de prendre la taille supérieure pour un ajustement plus confortable."
+      },
+      "care": {
+        "question": "Comment dois-je entretenir mon sweat à capuche ?",
+        "answer": "Lavez en machine à l'eau froide avec des couleurs similaires. Séchez à basse température ou suspendez pour sécher. Ne pas utiliser d'eau de javel ni repasser directement sur l'impression. Pour de meilleurs résultats, lavez à l'envers."
+      },
+      "durability": {
+        "question": "Les impressions sont-elles durables ?",
+        "answer": "Oui ! Nos impressions vinyle de haute qualité sont conçues pour durer de nombreux lavages sans se fissurer ni se faner. Nous utilisons des matériaux premium et des techniques de transfert thermique pour des résultats durables."
+      }
+    },
+    "quality": {
+      "badge": "Qualité Premium",
+      "title": "Conçu pour l'Excellence",
+      "subtitle": "Chaque sweat à capuche est fabriqué avec une attention méticuleuse aux détails",
+      "fabric": {
+        "title": "Tissu Premium",
+        "description": "Mélange de coton lourd 320gsm pour un confort et une durabilité ultimes"
+      },
+      "print": {
+        "title": "Technologie d'Impression HD",
+        "description": "Des impressions vibrantes et durables qui ne se fissurent pas, ne s'écaillent pas et ne se fanent pas"
+      },
+      "stitching": {
+        "title": "Coutures Renforcées",
+        "description": "Coutures doublement filées pour une durabilité accrue et une finition premium"
+      },
+      "fit": {
+        "title": "Coupe Parfaite",
+        "description": "Tissu pré-rétréci avec une coupe confortable et conforme à la taille"
+      }
+    }
+  },
+
+  "shop": {
+    "title": "Boutique",
+    "allProducts": "Tous les produits",
+    "filters": "Filtres",
+    "clearFilters": "Effacer les filtres",
+    "sortBy": "Trier par",
+    "priceRange": "Fourchette de prix",
+    "categories": "Catégories",
+    "colors": "Couleurs",
+    "sizes": "Tailles",
+    "search": "Rechercher des produits",
+    "noProducts": "Aucun produit trouvé",
+    "noProductsDescription": "Essayez d'ajuster vos filtres ou vos termes de recherche.",
+    "showingResults": "Affichage de {count} produits",
+    "loadMore": "Charger plus",
+    "loading": "Chargement des produits..."
+  },
+
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue",
+    "welcomeBack": "Bienvenue, {name} !",
+    "overview": "Aperçu",
+    "orders": "Commandes",
+    "viewOrders": "Voir l'historique de vos commandes",
+    "addresses": "Adresses",
+    "manageAddresses": "Gérer vos adresses de livraison",
+    "wishlist": "Liste de souhaits",
+    "viewWishlist": "Voir vos articles sauvegardés",
+    "profile": "Profil",
+    "editProfile": "Modifier vos paramètres de profil",
+    "settings": "Paramètres",
+    "recentOrders": "Commandes récentes",
+    "viewAllOrders": "Voir toutes les commandes",
+    "noOrders": "Aucune commande pour le moment",
+    "noOrdersDescription": "Commencez à magasiner pour voir vos commandes ici.",
+    "defaultAddress": "Adresse par défaut",
+    "noAddress": "Aucune adresse enregistrée",
+    "addAddress": "Ajouter une adresse",
+    "editAddress": "Modifier l'adresse",
+    "deleteAddress": "Supprimer l'adresse",
+    "wishlistEmpty": "Votre liste de souhaits est vide",
+    "wishlistEmptyDescription": "Sauvegardez les articles que vous aimez en cliquant sur l'icône cœur sur les produits.",
+    "customer": "Client",
+    "signOut": "Se déconnecter",
+    "signingOut": "Déconnexion...",
+    "quickStats": "Statistiques rapides",
+    "totalOrders": "Total des commandes",
+    "savedAddresses": "Adresses enregistrées",
+    "wishlistItems": "Articles favoris",
+    "addNewAddress": "Ajouter une nouvelle adresse",
+    "addressLabel": "Libellé de l'adresse",
+    "addressLabelPlaceholder": "Maison, Travail, etc.",
+    "recipientName": "Nom du destinataire",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "city": "Ville",
+    "postalCode": "Code postal",
+    "country": "Pays",
+    "setDefaultAddress": "Définir comme adresse par défaut",
+    "cancel": "Annuler",
+    "update": "Mettre à jour",
+    "add": "Ajouter",
+    "changePassword": "Changer le mot de passe",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "confirmNewPassword": "Confirmer le nouveau mot de passe",
+    "order": "Commande",
+    "status": "Statut",
+    "itemsOrdered": "Articles commandés",
+    "size": "Taille",
+    "print": "Impression",
+    "quantity": "Quantité",
+    "each": "chacun",
+    "orderSummary": "Résumé de la commande",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "free": "Gratuit",
+    "discount": "Réduction",
+    "total": "Total",
+    "shippingAddress": "Adresse de livraison",
+    "orderTimeline": "Suivi de commande",
+    "orderPlaced": "Commande passée",
+    "shipped": "Expédiée",
+    "delivered": "Livrée",
+    "startShopping": "Commencez à magasiner pour voir vos commandes ici",
+    "browseProducts": "Parcourir les produits",
+    "more": "plus",
+    "clickToView": "Cliquez pour voir les détails",
+    "items": "articles",
+    "noAddresses": "Aucune adresse enregistrée",
+    "addAddressForCheckout": "Ajoutez une adresse pour un paiement plus rapide",
+    "myAddresses": "Mes adresses",
+    "default": "Par défaut",
+    "saveItemsToWishlist": "Sauvegardez les articles que vous aimez dans votre liste de souhaits",
+    "removeFromWishlist": "Retirer de la liste de souhaits",
+    "user": "Utilisateur",
+    "name": "Nom",
+    "saveChanges": "Enregistrer les modifications",
+    "accountInformation": "Informations du compte",
+    "email": "Email",
+    "memberSince": "Membre depuis",
+    "passwordSet": "Mot de passe défini",
+    "yes": "Oui",
+    "no": "Non",
+    "na": "N/A",
+    "retry": "Réessayer",
+    "confirmDeleteAddress": "Êtes-vous sûr de vouloir supprimer cette adresse ?",
+    "confirmRemoveWishlist": "Retirer cet article de votre liste de souhaits ?"
+  },
+
+  "admin": {
+    "dashboard": "Tableau de bord",
+    "overview": "Aperçu",
+    "products": "Produits",
+    "orders": "Commandes",
+    "customers": "Clients",
+    "categories": "Catégories",
+    "coupons": "Coupons",
+    "messages": "Messages",
+    "addProduct": "Ajouter un produit",
+    "editProduct": "Modifier le produit",
+    "addCategory": "Ajouter une catégorie",
+    "editCategory": "Modifier la catégorie",
+    "addCoupon": "Ajouter un coupon",
+    "createNewCoupon": "Créer un nouveau coupon",
+    "createProduct": "Créer le produit",
+    "updateProduct": "Mettre à jour le produit",
+    "createCategory": "Créer la catégorie",
+    "updateCategory": "Mettre à jour la catégorie",
+    "createCoupon": "Créer le coupon",
+    "productCreated": "Produit créé avec succès !",
+    "productUpdated": "Produit mis à jour avec succès !",
+    "productDeleted": "Produit supprimé avec succès",
+    "categoryCreated": "Catégorie créée avec succès !",
+    "categoryUpdated": "Catégorie mise à jour avec succès !",
+    "categoryDeleted": "Catégorie supprimée avec succès",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet élément ?",
+    "confirmDeleteProduct": "Êtes-vous sûr de vouloir supprimer ce produit ?",
+    "confirmDeleteMessage": "Êtes-vous sûr de vouloir supprimer ce message ?",
+    "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.",
+    "confirmBlock": "Êtes-vous sûr de vouloir bloquer cet utilisateur ?",
+    "confirmUnblock": "Êtes-vous sûr de vouloir débloquer cet utilisateur ?",
+    "createFailed": "Échec de la création",
+    "updateFailed": "Échec de la mise à jour",
+    "deleteFailed": "Échec de la suppression",
+    "errorOccurred": "Une erreur s'est produite",
+    "saving": "Enregistrement...",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "viewDetails": "Voir les détails",
+    "name": "Nom",
+    "slug": "Slug",
+    "description": "Description",
+    "price": "Prix",
+    "stock": "Stock",
+    "status": "Statut",
+    "actions": "Actions",
+    "image": "Image",
+    "noImage": "Pas d'image",
+    "noProducts": "Aucun produit trouvé",
+    "noCategories": "Aucune catégorie trouvée",
+    "noCoupons": "Aucun coupon trouvé",
+    "noCustomers": "Aucun client trouvé",
+    "noOrders": "Aucune commande trouvée",
+    "noMessages": "Pas encore de messages",
+    "noCustomersInCategory": "Aucun client dans cette catégorie",
+    "product": "Produit",
+    "category": "Catégorie",
+    "colors": "Couleurs",
+    "customer": "Client",
+    "role": "Rôle",
+    "totalSpent": "Total dépensé",
+    "joined": "Inscrit le",
+    "guest": "Invité",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "blocked": "Bloqué",
+    "blockUser": "Bloquer l'utilisateur",
+    "unblockUser": "Débloquer l'utilisateur",
+    "activeCustomers": "Clients actifs",
+    "blockedUsers": "Utilisateurs bloqués",
+    "editCustomer": "Modifier le client",
+    "editCustomerDescription": "Mettez à jour les informations du client ci-dessous.",
+    "customerDetails": "Détails du client",
+    "customerNamePlaceholder": "Nom du client",
+    "customerRole": "Client",
+    "adminRole": "Admin",
+    "ghostRole": "Fantôme",
+    "saveChanges": "Enregistrer les modifications",
+    "notProvided": "Non renseigné",
+    "noOrdersYet": "Pas encore de commandes",
+    "phone": "Téléphone",
+    "email": "Email",
+    "order": "Commande",
+    "items": "articles",
+    "total": "Total",
+    "date": "Date",
+    "searchOrders": "Rechercher des commandes...",
+    "filterByStatus": "Filtrer par statut",
+    "allStatus": "Tous les statuts",
+    "pending": "En attente",
+    "processing": "En cours",
+    "shipped": "Expédiée",
+    "delivered": "Livrée",
+    "cancelled": "Annulée",
+    "customerInformation": "Informations client",
+    "shippingAddress": "Adresse de livraison",
+    "orderItems": "Articles de la commande",
+    "subtotal": "Sous-total",
+    "updateStatus": "Mettre à jour le statut",
+    "placedAt": "Passée le",
+    "na": "N/A",
+    "contactMessages": "Messages de contact",
+    "messagesCount": "{count, plural, =1 {message} other {messages}}",
+    "subject": "Sujet",
+    "message": "Message",
+    "received": "Reçu",
+    "lastUpdated": "Dernière mise à jour",
+    "markAsRead": "Marquer comme lu",
+    "markAsReplied": "Marquer comme répondu",
+    "close": "Fermer",
+    "reply": "Répondre",
+    "sendReply": "Envoyer la réponse",
+    "typeYourReply": "Tapez votre réponse...",
+    "yourReply": "Votre réponse",
+    "couponCode": "Code coupon",
+    "couponCodePlaceholder": "ex., SAVE20",
+    "couponDescriptionPlaceholder": "ex., 20% de réduction sur votre commande",
+    "discountType": "Type de réduction",
+    "discountValue": "Valeur de la réduction",
+    "percentage": "Pourcentage",
+    "fixedAmount": "Montant fixe",
+    "minOrderAmount": "Montant minimum de commande",
+    "maxUses": "Utilisations maximum",
+    "expirationDate": "Date d'expiration",
+    "code": "Code",
+    "discount": "Réduction",
+    "usage": "Utilisation",
+    "expires": "Expire",
+    "never": "Jamais",
+    "enable": "Activer",
+    "disable": "Désactiver",
+    "basicInformation": "Informations de base",
+    "productNamePlaceholder": "ex., Sweat Monkey D. Luffy",
+    "productSlugPlaceholder": "ex., sweat-monkey-d-luffy",
+    "descriptionPlaceholder": "Description optionnelle",
+    "basePrice": "Prix de base",
+    "selectCategory": "Sélectionner une catégorie",
+    "noCategoriesAvailable": "Aucune catégorie disponible",
+    "printPosition": "Position de l'impression",
+    "bothFrontBack": "Les deux (avant et arrière)",
+    "frontOnly": "Avant uniquement",
+    "backOnly": "Arrière uniquement",
+    "colorsWithImages": "Couleurs (avec images)",
+    "addColor": "Ajouter une couleur",
+    "required": "Requis",
+    "colorImageRequirement": "Chaque couleur doit avoir une image avant et une image arrière. Ces images seront affichées sur la page du produit avec un bouton de retournement.",
+    "color": "Couleur",
+    "colorName": "Nom de la couleur",
+    "colorNamePlaceholder": "Noir, Blanc, Bleu marine...",
+    "frontImage": "Image avant",
+    "backImage": "Image arrière",
+    "uploadRequiredImages": "Veuillez télécharger toutes les images requises",
+    "selectAtLeastOneSize": "Veuillez sélectionner au moins une taille disponible",
+    "availableSizes": "Tailles disponibles",
+    "selectAvailableSizes": "Sélectionnez les tailles disponibles pour ce produit.",
+    "selected": "Sélectionné",
+    "sizes": "tailles",
+    "namePlaceholder": "ex., One Piece",
+    "slugPlaceholder": "ex., one-piece",
+    "categoryImage": "Image de la catégorie",
+    "stats": {
+      "totalOrders": "Total des commandes",
+      "totalRevenue": "Revenu total",
+      "pendingOrders": "Commandes en attente",
+      "totalCustomers": "Total des clients",
+      "totalProducts": "Total des produits",
+      "lowStock": "Stock faible"
+    }
+  },
+
+  "contact": {
+    "title": "Nous contacter",
+    "subtitle": "Contactez-nous",
+    "badge": "Nous contacter",
+    "heroTitle": "Nous serions ravis de vous entendre",
+    "heroDescription": "Vous avez des questions sur nos produits, besoin d'aide avec une commande, ou simplement envie de dire bonjour ? Notre équipe est là pour vous aider !",
+    "info": {
+      "email": {
+        "title": "Envoyez-nous un email",
+        "value": "support@hoodielegends.com",
+        "note": "Nous répondons sous 24 heures"
+      },
+      "phone": {
+        "title": "Appelez-nous",
+        "value": "+1 (555) 123-4567",
+        "note": "Lun-Ven 9h-18h EST"
+      },
+      "visit": {
+        "title": "Visitez-nous",
+        "value": "123 Anime Street",
+        "note": "New York, NY 10001"
+      },
+      "hours": {
+        "title": "Heures d'ouverture",
+        "value": "Lun - Ven: 9h - 18h",
+        "note": "Sam: 10h - 16h"
+      }
+    },
+    "form": {
+      "title": "Envoyez-nous un message",
+      "description": "Remplissez le formulaire ci-dessous et nous vous répondrons dès que possible.",
+      "yourName": "Votre nom",
+      "emailAddress": "Adresse email",
+      "selectSubject": "Sélectionnez un sujet",
+      "subjects": {
+        "order": "Question sur une commande",
+        "product": "Question sur un produit",
+        "shipping": "Livraison",
+        "returns": "Retours et échanges",
+        "wholesale": "Demande de gros",
+        "other": "Autre"
+      },
+      "messageLabel": "Message",
+      "messagePlaceholder": "Dites-nous comment nous pouvons vous aider...",
+      "sending": "Envoi en cours...",
+      "signInRequired": "Veuillez vous connecter pour envoyer un message",
+      "success": "Message envoyé avec succès !",
+      "successDescription": "Merci de nous avoir contactés. Nous vous répondrons bientôt."
+    },
+    "faq": {
+      "title": "Réponses rapides",
+      "shipping": {
+        "question": "Combien de temps prend la livraison ?",
+        "answer": "La livraison standard prend 5-7 jours ouvrables. La livraison express (2-3 jours) est disponible au paiement."
+      },
+      "returns": {
+        "question": "Quelle est votre politique de retour ?",
+        "answer": "Nous offrons une politique de retour de 30 jours pour les articles non portés et non lavés avec leurs étiquettes. Les retours sont gratuits !"
+      },
+      "international": {
+        "question": "Livrez-vous à l'international ?",
+        "answer": "Oui ! Nous livrons dans plus de 50 pays. La livraison internationale prend 10-15 jours ouvrables."
+      },
+      "tracking": {
+        "question": "Comment suivre ma commande ?",
+        "answer": "Une fois votre commande expédiée, vous recevrez un email avec les informations de suivi."
+      },
+      "changeOrder": {
+        "question": "Puis-je modifier ma commande après l'avoir passée ?",
+        "answer": "Contactez-nous dans l'heure suivant votre commande pour effectuer des modifications."
+      }
+    },
+    "name": "Nom",
+    "email": "Email",
+    "subject": "Sujet",
+    "message": "Message",
+    "sendMessage": "Envoyer le message",
+    "sending": "Envoi en cours...",
+    "success": "Message envoyé avec succès !",
+    "error": "Échec de l'envoi du message. Veuillez réessayer."
+  },
+"about": {
+  "title": "À propos",
+  "subtitle": "Notre Histoire",
+  "badge": "Notre Histoire",
+  "titleLine1": "Né en Tunisie,",
+  "titleLine2": "Pensé pour le style au quotidien",
+  "description": "Nous créons des hoodies premium alliant confort, durabilité et style, inspirés par la culture urbaine, la créativité et le lifestyle de la nouvelle génération tunisienne.",
+  "exploreCollection": "Découvrir la collection",
+  "getInTouch": "Nous contacter",
+
+  "mission": {
+    "badge": "Notre Mission",
+    "title": "Exprimer l’identité à travers la mode",
+    "paragraph1": "Notre mission est de concevoir des hoodies de haute qualité adaptés à tous les styles et à tous les moments. Du design minimal aux pièces plus audacieuses, nos créations permettent à chacun d’exprimer sa personnalité.",
+    "paragraph2": "Chaque hoodie est fabriqué avec des matériaux premium, une grande attention aux détails et des standards modernes, pensés pour le confort quotidien et la durabilité."
+  },
+
+  "stats": {
+    "happyCustomers": "Clients satisfaits",
+    "uniqueDesigns": "Designs uniques",
+    "hoodieStyles": "Styles de hoodies",
+    "satisfaction": "Taux de satisfaction"
+  },
+
+  "floatingBadges": {
+    "premiumQuality": "Qualité premium",
+    "fastShipping": "Livraison rapide en Tunisie"
+  },
+
+  "values": {
+    "badge": "Nos Valeurs",
+    "title": "Ce qui nous définit",
+    "authenticDesigns": {
+      "title": "Design authentique",
+      "description": "Chaque hoodie est conçu avec intention, en combinant créativité, simplicité et originalité."
+    },
+    "premiumQuality": {
+      "title": "Qualité supérieure",
+      "description": "Nous utilisons des tissus de haute qualité pour garantir douceur, résistance et confort au quotidien."
+    },
+    "communityFirst": {
+      "title": "La communauté avant tout",
+      "description": "Nous soutenons fièrement la communauté créative et streetwear tunisienne, avec une vision locale et des standards internationaux."
+    },
+    "fastDelivery": {
+      "title": "Livraison rapide et fiable",
+      "description": "Une livraison efficace partout en Tunisie, avec un service client réactif et un emballage soigné."
+    }
+  },
+    "cta": {
+      "title": "Prêt à rejoindre HOODIZ ?",
+      "description": "Découvrez notre collection de sweats à capuche anime premium et trouvez la pièce parfaite pour exprimer votre fandom.",
+      "shopNow": "Acheter maintenant",
+      "contactUs": "Nous contacter"
+    }
+  },
+
+  "privacy": {
+    "title": "Politique de confidentialité",
+    "description": "Comment nous collectons, utilisons et protégeons vos informations personnelles.",
+    "lastUpdated": "Dernière mise à jour",
+    "tableOfContents": "Table des matières",
+    "sections": {
+      "1": {
+        "title": "Introduction",
+        "content": "Hoodie Legends ('nous', 'notre') s'engage à protéger votre vie privée. Cette Politique de confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous visitez notre site web et effectuez des achats. Veuillez lire attentivement cette politique de confidentialité. Si vous n'êtes pas d'accord avec les termes de cette politique, veuillez ne pas accéder au site. Cette politique est conforme au Règlement général sur la protection des données (RGPD) et autres lois applicables."
+      },
+      "2": {
+        "title": "Données collectées",
+        "content": "Nous collectons les informations que vous nous fournissez directement, notamment : nom, adresse email, adresse de livraison, adresse de facturation, numéro de téléphone et informations de paiement. Nous collectons également automatiquement certaines informations lorsque vous visitez notre site, notamment : adresse IP, type de navigateur, informations sur l'appareil et comportement de navigation."
+      },
+      "3": {
+        "title": "Utilisation de vos données",
+        "content": "Nous utilisons les informations collectées pour : traiter et exécuter vos commandes, communiquer avec vous concernant vos commandes, envoyer des emails promotionnels (avec votre consentement), améliorer notre site web et nos services, prévenir la fraude et renforcer la sécurité, et nous conformer aux obligations légales."
+      },
+      "4": {
+        "title": "Cookies et suivi",
+        "content": "Nous utilisons des cookies et des technologies de suivi similaires pour suivre l'activité sur notre site web et stocker certaines informations. Les cookies sont des fichiers contenant de petites quantités de données qui peuvent inclure un identifiant unique anonyme. Vous pouvez configurer votre navigateur pour refuser tous les cookies."
+      },
+      "5": {
+        "title": "Partage des données",
+        "content": "Nous pouvons partager vos informations avec : les prestataires de services qui nous aident à exploiter notre site web, les processeurs de paiement, les transporteurs, et les autorités légales lorsque la loi l'exige. Nous ne vendons pas vos informations personnelles à des tiers."
+      },
+      "6": {
+        "title": "Vos droits",
+        "content": "En vertu du RGPD, vous avez le droit de : accéder à vos données personnelles, rectifier les données inexactes, effacer vos données, restreindre le traitement, porter les données, et vous opposer au traitement. Pour exercer ces droits, veuillez nous contacter."
+      },
+      "7": {
+        "title": "Sécurité des données",
+        "content": "Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données personnelles contre tout accès non autorisé, modification, divulgation ou destruction. Cependant, aucune méthode de transmission sur Internet n'est sûre à 100%."
+      },
+      "8": {
+        "title": "Confidentialité des enfants",
+        "content": "Notre site web n'est pas destiné aux enfants de moins de 13 ans. Nous ne collectons pas sciemment d'informations personnelles auprès d'enfants de moins de 13 ans. Si nous apprenons que nous avons collecté des informations personnelles auprès d'un enfant de moins de 13 ans, nous prendrons des mesures pour supprimer ces informations."
+      },
+      "9": {
+        "title": "Modifications de la politique",
+        "content": "Nous pouvons mettre à jour cette Politique de confidentialité de temps à autre. Nous vous informerons de tout changement en publiant la nouvelle Politique de confidentialité sur cette page et en mettant à jour la date de 'Dernière mise à jour'. Vous êtes invité à consulter régulièrement cette page."
+      },
+      "10": {
+        "title": "Nous contacter",
+        "content": "Si vous avez des questions concernant cette Politique de confidentialité, veuillez nous contacter en utilisant les informations ci-dessous."
+      }
+    },
+    "contact": {
+      "title": "Informations de contact",
+      "description": "Si vous avez des questions concernant cette Politique de confidentialité, veuillez nous contacter."
+    }
+  },
+
+  "terms": {
+    "title": "Conditions générales",
+    "lastUpdated": "Dernière mise à jour",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptation des conditions",
+        "content": "En accédant et en utilisant ce site web, vous acceptez et convenez d'être lié par les termes et dispositions de cet accord."
+      },
+      "useOfServices": {
+        "title": "2. Utilisation des services",
+        "content": "Vous acceptez d'utiliser nos services uniquement à des fins légales et conformément à ces Conditions générales."
+      },
+      "userAccounts": {
+        "title": "3. Comptes utilisateurs",
+        "content": "Lorsque vous créez un compte chez nous, vous devez fournir des informations exactes et complètes. Vous êtes responsable de la protection de votre mot de passe et de toutes les activités qui se produisent sous votre compte."
+      },
+      "privacyPolicy": {
+        "title": "4. Politique de confidentialité",
+        "content": "Votre utilisation de nos services est également régie par notre Politique de confidentialité. En utilisant nos services, vous consentez à la collecte et à l'utilisation de vos informations comme décrit dans notre Politique de confidentialité."
+      },
+      "intellectualProperty": {
+        "title": "5. Propriété intellectuelle",
+        "content": "Tout le contenu, les fonctionnalités et les caractéristiques de ce site web nous appartiennent et sont protégés par les lois internationales sur le droit d'auteur, les marques et autres droits de propriété intellectuelle."
+      },
+      "limitationOfLiability": {
+        "title": "6. Limitation de responsabilité",
+        "content": "Nous ne sommes pas responsables des dommages indirects, accessoires, spéciaux, consécutifs ou punitifs résultant de votre utilisation ou de votre incapacité à utiliser les services."
+      },
+      "changesToTerms": {
+        "title": "7. Modifications des conditions",
+        "content": "Nous nous réservons le droit de modifier ou de remplacer ces Conditions à tout moment. Si une révision est importante, nous fournirons un avis avant que les nouvelles conditions prennent effet."
+      },
+      "contactInformation": {
+        "title": "8. Informations de contact",
+        "content": "Si vous avez des questions concernant ces Conditions, veuillez nous contacter."
+      }
+    },
+    "backToRegistration": "Retour à l'inscription"
+  },
+
+  "gdpr": {
+    "exportData": "Exporter mes données",
+    "exportDescription": "Téléchargez une copie de vos données personnelles.",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteDescription": "Supprimez définitivement votre compte et toutes les données associées.",
+    "confirmDelete": "Êtes-vous sûr ? Cette action est irréversible.",
+    "export": {
+      "title": "Exporter vos données",
+      "description": "Demandez une copie de toutes vos données personnelles stockées sur notre site web.",
+      "whatData": "Quelles données seront exportées ?",
+      "dataTypes": {
+        "account": "Informations du compte (nom, email, téléphone)",
+        "orders": "Historique et détails des commandes",
+        "addresses": "Adresses de livraison",
+        "wishlist": "Articles de la liste de souhaits",
+        "preferences": "Préférences et paramètres"
+      },
+      "exportButton": "Exporter mes données",
+      "exporting": "Exportation...",
+      "success": "Vos données ont été exportées et téléchargées avec succès.",
+      "error": "Échec de l'exportation des données. Veuillez réessayer.",
+      "genericError": "Une erreur s'est produite. Veuillez réessayer plus tard.",
+      "footer": "Cette demande est traitée automatiquement. Pour une assistance manuelle, {link}.",
+      "contactLink": "contactez notre équipe de support"
+    },
+    "delete": {
+      "title": "Supprimer votre compte",
+      "description": "Demandez la suppression définitive de vos données personnelles.",
+      "warningTitle": "Avant de continuer :",
+      "warningItems": {
+        "permanent": "Cette action est définitive et ne peut pas être annulée",
+        "orders": "Tout votre historique de commandes sera supprimé",
+        "wishlist": "Vos articles de liste de souhaits seront supprimés",
+        "access": "Vous perdrez immédiatement l'accès à votre compte",
+        "pending": "Si vous avez des commandes en cours, veuillez d'abord contacter le support"
+      },
+      "confirmLabel": "Tapez",
+      "confirmPlaceholder": "supprimer mon compte",
+      "confirmCode": "supprimer mon compte",
+      "confirmError": "Veuillez taper \"supprimer mon compte\" pour confirmer.",
+      "deleteButton": "Supprimer définitivement mon compte",
+      "processing": "Traitement...",
+      "success": "Votre demande de suppression de compte a été reçue. Vous recevrez un email de confirmation sous peu.",
+      "error": "Échec du traitement de la demande de suppression. Veuillez réessayer.",
+      "genericError": "Une erreur s'est produite. Veuillez réessayer plus tard.",
+      "gdprNotice": "Cette demande est traitée conformément à {link} (Droit à l'effacement). Nous confirmerons votre demande de suppression par email dans les 24 heures.",
+      "gdprLink": "l'article 17 du RGPD",
+      "questions": "Des questions ? {link}.",
+      "contactLink": "Contactez notre équipe de support"
+    }
+  },
+
+  "errors": {
+    "notFound": "Page non trouvée",
+    "serverError": "Erreur serveur",
+    "unauthorized": "Accès non autorisé",
+    "forbidden": "Accès interdit",
+    "somethingWentWrong": "Une erreur s'est produite. Veuillez réessayer plus tard."
+  },
+
+  "unauthorized": {
+    "title": "Accès refusé",
+    "description": "Vous n'avez pas la permission d'accéder à cette page. Cette zone est réservée aux administrateurs.",
+    "goHome": "Aller à l'accueil",
+    "browseProducts": "Parcourir les produits",
+    "contactSupport": "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter notre équipe de support."
+  },
+
+  "blocked": {
+    "title": "Compte bloqué",
+    "description": "Votre compte a été restreint. Vous ne pouvez pas accéder à ce site.",
+    "contactMistake": "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter notre équipe de support.",
+    "contactSupport": "Contacter le support",
+    "signOut": "Se déconnecter",
+    "footer": "Hoodies Anime Store - Support Client"
+  },
+
+  "cookieConsent": {
+    "title": "Nous utilisons des cookies",
+    "description": "Nous utilisons des cookies pour améliorer votre expérience de navigation, diffuser des publicités ou contenus personnalisés et analyser notre trafic.",
+    "accept": "Tout accepter",
+    "decline": "Refuser",
+    "customize": "Personnaliser",
+    "savePreferences": "Enregistrer les préférences",
+    "necessary": "Nécessaires",
+    "necessaryDescription": "Ces cookies sont nécessaires au bon fonctionnement du site web.",
+    "analytics": "Analytiques",
+    "analyticsDescription": "Ces cookies nous aident à comprendre comment les visiteurs interagissent avec notre site web.",
+    "marketing": "Marketing",
+    "marketingDescription": "Ces cookies sont utilisés pour suivre les visiteurs sur différents sites à des fins publicitaires."
+  }
+}

@@ -89,7 +89,7 @@ export function MiniCart() {
             <div className="border-t p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="text-xl font-bold">${subtotal.toFixed(2)}</span>
+                <span className="text-xl font-bold">{subtotal.toFixed(2)} DT</span>
               </div>
               <p className="text-xs text-muted-foreground">
                 Shipping and taxes calculated at checkout
@@ -153,7 +153,7 @@ function CartItemRow({
         <p className="text-sm text-muted-foreground mt-0.5">
           {item.color} / {item.size}
         </p>
-        <p className="font-semibold mt-1">${item.price.toFixed(2)}</p>
+        <p className="font-semibold mt-1">{item.price.toFixed(2)} DT</p>
 
         {/* Quantity Controls */}
         <div className="flex items-center gap-2 mt-2">

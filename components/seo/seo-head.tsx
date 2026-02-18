@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Script from 'next/script';
+import { baseUrl, defaultOgImage, businessInfo } from '@/lib/config';
 
 interface SEOProps {
   title?: string;
@@ -12,24 +13,24 @@ interface SEOProps {
 }
 
 export function SEO({
-  title = 'Hoodiz - Anime Merchandise',
-  description = 'Premium anime hoodies and merchandise. Wear the power of anime with exclusive hoodie designs.',
-  keywords = ['anime hoodies', 'anime merchandise', 'hoodies', 'anime clothing', 'anime apparel'],
-  image = '/images/og-image.jpg',
+  title = `${businessInfo.name} - Premium Hoodies & Streetwear`,
+  description = businessInfo.description,
+  keywords = ['hoodies tunisia', 'streetwear tunisia', 'anime hoodies', 'gaming merch', 'urban fashion', 'clothing tunisia', 'hoodies en ligne'],
+  image = defaultOgImage,
   url,
   type = 'website',
   schema = [],
 }: SEOProps) {
-  const fullUrl = url || process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodiz.com';
-  const fullImage = image.startsWith('http') ? image : `${fullUrl}${image}`;
+  const fullUrl = url || baseUrl;
+  const fullImage = image.startsWith('http') ? image : `${baseUrl}${image}`;
 
   const metadata: Metadata = {
     title,
     description,
     keywords: keywords.join(', '),
-    authors: [{ name: 'Hoodiz' }],
-    creator: 'Hoodiz',
-    publisher: 'Hoodiz',
+    authors: [{ name: businessInfo.name }],
+    creator: businessInfo.name,
+    publisher: businessInfo.name,
     robots: {
       index: true,
       follow: true,
@@ -47,7 +48,7 @@ export function SEO({
       url: fullUrl,
       title,
       description,
-      siteName: 'Hoodiz',
+      siteName: businessInfo.name,
       images: [
         {
           url: fullImage,
@@ -62,7 +63,7 @@ export function SEO({
       title,
       description,
       images: [fullImage],
-      creator: '@hoodiz',
+      creator: '@hoodiztn',
     },
     alternates: {
       canonical: fullUrl,
