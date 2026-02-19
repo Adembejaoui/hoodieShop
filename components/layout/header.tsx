@@ -73,10 +73,12 @@ export function Header() {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
            
-          {/* Language Switcher */}
-            <LanguageSwitcher />
+          {/* Language Switcher - Hidden on very small screens */}
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
            
           {/* Cart Icon */}
             <CartIcon />
@@ -84,7 +86,7 @@ export function Header() {
             {/* Auth Section - Sign In or Profile Dropdown */}
             {status === 'loading' ? (
               // Loading state
-              <div className="h-10 w-10 rounded-full bg-white/5 animate-pulse" />
+              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-white/5 animate-pulse" />
             ) : session?.user ? (
               // User is logged in - show profile dropdown
               <div className="relative" ref={profileRef}>
@@ -92,10 +94,10 @@ export function Header() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="relative h-10 w-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 border border-white/20 hover:from-purple-500 hover:to-pink-500 transition-all"
+                  className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 border border-white/20 hover:from-purple-500 hover:to-pink-500 transition-all"
                 >
                 
-                    <User className="h-5 w-5 text-white" />
+                    <User className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                 
                 </Button>
 
@@ -131,11 +133,11 @@ export function Header() {
                 )}
               </div>
             ) : (
-              // User is not logged in - show Sign In link
-              <Button asChild variant="ghost" className="text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-full px-4">
+              // User is not logged in - show Sign In link (icon only on mobile)
+              <Button asChild variant="ghost" className="text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-4">
                 <Link href="/auth">
-                  <User className="h-4 w-4 mr-2" />
-                  {t('signIn')}
+                  <User className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">{t('signIn')}</span>
                 </Link>
               </Button>
             )}
@@ -146,7 +148,7 @@ export function Header() {
               onClick={() => setIsOpen(!isOpen)}
               aria-label={tHeader('toggleMenu')}
             >
-              {isOpen ? <X className="h-6 w-6 text-white" /> : <Menu className="h-6 w-6 text-white" />}
+              {isOpen ? <X className="h-5 w-5 sm:h-6 sm:w-6 text-white" /> : <Menu className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
             </button>
           </div>
         </div>
@@ -154,47 +156,47 @@ export function Header() {
         {/* Mobile Navigation */}
         {isOpen && (
           <nav className="border-t border-white/10 py-4 md:hidden">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
               {isAdmin ? (
-                <Link href="/admin/dashboard/overview" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                <Link href="/admin/dashboard/overview" className="text-base font-medium text-white/70 transition-colors hover:text-white py-3 px-2 rounded-lg hover:bg-white/5">
                   {t('adminDashboard')}
                 </Link>
               ) : (
                 <>
-                  <Link href="/" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                  <Link href="/" className="text-base font-medium text-white/70 transition-colors hover:text-white py-3 px-2 rounded-lg hover:bg-white/5">
                     {t('home')}
                   </Link>
-                  <Link href="/shop" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                  <Link href="/shop" className="text-base font-medium text-white/70 transition-colors hover:text-white py-3 px-2 rounded-lg hover:bg-white/5">
                     {t('shop')}
                   </Link>
-                  <Link href="/about" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                  <Link href="/about" className="text-base font-medium text-white/70 transition-colors hover:text-white py-3 px-2 rounded-lg hover:bg-white/5">
                     {t('about')}
                   </Link>
-                  <Link href="/contact" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                  <Link href="/contact" className="text-base font-medium text-white/70 transition-colors hover:text-white py-3 px-2 rounded-lg hover:bg-white/5">
                     {t('contact')}
                   </Link>
                 </>
               )}
               {session?.user ? (
                 <>
-                  <Link href={isAdmin ? "/admin/dashboard/overview" : "/dashboard"} className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                  <Link href={isAdmin ? "/admin/dashboard/overview" : "/dashboard"} className="text-base font-medium text-white/70 transition-colors hover:text-white py-3 px-2 rounded-lg hover:bg-white/5">
                     {isAdmin ? t('adminDashboard') : t('dashboard')}
                   </Link>
                   
                   <button
                     onClick={() => signOut({ callbackUrl: `/${locale}` })}
-                    className="text-sm font-medium text-red-400 transition-colors hover:text-red-300 text-left"
+                    className="text-base font-medium text-red-400 transition-colors hover:text-red-300 text-left py-3 px-2 rounded-lg hover:bg-white/5"
                   >
                     {t('logout')}
                   </button>
                 </>
               ) : (
-                <Link href="/auth" className="text-sm font-medium text-purple-400 transition-colors hover:text-purple-300">
+                <Link href="/auth" className="text-base font-medium text-purple-400 transition-colors hover:text-purple-300 py-3 px-2 rounded-lg hover:bg-white/5">
                   {t('signIn')}
                 </Link>
               )}
               {/* Mobile Language Switcher */}
-              <div className="pt-4 border-t border-white/10 mt-4">
+              <div className="pt-4 border-t border-white/10 mt-2">
                 <LanguageSwitcher />
               </div>
             </div>

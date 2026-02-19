@@ -38,13 +38,7 @@ export function DashboardSidebar({
     <nav className="bg-card rounded-lg border overflow-hidden">
       <div className="p-4 border-b bg-secondary/50">
         <div className="flex items-center gap-3">
-          {user?.image ? (
-            <img src={user.image} alt={user.name || ""} className="w-10 h-10 rounded-full" />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-              <User className="w-5 h-5" />
-            </div>
-          )}
+
           <div>
             <p className="font-medium">{user?.name || t("customer")}</p>
             <p className="text-xs text-muted-foreground">{user?.email}</p>
