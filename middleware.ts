@@ -12,6 +12,11 @@ export default withAuth(
     const token = req.nextauth.token;
     const pathname = req.nextUrl.pathname;
 
+    // Skip locale routing for sitemap.xml and robots.txt
+    if (pathname === "/sitemap.xml" || pathname === "/robots.txt") {
+      return securityHeaders(req);
+    }
+
     // Handle locale routing first
     const intlResponse = intlMiddleware(req);
     
@@ -134,6 +139,11 @@ export default withAuth(
           pathname.startsWith("/public") ||
           pathname === "/favicon.ico"
         ) {
+          return true;
+        }
+        
+        // Allow access to sitemap.xml and robots.txt for SEO
+        if (pathname === "/sitemap.xml" || pathname === "/robots.txt") {
           return true;
         }
         
