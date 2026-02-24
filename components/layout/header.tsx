@@ -179,6 +179,9 @@ export function Header() {
                   <Link href="/contact" className="text-base font-medium text-white/70 transition-colors hover:text-white py-3 px-2 rounded-lg hover:bg-white/5">
                     {t('contact')}
                   </Link>
+                  <Link href="/blog" className="text-base font-medium text-white/70 transition-colors hover:text-white py-3 px-2 rounded-lg hover:bg-white/5">
+                    {t('blog')}
+                  </Link>
                 </>
               )}
               {session?.user ? (

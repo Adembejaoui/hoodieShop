@@ -179,8 +179,8 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    // Match all pathnames except for static files, api routes, etc.
+    // Match all pathnames except for static files, api routes, sitemap, robots, etc.
     // Exclude ALL api routes from internationalization
-    "/((?!api|_next/static|_next/image|favicon.ico|public/).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|public/|sitemap.xml|robots.txt).*)",
   ],
 };
