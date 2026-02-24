@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { HeroSection } from '@/components/home/hero-section'
 import { FeaturedProducts } from '@/components/home/featured-products'
 import { CategoriesSection } from '@/components/home/categories-section'
 import { BenefitsSection } from '@/components/home/benefits-section'
+import { HeroVariant1 } from '@/components/home/hero-variants'
 
 // Fixed particle positions to avoid hydration mismatch
 const PARTICLE_COUNT = 20
@@ -22,7 +22,7 @@ const BackgroundParticles = () => (
     {FIXED_PARTICLES.map((particle) => (
       <div
         key={particle.id}
-        className="absolute w-1 h-1 bg-purple-500/30 rounded-full animate-float"
+        className="absolute w-1 h-1 bg-zinc-500/30 rounded-full animate-float"
         style={{
           left: particle.left,
           top: particle.top,
@@ -44,7 +44,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-black">
       {mounted && <BackgroundParticles />}
-      <HeroSection />
+      <HeroVariant1 />
       <CategoriesSection />
       <BenefitsSection />
       <FeaturedProducts />

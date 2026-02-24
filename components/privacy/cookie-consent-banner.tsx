@@ -87,14 +87,14 @@ export function CookieConsentBanner() {
           <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3">
-                <Cookie className="h-6 w-6 text-purple-400 flex-shrink-0 mt-0.5" />
+                <Cookie className="h-6 w-6 text-zinc-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm text-white">
                     We use cookies to enhance your experience. By clicking "Accept All", you consent to our use of cookies.
                     {' '}
                     <a 
                       href="/privacy" 
-                      className="text-purple-400 hover:text-purple-300 underline"
+                      className="text-zinc-400 hover:text-zinc-300 underline"
                     >
                       Privacy Policy
                     </a>
@@ -122,7 +122,7 @@ export function CookieConsentBanner() {
                 <Button
                   size="sm"
                   onClick={handleAcceptAll}
-                  className="bg-purple-600 hover:bg-purple-700 text-white"
+                  className="bg-white text-zinc-900 hover:bg-zinc-200"
                 >
                   Accept All
                 </Button>
@@ -164,7 +164,7 @@ export function CookieConsentBanner() {
                     disabled
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-purple-600 rounded-full peer peer-checked:bg-purple-600 cursor-not-allowed opacity-50"></div>
+                  <div className="w-11 h-6 bg-zinc-600 rounded-full peer peer-checked:bg-zinc-600 cursor-not-allowed opacity-50"></div>
                 </div>
               </div>
 
@@ -184,7 +184,7 @@ export function CookieConsentBanner() {
                     className="sr-only peer"
                   />
                   <div 
-                    className="w-11 h-6 bg-white/20 rounded-full cursor-pointer peer peer-checked:bg-purple-600 peer-focus:ring-2 peer-focus:ring-purple-500"
+                    className="w-11 h-6 bg-white/20 rounded-full cursor-pointer peer peer-checked:bg-zinc-600 peer-focus:ring-2 peer-focus:ring-zinc-500"
                     onClick={() => handlePreferenceChange('analytics')}
                   >
                     <div 
@@ -212,7 +212,7 @@ export function CookieConsentBanner() {
                     className="sr-only peer"
                   />
                   <div 
-                    className="w-11 h-6 bg-white/20 rounded-full cursor-pointer peer peer-checked:bg-purple-600 peer-focus:ring-2 peer-focus:ring-purple-500"
+                    className="w-11 h-6 bg-white/20 rounded-full cursor-pointer peer peer-checked:bg-zinc-600 peer-focus:ring-2 peer-focus:ring-zinc-500"
                     onClick={() => handlePreferenceChange('marketing')}
                   >
                     <div 
@@ -235,7 +235,7 @@ export function CookieConsentBanner() {
               </Button>
               <Button
                 onClick={handleSavePreferences}
-                className="bg-purple-600 hover:bg-purple-700 text-white"
+                className="bg-white text-zinc-900 hover:bg-zinc-200"
               >
                 Save Preferences
               </Button>

@@ -90,10 +90,10 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
   if (loading) {
     return (
       <section className="relative py-20 lg:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950/20 to-black" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 flex flex-col items-center text-center">
-            <div className="h-8 w-32 bg-purple-500/20 rounded animate-pulse mb-6" />
+            <div className="h-8 w-32 bg-zinc-800/50 rounded animate-pulse mb-6" />
             <div className="h-10 w-64 bg-white/10 rounded animate-pulse mb-4" />
             <div className="h-6 w-96 bg-white/5 rounded animate-pulse" />
           </div>
@@ -110,7 +110,7 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
   if (error) {
     return (
       <section className="relative py-20 lg:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950/20 to-black" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-red-400">{error}</p>
         </div>
@@ -121,7 +121,7 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
   if (products.length === 0) {
     return (
       <section className="relative py-20 lg:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950/20 to-black" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-white/60">{t('noProducts')}</p>
         </div>
@@ -132,12 +132,12 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
   return (
     <section className="relative py-20 lg:py-28 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950/20 to-black" />
       
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/30 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -148,11 +148,11 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 mb-6">
-            <Zap className="w-4 h-4 text-blue-400" />
-            <span className="text-blue-300 text-sm font-medium">{t('badge')}</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-800/50 border border-zinc-700/50 mb-6">
+            <Zap className="w-4 h-4 text-zinc-400" />
+            <span className="text-zinc-300 text-sm font-medium">{t('badge')}</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-white via-zinc-200 to-zinc-300 bg-clip-text text-transparent">
             {t('title')}
           </h2>
           <p className="text-white/60 max-w-2xl text-lg">
@@ -188,7 +188,7 @@ export function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
         >
           <Link 
             href="/shop"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-xl transition-all"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-white text-zinc-900 hover:bg-zinc-200 font-semibold rounded-xl transition-all"
           >
             {t('viewAll')}
           </Link>

@@ -24,7 +24,7 @@ const AnimeBackground = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/90" />
       {/* Animated accent glow */}
       <motion.div
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"
         animate={{
           scale: [1, 1.5, 1],
           opacity: [0.3, 0.5, 0.3],
@@ -32,7 +32,7 @@ const AnimeBackground = () => {
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-600/20 rounded-full blur-3xl"
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-zinc-500/10 rounded-full blur-3xl"
         animate={{
           scale: [1.5, 1, 1.5],
           opacity: [0.3, 0.5, 0.3],
@@ -92,7 +92,7 @@ export default function ForgotPasswordPage() {
         >
           <div className="backdrop-blur-xl bg-black/40 rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
             {/* Header */}
-            <div className="relative bg-gradient-to-r from-purple-900/80 to-pink-900/80 p-6 sm:p-8 text-center border-b border-white/10">
+            <div className="relative bg-zinc-900 p-6 sm:p-8 text-center border-b border-white/10">
               <Link
                 href="/auth"
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors"
@@ -153,7 +153,7 @@ export default function ForgotPasswordPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       disabled={isLoading}
-                      className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-purple-500 focus:ring-purple-500/20"
+                      className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-white/50 focus:ring-white/20"
                     />
                   </div>
                 </Field>
@@ -174,7 +174,7 @@ export default function ForgotPasswordPage() {
               <div className="mt-6 text-center">
                 <p className="text-white/50 text-sm">
                   {t('rememberPassword')}{" "}
-                  <Link href="/auth" className="text-purple-400 hover:text-purple-300 font-medium">
+                  <Link href="/auth" className="text-zinc-300 hover:text-white font-medium">
                     {t('signIn')}
                   </Link>
                 </p>

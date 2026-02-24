@@ -74,7 +74,7 @@ export function LoginForm({ className, darkMode = false }: LoginFormProps) {
   }
 
   const inputClass = darkMode
-    ? "bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-purple-500 focus:ring-purple-500/20"
+    ? "bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-white/50 focus:ring-white/20"
     : "";
 
   return (
@@ -106,7 +106,7 @@ export function LoginForm({ className, darkMode = false }: LoginFormProps) {
             href="/auth/forgot-password"
             className={cn(
               "text-sm hover:underline",
-              darkMode ? "text-purple-400" : "text-purple-600"
+              darkMode ? "text-zinc-400" : "text-zinc-600"
             )}
           >
             Forgot password?

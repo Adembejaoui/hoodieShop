@@ -93,19 +93,19 @@ export default function ContactPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="p-6 bg-secondary/50 rounded-xl border">
-              <Mail className="w-5 h-5 text-purple-600 mb-4" />
+              <Mail className="w-5 h-5 text-zinc-400 mb-4" />
               <h3 className="font-semibold mb-1">{tInfo('email.title')}</h3>
               <p className="text-sm font-medium">{tInfo('email.value')}</p>
               <p className="text-xs text-muted-foreground">{tInfo('email.note')}</p>
             </div>
             <div className="p-6 bg-secondary/50 rounded-xl border">
-              <Phone className="w-5 h-5 text-purple-600 mb-4" />
+              <Phone className="w-5 h-5 text-zinc-400 mb-4" />
               <h3 className="font-semibold mb-1">{tInfo('phone.title')}</h3>
               <p className="text-sm font-medium">{tInfo('phone.value')}</p>
               <p className="text-xs text-muted-foreground">{tInfo('phone.note')}</p>
             </div>
             <div className="p-6 bg-secondary/50 rounded-xl border">
-              <Clock className="w-5 h-5 text-purple-600 mb-4" />
+              <Clock className="w-5 h-5 text-zinc-400 mb-4" />
               <h3 className="font-semibold mb-1">{tInfo('hours.title')}</h3>
               <p className="text-sm font-medium">{tInfo('hours.value')}</p>
               <p className="text-xs text-muted-foreground">{tInfo('hours.note')}</p>
@@ -127,7 +127,7 @@ export default function ContactPage() {
 
               {status === "loading" ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
                 </div>
               ) : success ? (
                 <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -195,7 +195,7 @@ export default function ContactPage() {
                 <button 
                   type="submit" 
                   disabled={isLoading || !session}
-                  className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white py-2 px-4 rounded-md"
+                  className="w-full bg-white text-zinc-900 hover:bg-zinc-200 disabled:bg-gray-400 py-2 px-4 rounded-md"
                 >
                   {isLoading ? tForm('sending') : !session ? tForm('signInRequired') : t('sendMessage')}
                 </button>

@@ -65,7 +65,7 @@ export default function AdminOverviewPage() {
     { name: t("stats.totalOrders"), value: stats.totalOrders, icon: ShoppingCart, color: "bg-blue-500" },
     { name: t("stats.totalRevenue"), value: `${stats.totalRevenue.toFixed(2)} DT`, icon: DollarSign, color: "bg-green-500" },
     { name: t("stats.pendingOrders"), value: stats.pendingOrders, icon: Clock, color: "bg-yellow-500" },
-    { name: t("stats.totalCustomers"), value: stats.totalCustomers, icon: Users, color: "bg-purple-500" },
+    { name: t("stats.totalCustomers"), value: stats.totalCustomers, icon: Users, color: "bg-zinc-500" },
     { name: t("stats.totalProducts"), value: stats.totalProducts, icon: Package, color: "bg-indigo-500" },
     { name: t("stats.lowStock"), value: stats.lowStockItems, icon: AlertTriangle, color: "bg-red-500" },
   ] : [];

@@ -46,6 +46,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { name: t("categories"), href: "/admin/dashboard/categories", icon: Tags },
     { name: t("coupons"), href: "/admin/dashboard/coupons", icon: Ticket },
     { name: t("messages"), href: "/admin/dashboard/messages", icon: MessageSquare },
+    { name: t("blogs"), href: "/admin/dashboard/blog", icon: MessageSquare },
   ];
 
   const isActive = (href: string) => {

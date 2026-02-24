@@ -54,10 +54,10 @@ export function Footer() {
             {/* Socials */}
             <div className="flex gap-4 mt-4">
           
-              <Link href="#" className="transition-colors hover:text-primary">
+              <Link href="https://www.instagram.com/hoodiz1/" className="transition-colors hover:text-primary">
                 <Instagram className="h-5 w-5" />
               </Link>
-              <Link href="#" className="transition-colors hover:text-primary">
+              <Link href="https://www.facebook.com/profile.php?id=61588218478567" className="transition-colors hover:text-primary">
                 <Facebook className="h-5 w-5" />
               </Link>
              

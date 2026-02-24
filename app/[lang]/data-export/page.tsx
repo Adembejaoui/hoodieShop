@@ -67,8 +67,8 @@ export default function DataExportPage() {
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-500/10 mb-6">
-            <Download className="h-8 w-8 text-purple-400" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-zinc-800 mb-6">
+            <Download className="h-8 w-8 text-zinc-400" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
             {t('title')}
@@ -79,8 +79,8 @@ export default function DataExportPage() {
         </div>
 
         {/* Info Box */}
-        <div className="p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg mb-8">
-          <h2 className="font-semibold text-purple-300 mb-2">
+        <div className="p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg mb-8">
+          <h2 className="font-semibold text-zinc-300 mb-2">
             {t('whatData')}
           </h2>
           <ul className="text-sm text-muted-foreground space-y-1">
@@ -113,7 +113,7 @@ export default function DataExportPage() {
 
           <Button
             onClick={handleExport}
-            className="w-full bg-purple-600 hover:bg-purple-700"
+            className="w-full bg-white text-zinc-900 hover:bg-zinc-200"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -134,7 +134,7 @@ export default function DataExportPage() {
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground">
             {t('footer').replace('{link}', '')}{' '}
-            <Link href="/contact" className="text-purple-400 hover:text-purple-300 underline">
+            <Link href="/contact" className="text-zinc-400 hover:text-zinc-300 underline">
               {t('contactLink')}
             </Link>.
           </p>

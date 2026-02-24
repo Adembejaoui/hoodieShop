@@ -33,7 +33,7 @@ export function HoodizLogo({ variant = 'full', size = 'md', className = '', show
 
   const TextLogo = () => (
     <span 
-      className={`${textSize} font-black tracking-tight bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent select-none`}
+      className={`${textSize} font-black tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent select-none`}
       style={{ letterSpacing: '-0.02em' }}
     >
       HOODIZ

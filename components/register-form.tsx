@@ -112,7 +112,7 @@ export function RegisterForm({ className, darkMode = false }: RegisterFormProps)
   }
 
   const inputClass = darkMode
-    ? "bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-pink-500 focus:ring-pink-500/20"
+    ? "bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-white/50 focus:ring-white/20"
     : "";
 
   return (
@@ -191,7 +191,7 @@ export function RegisterForm({ className, darkMode = false }: RegisterFormProps)
           />
           <label htmlFor="terms" className={cn("text-sm", darkMode ? "text-white/70" : "text-muted-foreground")}>
             I agree to the{" "}
-            <Link href="/terms" className={cn("underline underline-offset-4", darkMode ? "text-pink-400 hover:text-pink-300" : "")}>
+            <Link href="/terms" className={cn("underline underline-offset-4", darkMode ? "text-zinc-400 hover:text-zinc-300" : "")}>
               Terms
             </Link>
           </label>

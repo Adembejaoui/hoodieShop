@@ -111,6 +111,16 @@ export default withAuth(
           return true;
         }
         
+        // Allow access to blog pages (public for SEO)
+        if (pathname === "/blog" || pathname.match(/^\/(en|fr)\/blog(\/|$)/)) {
+          return true;
+        }
+        
+        // Allow access to hero showcase page (public demo)
+        if (pathname === "/hero-showcase" || pathname.match(/^\/(en|fr)\/hero-showcase(\/|$)/)) {
+          return true;
+        }
+        
         // Allow access to cart and checkout pages
         if (pathname === "/cart" || pathname === "/checkout" ||
             pathname === `/${locale}/cart` || pathname === `/${locale}/checkout`) {
@@ -134,7 +144,8 @@ export default withAuth(
           pathname.startsWith("/api/variants") ||
           pathname.startsWith("/api/coupons") ||
           pathname.startsWith("/api/orders") ||
-          pathname.startsWith("/api/gdpr")
+          pathname.startsWith("/api/gdpr") ||
+          pathname.startsWith("/api/blog")
         ) {
           return true;
         }

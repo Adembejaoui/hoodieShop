@@ -37,7 +37,7 @@ export function WelcomePopup({ isOpen, onClose }: WelcomePopupProps) {
         className={`bg-card rounded-2xl border shadow-2xl w-full max-w-md overflow-hidden transform transition-all duration-300 ${isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}
       >
         {/* Header with gradient */}
-        <div className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 p-6 text-white">
+        <div className="relative bg-zinc-800 p-6 text-white">
           <button 
             onClick={onClose} 
             className="absolute top-4 right-4 hover:bg-white/20 p-1.5 rounded-full transition-colors"
@@ -64,8 +64,8 @@ export function WelcomePopup({ isOpen, onClose }: WelcomePopupProps) {
           {/* Discount tiers */}
           <div className="space-y-3">
             {/* 2+ Hoodies tier */}
-            <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-950/30 dark:to-purple-950/30 rounded-xl border border-pink-200 dark:border-pink-800">
-              <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+            <div className="flex items-center gap-4 p-4 bg-zinc-800/50 rounded-xl border border-zinc-700">
+              <div className="flex-shrink-0 w-14 h-14 bg-white rounded-full flex items-center justify-center text-zinc-900 font-bold text-lg shadow-lg">
                 10%
               </div>
               <div>
@@ -75,8 +75,8 @@ export function WelcomePopup({ isOpen, onClose }: WelcomePopupProps) {
             </div>
 
             {/* 3+ Hoodies tier */}
-            <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 rounded-xl border border-purple-200 dark:border-purple-800">
-              <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+            <div className="flex items-center gap-4 p-4 bg-zinc-800/50 rounded-xl border border-zinc-700">
+              <div className="flex-shrink-0 w-14 h-14 bg-white rounded-full flex items-center justify-center text-zinc-900 font-bold text-lg shadow-lg">
                 20%
               </div>
               <div>
@@ -95,7 +95,7 @@ export function WelcomePopup({ isOpen, onClose }: WelcomePopupProps) {
         <div className="p-6 pt-0 space-y-3">
           <Button 
             onClick={handleShopNow}
-            className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 text-white font-semibold py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
+            className="w-full bg-white text-zinc-900 hover:bg-zinc-200 font-semibold py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
           >
             Start Shopping Now →
           </Button>

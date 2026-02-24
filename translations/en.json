@@ -42,6 +42,7 @@
     "home": "Home",
     "shop": "Shop",
     "about": "About",
+    "blog": "Blog",
     "contact": "Contact",
     "dashboard": "Dashboard",
     "adminDashboard": "Admin Dashboard",
@@ -325,7 +326,7 @@
     "front": "Front",
     "back": "Back",
     "both": "Both",
-    "freeShipping": "Free shipping on orders over $75",
+    "freeShipping": "Free shipping ",
     "securePayment": "Secure payment with SSL encryption",
     "easyReturns": "30-day easy returns policy",
     "shop": "Shop",
@@ -487,6 +488,7 @@
     "overview": "Overview",
     "products": "Products",
     "orders": "Orders",
+    "blogs": "Blogs",
     "customers": "Customers",
     "categories": "Categories",
     "coupons": "Coupons",
@@ -703,7 +705,7 @@
       "title": "Quick Answers",
       "shipping": {
         "question": "How long does shipping take?",
-        "answer": "Standard shipping takes 5-7 business days. Express shipping (2-3 days) is available at checkout."
+        "answer": "Standard shipping takes 4-6 business days."
       },
       "returns": {
         "question": "What is your return policy?",
@@ -969,5 +971,22 @@
     "analyticsDescription": "These cookies help us understand how visitors interact with our website.",
     "marketing": "Marketing",
     "marketingDescription": "These cookies are used to track visitors across websites for advertising purposes."
+  },
+
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Latest news, style tips, and behind-the-scenes stories",
+    "pageTitle": "Blog - Hoodiz Tunisia",
+    "pageDescription": "Discover the latest news, style tips, and behind-the-scenes stories from Hoodiz Tunisia.",
+    "noPosts": "No posts yet. Check back soon!",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "home": "Home",
+    "blog": "Blog",
+    "minRead": "min read",
+    "views": "views",
+    "backToBlog": "Back to Blog"
   }
 }

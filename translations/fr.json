@@ -42,6 +42,7 @@
     "home": "Accueil",
     "shop": "Boutique",
     "about": "À propos",
+    "blog": "Blog",
     "contact": "Contact",
     "dashboard": "Tableau de bord",
     "adminDashboard": "Tableau de bord Admin",
@@ -325,7 +326,7 @@
     "front": "Devant",
     "back": "Derrière",
     "both": "Les deux",
-    "freeShipping": "Livraison gratuite pour les commandes de plus de 75€",
+    "freeShipping": "Livraison gratuite ",
     "securePayment": "Paiement sécurisé avec cryptage SSL",
     "easyReturns": "Politique de retours faciles sous 30 jours",
     "shop": "Boutique",
@@ -489,6 +490,7 @@
     "dashboard": "Tableau de bord",
     "overview": "Aperçu",
     "products": "Produits",
+    "blogs": "Blogs",
     "orders": "Commandes",
     "customers": "Clients",
     "categories": "Catégories",
@@ -979,5 +981,22 @@
     "analyticsDescription": "Ces cookies nous aident à comprendre comment les visiteurs interagissent avec notre site web.",
     "marketing": "Marketing",
     "marketingDescription": "Ces cookies sont utilisés pour suivre les visiteurs sur différents sites à des fins publicitaires."
+  },
+
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Dernières actualités, conseils de style et coulisses",
+    "pageTitle": "Blog - Hoodiz Tunisie",
+    "pageDescription": "Découvrez les dernières actualités, conseils de style et coulisses de Hoodiz Tunisie.",
+    "noPosts": "Aucun article pour le moment. Revenez bientôt !",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page",
+    "of": "sur",
+    "home": "Accueil",
+    "blog": "Blog",
+    "minRead": "min de lecture",
+    "views": "vues",
+    "backToBlog": "Retour au Blog"
   }
 }

@@ -46,27 +46,31 @@ export function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden gap-8 md:flex">
             {isAdmin ? (
-              <Link href="/admin/dashboard/overview" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+              <Link href="/admin/dashboard/overview" className="text-sm font-medium text-white/70 transition-all hover:text-white relative group">
                 {t('dashboard')}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full" />
               </Link>
             ) : (
               <>
-                <Link href="/" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+                <Link href="/" className="text-sm font-medium text-white/70 transition-all hover:text-white relative group">
                   {t('home')}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full" />
                 </Link>
-                <Link href="/shop" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+                <Link href="/shop" className="text-sm font-medium text-white/70 transition-all hover:text-white relative group">
                   {t('shop')}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full" />
                 </Link>
-                <Link href="/about" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+                <Link href="/about" className="text-sm font-medium text-white/70 transition-all hover:text-white relative group">
                   {t('about')}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full" />
                 </Link>
-                <Link href="/contact" className="text-sm font-medium text-white/70 transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] relative group">
+                  <Link href="/blog" className="text-sm font-medium text-white/70 transition-all hover:text-white relative group">
+                  {t('blog')}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full" />
+                </Link>
+                <Link href="/contact" className="text-sm font-medium text-white/70 transition-all hover:text-white relative group">
                   {t('contact')}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all group-hover:w-full" />
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full" />
                 </Link>
               </>
             )}
@@ -94,7 +98,7 @@ export function Header() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 border border-white/20 hover:from-purple-500 hover:to-pink-500 transition-all"
+                  className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 transition-all"
                 >
                 
                     <User className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
@@ -191,7 +195,7 @@ export function Header() {
                   </button>
                 </>
               ) : (
-                <Link href="/auth" className="text-base font-medium text-purple-400 transition-colors hover:text-purple-300 py-3 px-2 rounded-lg hover:bg-white/5">
+                <Link href="/auth" className="text-base font-medium text-zinc-400 transition-colors hover:text-white py-3 px-2 rounded-lg hover:bg-white/5">
                   {t('signIn')}
                 </Link>
               )}

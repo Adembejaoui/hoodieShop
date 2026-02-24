@@ -13,7 +13,7 @@ const getStatusColor = (status: string) => {
   switch (status) {
     case "PENDING": return "bg-yellow-100 text-yellow-800";
     case "PROCESSING": return "bg-blue-100 text-blue-800";
-    case "SHIPPED": return "bg-purple-100 text-purple-800";
+    case "SHIPPED": return "bg-zinc-100 text-zinc-800";
     case "DELIVERED": return "bg-green-100 text-green-800";
     case "CANCELLED": return "bg-red-100 text-red-800";
     case "REFUNDED": return "bg-gray-100 text-gray-800";
@@ -149,7 +149,7 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
               )}
               {order.deliveredAt && (
                 <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                  <div className="w-2 h-2 rounded-full bg-zinc-500"></div>
                   <div className="flex-1">
                     <p className="text-sm font-medium">{t("delivered")}</p>
                     <p className="text-xs text-muted-foreground">{formatDate(order.deliveredAt)}</p>

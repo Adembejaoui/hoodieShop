@@ -17,10 +17,16 @@ interface ProductResult {
   updatedAt: Date;
 }
 
+interface BlogPostResult {
+  slug: string;
+  updatedAt: Date;
+}
+
 // Static page paths (without locale prefix)
 const staticPagePaths = [
   { path: '', priority: 1.0, changeFrequency: 'daily' as const },
   { path: '/shop', priority: 0.9, changeFrequency: 'daily' as const },
+  { path: '/blog', priority: 0.8, changeFrequency: 'daily' as const },
   { path: '/about', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/contact', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/cart', priority: 0.6, changeFrequency: 'weekly' as const },
@@ -30,16 +36,18 @@ const staticPagePaths = [
 ];
 
 // Generate hreflang alternates for a given path
-function generateAlternates(path: string): Record<Locale, string> {
+function generateAlternates(path: string): Record<string, string> {
   const alternates: Record<string, string> = {};
   for (const locale of locales) {
     alternates[locale] = `${baseUrl}/${locale}${path}`;
   }
+  // Add x-default pointing to default locale
+  alternates['x-default'] = `${baseUrl}/${defaultLocale}${path}`;
   return alternates;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Fetch all categories and products from database
+  // Fetch all categories, products, and blog posts from database
   const categories = await prisma.category.findMany({
     select: {
       slug: true,
@@ -57,6 +65,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   }) as ProductResult[];
 
+  const blogPosts = await prisma.blogPost.findMany({
+    where: {
+      status: 'PUBLISHED',
+      publishedAt: { lte: new Date() },
+    },
+    select: {
+      slug: true,
+      updatedAt: true,
+    },
+  }) as BlogPostResult[];
+
   const now = new Date();
 
   // Static pages - generate for each locale
@@ -72,15 +91,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
-  // Category pages - generate for each locale
+  // Category shop pages - using shop page with category filter
+  // Note: Categories are filtered via query params on the shop page
   const categoryPages: MetadataRoute.Sitemap = categories.flatMap((category) =>
     locales.map((locale) => ({
-      url: `${baseUrl}/${locale}/product/${category.slug}`,
+      url: `${baseUrl}/${locale}/shop?category=${category.slug}`,
       lastModified: category.updatedAt || now,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
       alternates: {
-        languages: generateAlternates(`/product/${category.slug}`),
+        languages: generateAlternates(`/shop?category=${category.slug}`),
       },
     }))
   );
@@ -98,5 +118,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
-  return [...staticPages, ...categoryPages, ...productPages];
+  // Blog post pages - generate for each locale
+  const blogPages: MetadataRoute.Sitemap = blogPosts.flatMap((post) =>
+    locales.map((locale) => ({
+      url: `${baseUrl}/${locale}/blog/${post.slug}`,
+      lastModified: post.updatedAt || now,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+      alternates: {
+        languages: generateAlternates(`/blog/${post.slug}`),
+      },
+    }))
+  );
+
+  return [...staticPages, ...categoryPages, ...productPages, ...blogPages];
 }

@@ -59,10 +59,10 @@ export function CategoriesSection() {
   if (loading) {
     return (
       <section id="categories" className="relative py-20 lg:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-950/50 via-black to-purple-950/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/50 via-black to-zinc-950/50" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 flex flex-col items-center text-center">
-            <div className="h-8 w-48 bg-purple-500/20 rounded animate-pulse mb-6" />
+            <div className="h-8 w-48 bg-zinc-800/50 rounded animate-pulse mb-6" />
             <div className="h-10 w-64 bg-white/10 rounded animate-pulse mb-4" />
             <div className="h-6 w-96 bg-white/5 rounded animate-pulse" />
           </div>
@@ -79,12 +79,12 @@ export function CategoriesSection() {
   return (
     <section id="categories" className="relative py-20 lg:py-28 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-950/50 via-black to-purple-950/50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/50 via-black to-zinc-950/50" />
       
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/50 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -95,10 +95,10 @@ export function CategoriesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 mb-6">
-            <span className="text-purple-300 text-sm font-medium">{t('badge')}</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-800/50 border border-zinc-700/50 mb-6">
+            <span className="text-zinc-300 text-sm font-medium">{t('badge')}</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-white via-zinc-200 to-zinc-300 bg-clip-text text-transparent">
             {t('title')}
           </h2>
           <p className="text-white/60 max-w-2xl text-lg">
@@ -119,13 +119,13 @@ export function CategoriesSection() {
               <Link href={`/shop?category=${category.slug}`}>
                 <div className="group relative h-80 rounded-2xl overflow-hidden cursor-pointer">
                   {/* Manga panel border effect */}
-                  <div className="absolute inset-0 rounded-2xl border-2 border-white/10 group-hover:border-purple-500/50 transition-all duration-300 z-10" />
+                  <div className="absolute inset-0 rounded-2xl border-2 border-white/10 group-hover:border-white/30 transition-all duration-300 z-10" />
                   
                   {/* Corner decorations */}
-                  <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-purple-500 rounded-tl-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-pink-500 rounded-tr-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-pink-500 rounded-bl-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-purple-500 rounded-br-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-white/50 rounded-tl-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-white/50 rounded-tr-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-white/50 rounded-bl-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-white/50 rounded-br-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity" />
                   
                   {/* Image */}
                   <Image
@@ -148,13 +148,13 @@ export function CategoriesSection() {
                     >
                       {category.name}
                     </motion.h3>
-                    <p className="text-sm text-purple-300 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
+                    <p className="text-sm text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
                       {t('productsCount', { count: category._count?.products || 0 })}
                     </p>
                   </div>
 
                   {/* Glow effect on hover */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-600/0 via-purple-600/20 to-pink-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </Link>
             </motion.div>
@@ -171,7 +171,7 @@ export function CategoriesSection() {
         >
           <Link 
             href="/shop"
-            className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold overflow-hidden transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25"
+            className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-zinc-900 font-semibold overflow-hidden transition-all hover:scale-105 hover:shadow-lg hover:shadow-black/20"
           >
             <span className="relative z-10">{t('viewAll')}</span>
             <svg 
@@ -182,7 +182,7 @@ export function CategoriesSection() {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-zinc-200 opacity-0 group-hover:opacity-100 transition-opacity" />
           </Link>
         </motion.div>
 

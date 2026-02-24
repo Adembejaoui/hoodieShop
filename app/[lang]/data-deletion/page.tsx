@@ -152,14 +152,14 @@ export default function DataDeletionPage() {
         </div>
 
         {/* GDPR Notice */}
-        <div className="mt-8 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+        <div className="mt-8 p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg">
           <p className="text-sm text-muted-foreground text-center">
             {t('gdprNotice').replace('{link}', '')}{' '}
             <a 
               href="https://gdpr.eu/article-17-right-to-erasure/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-purple-400 hover:text-purple-300 underline"
+              className="text-zinc-400 hover:text-zinc-300 underline"
             >
               {t('gdprLink')}
             </a>
@@ -170,7 +170,7 @@ export default function DataDeletionPage() {
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
             {t('questions').replace('{link}', '')}{' '}
-            <Link href="/contact" className="text-purple-400 hover:text-purple-300 underline">
+            <Link href="/contact" className="text-zinc-400 hover:text-zinc-300 underline">
               {t('contactLink')}
             </Link>
           </p>

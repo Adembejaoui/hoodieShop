@@ -45,8 +45,8 @@ export function LanguageSwitcher() {
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
             className={`cursor-pointer ${
-              locale === language.code 
-                ? 'bg-purple-500/20 text-purple-300' 
+              locale === language.code
+                ? 'bg-white/10 text-white'
                 : 'text-white/70 hover:text-white hover:bg-white/5'
             }`}
           >

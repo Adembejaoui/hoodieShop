@@ -85,10 +85,10 @@ export function AutocompleteInput() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results && setIsOpen(true)}
-          className="w-full pl-10 pr-10 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+          className="w-full pl-10 pr-10 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all"
         />
         {loading && (
-          <Loader2 className="absolute right-10 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-400 animate-spin" />
+          <Loader2 className="absolute right-10 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 animate-spin" />
         )}
         {query && (
           <button
@@ -105,7 +105,7 @@ export function AutocompleteInput() {
           {/* Categories */}
           {results.categories.length > 0 && (
             <div className="p-2 border-b border-white/10">
-              <p className="text-xs text-purple-400 px-2 py-1 font-medium uppercase tracking-wide">Categories</p>
+              <p className="text-xs text-zinc-400 px-2 py-1 font-medium uppercase tracking-wide">Categories</p>
               {results.categories.map((category) => (
                 <Link
                   key={category.id}
@@ -125,7 +125,7 @@ export function AutocompleteInput() {
           {/* Products */}
           {results.products.length > 0 && (
             <div className="p-2">
-              <p className="text-xs text-purple-400 px-2 py-1 font-medium uppercase tracking-wide">Products</p>
+              <p className="text-xs text-zinc-400 px-2 py-1 font-medium uppercase tracking-wide">Products</p>
               {results.products.map((product) => (
                 <Link
                   key={product.id}
@@ -145,7 +145,7 @@ export function AutocompleteInput() {
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-white truncate">{product.name}</p>
-                    <p className="text-sm text-purple-400">
+                    <p className="text-sm text-zinc-400">
                       {product.price.toFixed(2)} DT
                     </p>
                   </div>
