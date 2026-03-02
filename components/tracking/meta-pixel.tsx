@@ -90,15 +90,6 @@ function initMetaPixel() {
   script.async = true
   script.src = `https://connect.facebook.net/en_US/fbevents.js`
   document.head.appendChild(script)
-
-  // Fallback: Inject fbevents.js directly if above fails
-  const fbq = function(...args: unknown[]) {
-    const q = window.fbq as unknown as unknown[]
-    if (q) q.push(args)
-  }
-  window.fbq = fbq
-  fbq('init', META_PIXEL_ID)
-  fbq('track', 'PageView')
 }
 
 // Track Meta Event
@@ -112,8 +103,10 @@ export function trackMetaEvent(
   }
 
   // Use window.fbq if available, otherwise log
-  if (window.fbq) {
-    window.fbq('track', eventName, data)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fbq = window.fbq as any
+  if (fbq && typeof fbq === 'function') {
+    fbq('track', eventName, data)
   } else {
     console.log(`[Meta Pixel] ${eventName}:`, data)
   }
