@@ -163,7 +163,7 @@ export function ProductCard({ product, showLoginPrompt, setShowLoginPrompt }: Pr
                 e.preventDefault()
                 window.location.href = `/product/${product.category.slug}/${product.slug}`
               }}
-              className="w-full mt-4 py-2 px-4 bg-primary text-primary-foreground rounded-md font-medium hover:bg-primary/90 transition-colors"
+              className="w-full mt-4 py-3 px-4 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-base sm:text-sm"
             >
               View Details
             </button>

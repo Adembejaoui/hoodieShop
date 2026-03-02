@@ -8,6 +8,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AuthProvider } from "@/providers/auth-provider";
 import { CookieConsentBanner } from "@/components/privacy/cookie-consent-banner";
+import { MetaPixelProvider } from "@/components/tracking/meta-pixel";
 import { getOrganizationSchema, getWebSiteSchema } from "@/lib/seo/structured-data";
 import { routing } from '@/i18n/routing';
 import { baseUrl, defaultOgImage, locales, businessInfo } from '@/lib/config';
@@ -107,6 +108,34 @@ export default async function LangLayout({
   return (
     <html lang={lang} className="dark">
       <head>
+        {/* Meta/Facebook Pixel - Load asynchronously */}
+        <Script
+          id="meta-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${process.env.NEXT_PUBLIC_META_PIXEL_ID || ''}');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: 'none' }}
+            src={`https://www.facebook.com/tr?id=${process.env.NEXT_PUBLIC_META_PIXEL_ID || ''}&ev=PageView&noscript=1`}
+            alt=""
+          />
+        </noscript>
         <Script
           id="organization-schema"
           type="application/ld+json"
@@ -118,10 +147,12 @@ export default async function LangLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}>
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
-            <Header />
-            {children}
-            <Footer />
-            <CookieConsentBanner />
+            <MetaPixelProvider>
+              <Header />
+              {children}
+              <Footer />
+              <CookieConsentBanner />
+            </MetaPixelProvider>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

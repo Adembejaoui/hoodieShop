@@ -7,6 +7,8 @@ import { Link, useRouter } from "@/i18n/routing";
 import { useCart } from "@/lib/cart-context";
 import { useSession } from "next-auth/react";
 import { Heart, Lock, ChevronDown, ChevronUp, ShoppingBag, Sparkles, Shield, Zap, Star } from "lucide-react";
+import { trackMetaEvent } from "@/components/tracking/meta-pixel";
+import { businessInfo } from "@/lib/config";
 
 // Types
 interface Category {
@@ -93,6 +95,16 @@ export default function ProductPage({ params }: ProductPageProps) {
         }
         const data = await res.json();
         setProduct(data);
+
+        // Track Meta Pixel ViewContent event
+        trackMetaEvent('ViewContent', {
+          content_name: data.name,
+          content_category: data.category?.name,
+          content_ids: [data.id],
+          content_type: 'product',
+          value: data.basePrice,
+          currency: businessInfo.currency,
+        });
 
         // Set default color and size
         if (data._useNewFormat) {

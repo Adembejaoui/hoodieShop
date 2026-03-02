@@ -11,6 +11,8 @@ import { ArrowLeft, Truck, FileText, CheckCircle, Lock, MapPin } from "lucide-re
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
+import { trackMetaEvent } from "@/components/tracking/meta-pixel";
+import { businessInfo } from "@/lib/config";
 
 interface ShippingInfo {
   firstName: string;
@@ -87,6 +89,17 @@ function CheckoutContent() {
 
   useEffect(() => {
     setMounted(true);
+
+    // Track Meta Pixel InitiateCheckout event when user reaches checkout
+    if (items.length > 0) {
+      trackMetaEvent('InitiateCheckout', {
+        content_ids: items.map((item) => item.productId),
+        content_type: 'product',
+        value: subtotal,
+        currency: businessInfo.currency,
+        num_items: items.reduce((sum, item) => sum + item.quantity, 0),
+      });
+    }
   }, []);
 
   // Fetch saved addresses when session is available
@@ -262,6 +275,14 @@ function CheckoutContent() {
       });
 
       if (response.ok) {
+        // Track Meta Pixel Purchase event
+        trackMetaEvent('Purchase', {
+          content_ids: items.map((item) => item.productId),
+          content_type: 'product',
+          value: total,
+          currency: businessInfo.currency,
+          num_items: items.reduce((sum, item) => sum + item.quantity, 0),
+        });
         clearCart();
         setIsSuccess(true);
       } else {

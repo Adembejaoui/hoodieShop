@@ -34,7 +34,7 @@ export function HeroVariant1() {
   ]
 
   return (
-    <section className="relative w-full min-h-[calc(100vh-5rem)] overflow-hidden flex items-center">
+    <section className="relative w-full min-h-[calc(100vh-4rem)] sm:min-h-[calc(100vh-5rem)] overflow-hidden flex items-center py-16 sm:py-0">
       {/* Dark gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black z-0" />
       
@@ -105,7 +105,7 @@ export function HeroVariant1() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button asChild size="lg" className="relative overflow-hidden bg-white text-zinc-900 hover:bg-zinc-200 font-semibold px-8 rounded-xl shadow-lg shadow-black/20">
+                <Button asChild size="xl" className="relative overflow-hidden bg-white text-zinc-900 hover:bg-zinc-200 font-semibold px-8 rounded-xl shadow-lg shadow-black/20 w-full sm:w-auto">
                   <Link href="/shop" className="inline-flex items-center justify-center">
                     {t('shopCollection')}
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -116,7 +116,7 @@ export function HeroVariant1() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button asChild variant="outline" size="lg" className="border-zinc-700 text-white hover:bg-zinc-800 hover:text-white bg-transparent rounded-xl">
+                <Button asChild variant="outline" size="xl" className="border-zinc-700 text-white hover:bg-zinc-800 hover:text-white bg-transparent rounded-xl w-full sm:w-auto">
                   <Link href="#categories">{t('exploreMore')}</Link>
                 </Button>
               </motion.div>
@@ -182,6 +182,7 @@ export function HeroVariant1() {
                   whileHover={{ rotate: 0, scale: 1.05, zIndex: 20 }}
                 >
                   <div className="relative w-full h-full rounded-2xl border border-zinc-700/50 overflow-hidden bg-zinc-900/50 shadow-2xl shadow-black/20">
+                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent z-10" />
                     <Image
                       src={hoodieImages[0].src}
                       alt={hoodieImages[0].alt}
@@ -190,7 +191,6 @@ export function HeroVariant1() {
                       className="object-cover"
                       sizes="280px"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent" />
                   </div>
                 </motion.div>
 
@@ -204,11 +204,12 @@ export function HeroVariant1() {
                 >
                   <div className="relative w-full h-full rounded-3xl border-2 border-zinc-600/50 overflow-hidden bg-zinc-900/50 shadow-2xl shadow-black/30">
                     {/* Corner decorations */}
-                    <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-zinc-500 rounded-tl-3xl" />
-                    <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-zinc-400 rounded-tr-3xl" />
-                    <div className="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-zinc-400 rounded-bl-3xl" />
-                    <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-zinc-500 rounded-br-3xl" />
+                    <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-zinc-500 rounded-tl-3xl z-20" />
+                    <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-zinc-400 rounded-tr-3xl z-20" />
+                    <div className="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-zinc-400 rounded-bl-3xl z-20" />
+                    <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-zinc-500 rounded-br-3xl z-20" />
                     
+                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent z-10" />
                     <Image
                       src={hoodieImages[1].src}
                       alt={hoodieImages[1].alt}
@@ -246,6 +247,7 @@ export function HeroVariant1() {
                   whileHover={{ rotate: 0, scale: 1.05, zIndex: 20 }}
                 >
                   <div className="relative w-full h-full rounded-2xl border border-zinc-700/50 overflow-hidden bg-zinc-900/50 shadow-2xl shadow-black/20">
+                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent z-10" />
                     <Image
                       src={hoodieImages[2].src}
                       alt={hoodieImages[2].alt}
@@ -254,7 +256,6 @@ export function HeroVariant1() {
                       className="object-cover"
                       sizes="280px"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent" />
                   </div>
                 </motion.div>
               </div>

@@ -429,4 +429,14 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Prevent CLS from animations during page load */
+  .animate-on-load {
+    animation-fill-mode: backwards;
+  }
+  
+  /* Ensure images have aspect ratio before loading to prevent CLS */
+  img {
+    aspect-ratio: attr(width) / attr(height);
+  }
 }

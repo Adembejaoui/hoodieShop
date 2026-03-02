@@ -2,6 +2,8 @@
 
 import { useCart, CartItem } from "@/lib/cart-context";
 import { useState, useEffect } from "react";
+import { trackMetaEvent } from "@/components/tracking/meta-pixel";
+import { businessInfo } from "@/lib/config";
 
 interface AddToCartButtonProps {
   productId: string;
@@ -88,6 +90,16 @@ export function AddToCartButton({
       quantity,
       image: variantImage,
       printPosition,
+    });
+
+    // Track Meta Pixel AddToCart event
+    trackMetaEvent('AddToCart', {
+      content_name: name,
+      content_category: categorySlug,
+      content_ids: [productId],
+      content_type: 'product',
+      value: price * quantity,
+      currency: businessInfo.currency,
     });
 
     setIsAdding(false);
@@ -309,6 +321,16 @@ export function SimpleAddToCart({
       quantity: 1,
       image,
       printPosition,
+    });
+
+    // Track Meta Pixel AddToCart event
+    trackMetaEvent('AddToCart', {
+      content_name: name,
+      content_category: categorySlug,
+      content_ids: [productId],
+      content_type: 'product',
+      value: price,
+      currency: businessInfo.currency,
     });
 
     setIsAdding(false);

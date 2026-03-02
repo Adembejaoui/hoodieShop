@@ -171,7 +171,7 @@ export function CategoriesSection() {
         >
           <Link 
             href="/shop"
-            className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-zinc-900 font-semibold overflow-hidden transition-all hover:scale-105 hover:shadow-lg hover:shadow-black/20"
+            className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-zinc-900 font-semibold overflow-hidden transition-all hover:scale-105 hover:shadow-lg hover:shadow-black/20 min-h-[48px]"
           >
             <span className="relative z-10">{t('viewAll')}</span>
             <svg 
